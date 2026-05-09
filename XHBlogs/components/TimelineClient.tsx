@@ -12,14 +12,27 @@ export default function TimelineClient({ posts: initialPosts, tags }: { posts: a
   const [searchQuery, setSearchQuery] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  // 🌟 核心状态：视图模式 ('timeline' | 'card')
+  // 🌟 默认视图模式 ('timeline' | 'card')
   const [viewMode, setViewMode] = useState<'timeline' | 'card'>('timeline');
-  // 🌟 控制回到顶部火箭按钮的显隐
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   const searchContainerRef = useRef<HTMLDivElement>(null);
-  // 🌟 核心引用：网格模式的内部滚动容器
   const gridScrollRef = useRef<HTMLDivElement>(null);
+
+  // 🌟 核心魔法 1：强制移动端为矩阵模式
+  useEffect(() => {
+    const enforceMobileView = () => {
+      if (window.innerWidth < 768) {
+        setViewMode('card');
+      }
+    };
+
+    // 初始化检测
+    enforceMobileView();
+    // 监听窗口大小变化
+    window.addEventListener('resize', enforceMobileView);
+    return () => window.removeEventListener('resize', enforceMobileView);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -46,22 +59,16 @@ export default function TimelineClient({ posts: initialPosts, tags }: { posts: a
     });
   }, [posts, selectedTag]);
 
-  // 🌟 监听内部滚动
   const handleGridScroll = () => {
     if (gridScrollRef.current) {
       setShowScrollTop(gridScrollRef.current.scrollTop > 200);
     }
   };
 
-  // 🌟 返回顶部的平滑滚动
   const scrollToTop = () => {
     if (gridScrollRef.current) {
       try {
-        gridScrollRef.current.scroll({
-          top: 0,
-          left: 0,
-          behavior: 'smooth'
-        });
+        gridScrollRef.current.scroll({ top: 0, left: 0, behavior: 'smooth' });
       } catch (error) {
         gridScrollRef.current.scrollTo(0, 0);
       }
@@ -78,7 +85,6 @@ export default function TimelineClient({ posts: initialPosts, tags }: { posts: a
         </p>
       </div>
 
-      {/* 🌟 搜索与控制面板 */}
       <div className="flex flex-col items-center gap-8 mb-16 relative z-[99]">
 
         <div className="relative w-full max-w-lg group" ref={searchContainerRef}>
@@ -149,14 +155,15 @@ export default function TimelineClient({ posts: initialPosts, tags }: { posts: a
             ))}
           </div>
 
-          <div className="flex bg-white/50 dark:bg-slate-900/50 p-1 rounded-2xl shadow-inner shrink-0">
+          {/* 🌟 核心魔法 2：隐藏手机端的视图切换按钮 (hidden md:flex) */}
+          <div className="hidden md:flex bg-white/50 dark:bg-slate-900/50 p-1 rounded-2xl shadow-inner shrink-0">
             <button onClick={() => setViewMode('timeline')} className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-sm transition-all duration-300 ${viewMode === 'timeline' ? 'bg-white dark:bg-slate-700 text-indigo-500 shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}>
               <ListTree size={16} />
-              <span className="hidden sm:inline">中枢链路</span>
+              <span>中枢链路</span>
             </button>
             <button onClick={() => setViewMode('card')} className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-sm transition-all duration-300 ${viewMode === 'card' ? 'bg-white dark:bg-slate-700 text-indigo-500 shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}>
               <LayoutGrid size={16} />
-              <span className="hidden sm:inline">矩阵网格</span>
+              <span>矩阵网格</span>
             </button>
           </div>
         </div>
@@ -165,7 +172,7 @@ export default function TimelineClient({ posts: initialPosts, tags }: { posts: a
 
       <AnimatePresence mode="wait">
 
-        {/* ================= 模式 1：网格卡片流 (前台纯净版) ================= */}
+        {/* ================= 模式 1：网格卡片流 (手机端强制此模式) ================= */}
         {viewMode === 'card' && (
           <motion.div
             key="card-view"
@@ -176,57 +183,41 @@ export default function TimelineClient({ posts: initialPosts, tags }: { posts: a
             className="relative w-full"
           >
             <style dangerouslySetInnerHTML={{ __html: `
-              .cyber-scrollbar::-webkit-scrollbar {
-                width: 12px; 
-              }
-              .cyber-scrollbar::-webkit-scrollbar-track {
-                background: rgba(99, 102, 241, 0.05);
-                border-radius: 12px;
-                margin-top: 20px;
-                margin-bottom: 56px; 
-              }
-              .cyber-scrollbar::-webkit-scrollbar-thumb {
-                background: linear-gradient(180deg, #818cf8 0%, #c084fc 100%);
-                border-radius: 12px;
-                border: 2px solid transparent;
-                background-clip: padding-box;
-              }
-              .cyber-scrollbar::-webkit-scrollbar-thumb:hover {
-                background: linear-gradient(180deg, #6366f1 0%, #a855f7 100%);
-                border: 2px solid transparent;
-                background-clip: padding-box;
-              }
-              .fade-edges {
-                -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
-                mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%);
-              }
+              .cyber-scrollbar::-webkit-scrollbar { width: 8px; md:width: 12px; }
+              .cyber-scrollbar::-webkit-scrollbar-track { background: rgba(99, 102, 241, 0.05); border-radius: 12px; margin-top: 20px; margin-bottom: 56px; }
+              .cyber-scrollbar::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #818cf8 0%, #c084fc 100%); border-radius: 12px; border: 2px solid transparent; background-clip: padding-box; }
+              .fade-edges { -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%); mask-image: linear-gradient(to bottom, transparent 0%, black 5%, black 95%, transparent 100%); }
             `}} />
 
             <div
               ref={gridScrollRef}
               onScroll={handleGridScroll}
-              className="h-[75vh] overflow-y-auto cyber-scrollbar pr-5 pb-10 fade-edges"
+              className="h-[75vh] overflow-y-auto cyber-scrollbar pr-2 sm:pr-5 pb-10 fade-edges"
             >
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4 pb-10">
-                {/* 渲染卡片 (无新建按钮，无编辑/删除按钮) */}
+              {/* 🌟 核心魔法 3：强制手机端 grid-cols-2 双列显示，减小 gap */}
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 pt-4 pb-10">
                 {timelinePosts.map((post, idx) => (
                   <motion.div key={post.slug} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.3, delay: idx * 0.05 }}>
-                    <div className="bg-white/60 dark:bg-slate-800/70 backdrop-blur-xl border border-white/50 dark:border-slate-700/50 rounded-3xl overflow-hidden shadow-lg flex flex-col h-full group relative hover:-translate-y-1 transition-transform duration-300">
+                    <div className="bg-white/60 dark:bg-slate-800/70 backdrop-blur-xl border border-white/50 dark:border-slate-700/50 rounded-2xl md:rounded-3xl overflow-hidden shadow-lg flex flex-col h-full group relative hover:-translate-y-1 transition-transform duration-300">
 
                       <Link href={`/posts/${post.slug}`} className="block flex-1 flex flex-col cursor-pointer">
-                        <div className="relative h-40 overflow-hidden">
+                        {/* 🌟 图片高度自适应：手机变矮，电脑变高 */}
+                        <div className="relative h-28 sm:h-36 md:h-40 overflow-hidden">
                           <img src={post.cover} alt={post.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                          <span className="absolute bottom-3 left-4 text-white/90 text-xs font-mono font-bold bg-black/40 backdrop-blur-sm px-2 py-1 rounded-md flex items-center gap-1">
-                            <Calendar size={12}/> {post.date.split(' ')[0]}
+                          {/* 🌟 日期标签微缩 */}
+                          <span className="absolute bottom-2 left-2 md:bottom-3 md:left-4 text-white/90 text-[9px] md:text-xs font-mono font-bold bg-black/40 backdrop-blur-sm px-1.5 py-0.5 md:px-2 md:py-1 rounded flex items-center gap-1">
+                            <Calendar size={10} className="md:w-3 md:h-3"/> {post.date.split(' ')[0]}
                           </span>
                         </div>
-                        <div className="p-5 flex-1 flex flex-col">
-                          <h3 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-2 line-clamp-2 transition-colors group-hover:text-indigo-500">{post.title}</h3>
-                          <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 line-clamp-3 flex-1">{post.description || "暂时没有描述喵..."}</p>
-                          <div className="flex flex-wrap gap-2 mt-auto">
+
+                        {/* 🌟 文本边距和字号全方位缩放 */}
+                        <div className="p-3 md:p-5 flex-1 flex flex-col">
+                          <h3 className="text-xs sm:text-sm md:text-lg font-bold text-slate-800 dark:text-slate-100 mb-1 md:mb-2 line-clamp-2 transition-colors group-hover:text-indigo-500">{post.title}</h3>
+                          <p className="text-[10px] sm:text-xs md:text-sm text-slate-500 dark:text-slate-400 mb-2 md:mb-4 line-clamp-2 flex-1 leading-snug">{post.description || "暂时没有描述喵..."}</p>
+                          <div className="flex flex-wrap gap-1 sm:gap-2 mt-auto">
                             {post.tags.map((tag: string) => (
-                              <span key={tag} className="text-[10px] font-bold text-indigo-500 bg-indigo-50 dark:bg-indigo-500/10 px-2 py-1 rounded-md">#{tag}</span>
+                              <span key={tag} className="text-[8px] md:text-[10px] font-bold text-indigo-500 bg-indigo-50 dark:bg-indigo-500/10 px-1.5 py-0.5 md:px-2 md:py-1 rounded">#{tag}</span>
                             ))}
                           </div>
                         </div>
@@ -270,15 +261,12 @@ export default function TimelineClient({ posts: initialPosts, tags }: { posts: a
             <div className="absolute border-opacity-20 border-indigo-500 dark:border-indigo-400/20 h-full border-2 left-1/2 transform -translate-x-1/2 rounded-full transition-colors duration-1000"></div>
 
             <div className="relative z-10 flex flex-col gap-16">
-
-              {/* 渲染时间线节点 (无新建按钮) */}
               <AnimatePresence mode='popLayout'>
                 {timelinePosts.map((post, index) => (
                   <TimelineNode
                     key={post.slug}
                     post={post}
                     index={index + 1}
-                    // 不再传递 onDelete 属性
                   />
                 ))}
               </AnimatePresence>
