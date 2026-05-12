@@ -4,6 +4,7 @@ import matter from 'gray-matter';
 import Navbar from '../../components/Navbar';
 import PageTransition from '../../components/PageTransition';
 import ChatterBoard from './ChatterBoard';
+import { siteConfig } from '@/siteConfig';
 
 
 export const metadata = {
