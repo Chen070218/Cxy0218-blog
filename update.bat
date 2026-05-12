@@ -1,9 +1,12 @@
 @echo off
+:: 🌟 核心修复：这一行能保证无论是否以管理员运行，脚本都会回到它自己所在的文件夹
+cd /d "%~dp0"
+
 title XingHuiSama Update Tool
 color 0B
 
 echo ===================================================
-echo   XingHuiSama Blog Update Script
+echo    XingHuiSama Blog Update Script (Admin Fixed)
 echo ===================================================
 echo.
 
@@ -86,13 +89,22 @@ git checkout origin/main -- ^
   my-blog-manager/tsconfig.json
 
 echo [3/4] Installing dependencies...
-cd XHBlogs && call npm install && cd ..
-cd my-blog-manager && call npm install && cd ..
+:: 使用更为稳妥的路径执行方式
+if exist "XHBlogs" (
+    echo Syncing XHBlogs...
+    cd XHBlogs && call npm install && cd ..
+)
+if exist "my-blog-manager" (
+    echo Syncing my-blog-manager...
+    cd my-blog-manager && call npm install && cd ..
+)
 
 echo [4/4] Patching siteConfig...
-node scripts/checkConfig.mjs
+if exist "scripts\checkConfig.mjs" (
+    node scripts/checkConfig.mjs
+)
 
 echo ===================================================
-echo   Update Successful!
+echo    Update Successful!！
 echo ===================================================
 pause
