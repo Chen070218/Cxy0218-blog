@@ -116,7 +116,8 @@ def update_site_config(payload: Dict[str, Any] = Body(...)):
         "faviconUrl",
         "navTitle",  # 👈 必须叫这个
         "navSuffix",  # 👈 必须叫这个
-        "navAfter"  # 👈 必须叫这个
+        "navAfter",  # 👈 必须叫这个
+        "friendLinkApplyFormat"
     }
 
     try:
