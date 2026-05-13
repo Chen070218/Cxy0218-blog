@@ -5,6 +5,9 @@
 本指南将带你从零开始，轻松部署并使用 XHBlogs。
 
 ---
+## 语言
+[![English](https://img.shields.io/badge/Language-English-blue.svg)](README_en.md)
+[![中文](https://img.shields.io/badge/语言-中文-red.svg)](README.md)
 
 ## 写在前面
 
