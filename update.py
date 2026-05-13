@@ -45,6 +45,7 @@ def main():
     # 4. 精准替换文件（再也不怕空格和换行符了！）
     print_step("[2/4] 执行核心文件精准替换...")
     files_to_update = [
+        "update.py", "update.bat",
         "LICENSE", "README.md", "scripts/checkConfig.mjs",
 
         # 前端文件
