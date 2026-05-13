@@ -109,26 +109,37 @@ Set email (must be the email associated with your GitHub)
 **1. Configure Local Physical Path**
 Open the "Settings" page in the console.
 The pulled source code contains two core folders: `XHBlogs-manager` and `XHBlogs`. Please specify the local physical path of `XHBlogs` in the console.
-![选择物理路径](picture/Pasted image 20260427111646.png)
+
+![选择物理路径](picture/Pasted%20image%2020260427111646.png)
+
 Example: `F:\Test2\XHBlogs`
-![填入本地BLOG物理路径](picture/Pasted image 20260427112311.png)
+
+![填入本地BLOG物理路径](picture/Pasted%20image%2020260427112311.png)
 
 > **Crucial Step**: After entering the path, you must click **[Test Path]** to verify connectivity! Once verified, click **[Save Dual-Track Configuration]** below.
 
 **2. Create a Private Repository on GitHub**
 Log in to GitHub and create a new repository to host your blog's source code (it is recommended to set it as a **Private repository** to protect data privacy).
-![创建仓库](picture/Pasted image 20260427112905.png)
+
+![创建仓库](picture/Pasted%20image%2020260427112905.png)
+
 The repository name can be customized.
-![仓库命名](picture/Pasted image 20260427113030.png)
+
+![仓库命名](picture/Pasted%20image%2020260427113030.png)
+
 Obtain the SSH address of the repository and paste it into the "Line B" configuration in the console:
-![复制SSH](picture/Pasted image 20260427113120.png)
+
+![复制SSH](picture/Pasted%20image%2020260427113120.png)
+
 Enter `main` for the source code branch. After confirming it is correct, click **[Save Dual-Track Configuration]** again.
 
 **3. Obtain and Configure Deployment Key**
 Click the **[Get Line B Exclusive Key]** button in the console:
 
 Go to your GitHub repository page and navigate to the `Settings` -> `Deploy keys` interface:
-![Deploy Keys](picture/Pasted image 20260427113705.png)
+
+![Deploy Keys](picture/Pasted%20image%2020260427113705.png)
+
 Paste the copied key into the `Key` box. The `Title` can be anything (e.g., `XHBlogs-Deploy-Key`).
 
 > **🚨 Critical Warning**: The **Allow write access** option below MUST be checked!
@@ -137,9 +148,13 @@ Paste the copied key into the `Key` box. The `Title` can be anything (e.g., `XHB
 **4. Initialize and Push Source Code**
 Return to the local console, click **[Smart Initialize Dual-Track Environment]**, and wait for the program to finish executing.
 Once completed, click the **[Sync Source Code Only]** button:
-![仅同步源码](picture/Pasted image 20260427121539.png)
+
+![仅同步源码](picture/Pasted%20image%2020260427121539.png)
+
 The program will begin pushing code to GitHub. **During this time, please do not switch pages or close the window:**
-![同步进度](picture/Pasted image 20260427121702.png)
+
+![同步进度](picture/Pasted%20image%2020260427121702.png)
+
 Once the progress bar is complete, the frontend static page source code has been successfully hosted on GitHub.
 
 > **A push failure bug may occur here**:
@@ -149,21 +164,36 @@ Once the progress bar is complete, the frontend static page source code has been
 
 **5. Deploy to the Vercel Platform**
 Visit the Vercel website, register an account, and bind your GitHub authorization.
-![绑定账号](picture/Pasted image 20260427121844.png)
+
+![绑定账号](picture/Pasted%20image%2020260427121844.png)
+
 Click `Add New...` to add a new Project, and select the repository you just pushed to GitHub from the Import list:
-![导入项目](picture/Pasted image 20260427121939.png)
+
+![导入项目](picture/Pasted%20image%2020260427121939.png)
+
 For example, I selected `XHBlogS2`:
-![选择项目](picture/Pasted image 20260427122034.png)
+
+![选择项目](picture/Pasted%20image%2020260427122034.png)
+
 Select **Next.js** in Framework Preset, then click the **Deploy** button to start deployment:
-![点击Deploy](picture/Pasted image 20260427122141.png)
+
+![点击Deploy](picture/Pasted%20image%2020260427122141.png)
+
 Wait for the Vercel server to build your blog.
-![部署中](picture/Pasted image 20260427122245.png)
+
+![部署中](picture/Pasted%20image%2020260427122245.png)
+
 Deployment successful! Click the preview image to visit your website directly.
-![部署成功](picture/Pasted image 20260427122338.png)
+
+![部署成功](picture/Pasted%20image%2020260427122338.png)
+
 In the project Dashboard, you can check the deployment status and detailed logs at any time:
-![查看详情](picture/Pasted image 20260427122453.png)
+
+![查看详情](picture/Pasted%20image%2020260427122453.png)
+
 Vercel will assign you a free subdomain by default:
-![分配域名](picture/Pasted image 20260427122553.png)
+
+![分配域名](picture/Pasted%20image%2020260427122553.png)
 
 ---
 
@@ -172,21 +202,31 @@ Vercel will assign you a free subdomain by default:
 **Answer:** Here is an example using a domain purchased from "Alibaba Cloud" (the operation logic for other providers like Tencent Cloud, Cloudflare, etc., is similar).
 
 First, log in to the Alibaba Cloud console and enter the [Domain Name Management] page:
-![域名管理](picture/Pasted image 20260427123636.png)
+
+![域名管理](picture/Pasted%20image%2020260427123636.png)
+
 Click the [DNS Resolution] button on the right side of the corresponding domain:
-![点击解析](picture/Pasted image 20260427123737.png)
+
+![点击解析](picture/Pasted%20image%2020260427123737.png)
+
 Then return to Vercel, enter your project dashboard, and click **Settings** (or directly click the plus sign next to the domain name):
-![点击加号](picture/Pasted image 20260427123156.png)
-![进入设置](picture/Pasted image 20260427123838.png)
+
+![点击加号](picture/Pasted%20image%2020260427123156.png)
+
+![进入设置](picture/Pasted%20image%2020260427123838.png)
+
 In the Domains tab, enter the domain you purchased (for example, mine is `xinghuisama.top`), and click **Add** to save:
 
 After adding it, Vercel will provide the configuration parameters for the `A` record and `CNAME` record. Please add these parameters completely to your Alibaba Cloud DNS resolution settings:
-![添加记录](picture/Pasted image 20260427124533.png)
+
+![添加记录](picture/Pasted%20image%2020260427124533.png)
 
 > **Note**: When adding records, be sure to carefully check the record type and Value!
 
 After configuration is complete, wait a few minutes (DNS propagation takes time), and click **Refresh** on the Vercel page to update the status.
-![Refresh](picture/Pasted image 20260427124625.png)
+
+![Refresh](picture/Pasted%20image%2020260427124625.png)
+
 Once the status shows as normal, you can access the blog via your custom domain name! (For example: `www.xinghuisama.top`).
 
 ---
@@ -196,15 +236,21 @@ Once the status shows as normal, you can access the blog via your custom domain 
 To protect data safety, this console uses an **"Operation Staging Area"** mechanism. **Please pay special attention!** Many settings must be actively "Updated to Local" after modification to be truly saved. When this operation is required, there is usually a highlighted prompt at the top of the interface.
 
 **Operation Example: Modifying Personal Profile**
-![修改简介](picture/Pasted image 20260427125314.png)
+
+![修改简介](picture/Pasted%20image%2020260427125314.png)
+
 After modifying the content, click **[Stage to Operation Queue]**:
-![暂存队列](picture/Pasted image 20260427125430.png)
+
+![暂存队列](picture/Pasted%20image%2020260427125430.png)
+
 At this point, the top toolbox will prompt pending operations. You can undo at any time (clear all), or click **[Update Local]**.
 
 > ⚠️ Note: After clicking "Update Local," the data is only saved in your local console environment.
 
 If you want these modifications to take effect on the frontend blog page, you must continue by clicking **[Sync Blog]** (assuming the physical path of the frontend blog is configured correctly):
-![同步Blog](picture/Pasted image 20260427125800.png)
+
+![同步Blog](picture/Pasted%20image%2020260427125800.png)
+
 The publishing and modification of all content, such as blog posts, moments, and talks, follow this process.
 
 > **💡 Golden Rule**: Staging Queue -> Update Local -> Sync Blog
@@ -216,7 +262,9 @@ The publishing and modification of all content, such as blog posts, moments, and
 When you have completed satisfactory creations or settings adjustments locally and want to publish them to the public network for everyone to see:
 
 Please remember, after making any substantial modifications and clicking **[Sync Blog]**, open the synchronous deployment page in the console:
-![打开同步](picture/Pasted image 20260427130216.png)
+
+![打开同步](picture/Pasted%20image%2020260427130216.png)
+
 Confirm that the "Line B" address is correct, and click **[Sync Source Code Only]**.
 Wait for GitHub Actions or Vercel to automatically capture the update. In a short time, you will see the latest content on the live page.
 
@@ -228,7 +276,9 @@ To optimize the writing experience, the console integrates image hosting upload 
 If you prefer using direct external links, the console also supports direct insertion of image URLs. If you want to connect other image hosting services that support standard APIs, you can attempt to do so.
 
 **Configuration Process:**
-![图床配置](picture/Pasted image 20260427124930.png)
+
+![图床配置](picture/Pasted%20image%2020260427124930.png)
+
 After filling in the corresponding API Token and other information, you can click **[Send Probe to Test Token]** to verify in real-time whether the image hosting interface is functional.
 
 ---
@@ -238,21 +288,32 @@ After filling in the corresponding API Token and other information, you can clic
 The blog system has a built-in AI Cat Assistant (connected to the Gemini model by default). Users can also modify the source code to connect other large language models.
 
 First, you need to apply for a Gemini API Key. After obtaining the API Key, configure it in the console as follows:
-![猫猫设置](picture/Pasted image 20260427134211.png)
+
+![猫猫设置](picture/Pasted%20image%2020260427134211.png)
+
 After setting the exclusive system prompt (personality) for the cat locally, we need to give the online environment the ability to call the AI. Please log in to Vercel:
-![Vercel环境](picture/Pasted image 20260427134538.png)
+
+![Vercel环境](picture/Pasted%20image%2020260427134538.png)
+
 Find `Environment Variables` in the project settings:
-![搜索变量](picture/Pasted image 20260427134633.png)
+
+![搜索变量](picture/Pasted%20image%2020260427134633.png)
+
 Enter your blog project details:
-![项目工程](picture/Pasted image 20260427134703.png)
+
+![项目工程](picture/Pasted%20image%2020260427134703.png)
+
 Ensure the scope (environment) includes the online environment, and click **Add Environment Variables**:
-![添加变量](picture/Pasted image 20260427135004.png)
+
+![添加变量](picture/Pasted%20image%2020260427135004.png)
+
 Input your key:
 
 * **Key** input: `GEMINI_API_KEY`
 * **Value** input: Your actual API key
 
-![输入API](picture/Pasted image 20260427135044.png)
+![输入API](picture/Pasted%20image%2020260427135044.png)
+
 Click save. The next time you redeploy, the Cat Assistant will be active online.
 
 ---
@@ -292,12 +353,16 @@ Accurately enter this `Client ID` and `Client Secret` into the corresponding fie
 
 ## VII. NetEase Cloud Music Widget Settings
 
-![歌单设置](picture/Pasted image 20260427141049.png)
+![歌单设置](picture/Pasted%20image%2020260427141049.png)
+
 Want to add BGM to your blog?
 Open the **NetEase Cloud Music Web Version** via your computer browser. Search for and enter the detail page of a song you like. Observe the browser's address bar; the number in the URL is the song's specific ID:
-![网易云ID](picture/Pasted image 20260427141235.png)
+
+![网易云ID](picture/Pasted%20image%2020260427141235.png)
+
 Copy and paste this ID into the search box in the console to add the song to your blog's playlist library!
-![添加歌曲](picture/Pasted image 20260427141356.png)
+
+![添加歌曲](picture/Pasted%20image%2020260427141356.png)
 
 ---
 
