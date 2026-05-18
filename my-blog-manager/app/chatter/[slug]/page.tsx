@@ -42,7 +42,7 @@ async function getChatterData(slug: string) {
   let { data, content } = matter(fileContents);
 
   // ==========================================
-  // 🌟 前台渲染清洗区：终极防吞换行 + 安全保护补丁！（从 Post 完美移植）
+  // 🌟 前台渲染清洗区：终极防吞换行 + 安全保护补丁！
   // ==========================================
 
   // 1. 基础物理清洗：统一换行符，干掉幽灵占位符和纯空格废行
@@ -212,8 +212,36 @@ export default async function ChatterDetail({ params }: { params: Promise<{ slug
                   
                   /* 🌟 删除线强制展现 */
                   .prose s, .prose del { text-decoration-line: line-through !important; opacity: 0.6; }
+
+                  /* 🌟 引用块专属果冻极客风样式补丁 */
+                  .prose blockquote {
+                    border-left: 4px solid #6366f1 !important;
+                    background-color: rgba(99, 102, 241, 0.05) !important;
+                    padding: 1rem 1.5rem !important;
+                    margin: 1.5rem 0 !important;
+                    border-radius: 0 1.25rem 1.25rem 0 !important;
+                    font-style: italic !important;
+                    color: #64748b !important;
+                    quotes: none !important; /* 强制移除 Tailwind 原生的丑陋大引号 */
+                  }
+                  .prose blockquote p {
+                    margin: 0 !important; 
+                    color: inherit !important;
+                  }
+                  /* 🌟 彻底杀掉 Tailwind Typography 生成的前后伪元素引号！ */
+                  .prose blockquote p::before,
+                  .prose blockquote p::after {
+                    display: none !important;
+                    content: none !important;
+                  }
                   
-                  /* 🌟 果冻极客风代码字体：更圆滑、更饱满！大圆角拉满！ */
+                  .dark .prose blockquote {
+                    border-left-color: #818cf8 !important;
+                    background-color: rgba(129, 140, 248, 0.1) !important;
+                    color: #94a3b8 !important;
+                  }
+                  
+                  /* 🌟 果冻极客风代码字体 */
                   .prose pre {
                     background-color: #282c34 !important; color: #abb2bf !important;
                     padding: 1rem !important; border-radius: 1.25rem !important;

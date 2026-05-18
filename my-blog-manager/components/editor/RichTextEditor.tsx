@@ -201,6 +201,26 @@ const RichTextEditor = forwardRef<RichTextEditorHandle, EditorProps>(({ title, s
         
         .editor-content-area s, .editor-content-area del { text-decoration-line: line-through !important; opacity: 0.6; }
 
+        /* 🌟 引用块专属果冻极客风样式 */
+        .editor-content-area blockquote {
+          border-left: 4px solid #6366f1 !important;
+          background-color: rgba(99, 102, 241, 0.05) !important;
+          padding: 1rem 1.5rem !important;
+          margin: 1.5rem 0 !important;
+          border-radius: 0 1.25rem 1.25rem 0 !important;
+          font-style: italic !important;
+          color: #64748b !important;
+        }
+        .editor-content-area blockquote p {
+          margin: 0 !important; 
+          color: inherit !important;
+        }
+        .dark .editor-content-area blockquote {
+          border-left-color: #818cf8 !important;
+          background-color: rgba(129, 140, 248, 0.1) !important;
+          color: #94a3b8 !important;
+        }
+
         /* 🌟 【修复 2】：果冻极客风代码字体！更圆滑、更饱满！ */
         .editor-content-area pre code, .editor-content-area p code {
           font-family: ui-rounded, 'Quicksand', 'Nunito', 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Source Code Pro', Menlo, Monaco, Consolas, monospace !important;

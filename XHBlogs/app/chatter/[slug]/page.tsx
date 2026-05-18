@@ -204,6 +204,26 @@ export default async function ChatterDetail({ params }: { params: Promise<{ slug
                   .prose ol ol, .prose ul ol { list-style-type: lower-alpha !important; margin-top: 0.25rem !important; margin-bottom: 0.25rem !important; }
                   
                   .prose del { text-decoration-color: inherit !important; opacity: 0.6; }
+
+                  /* 🌟 引用块专属果冻极客风样式补丁 */
+                  .prose blockquote {
+                    border-left: 4px solid #6366f1 !important;
+                    background-color: rgba(99, 102, 241, 0.05) !important;
+                    padding: 1rem 1.5rem !important;
+                    margin: 1.5rem 0 !important;
+                    border-radius: 0 1.25rem 1.25rem 0 !important;
+                    font-style: italic !important;
+                    color: #64748b !important;
+                  }
+                  .prose blockquote p {
+                    margin: 0 !important; 
+                    color: inherit !important;
+                  }
+                  .dark .prose blockquote {
+                    border-left-color: #818cf8 !important;
+                    background-color: rgba(129, 140, 248, 0.1) !important;
+                    color: #94a3b8 !important;
+                  }
                   
                   .prose pre {
                     background-color: #282c34 !important; color: #abb2bf !important;
