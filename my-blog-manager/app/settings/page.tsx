@@ -39,6 +39,7 @@ function SettingsContent() {
       owner: '',
       admin: []
     },
+    newMusicId: '',
     danmakuList: [...(siteConfig.danmakuList || [])],
     buildDate: siteConfig.buildDate || "2026-03-23T00:00:00",
     icpConfig: siteConfig.icpConfig || { name: "", link: "" },
