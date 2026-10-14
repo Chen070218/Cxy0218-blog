@@ -16,7 +16,7 @@ import LyricBar from '../components/LyricBar';
 import { ToastProvider } from '../components/ToastProvider';
 
 import LatestPostsCarousel from '../components/LatestPostsCarousel';
-import LatestChatterCarousel from '../components/LatestChatterCarousel';
+
 import DanmakuBackground from '../components/DanmakuBackground';
 
 function formatUpdateTime(dateString: string) {
@@ -63,28 +63,8 @@ export default function Home() {
   } catch (e) {}
   const top5Posts = allPosts.length > 0 ? allPosts.slice(0, 5) : [{ slug: 'none', title: '暂无文章', description: '快去写第一篇吧！', cover: siteConfig.defaultPostCover, date: '', formattedDate: '' }];
 
-  const chattersDirectory = path.join(process.cwd(), 'chatters');
-  let allChatters: any[] = [];
-  try {
-    if (fs.existsSync(chattersDirectory)) {
-      const chatterFiles = fs.readdirSync(chattersDirectory).filter(f => f.endsWith('.md'));
-      allChatters = chatterFiles.map(fileName => {
-        const fullPath = path.join(chattersDirectory, fileName);
-        const { data, content } = matter(fs.readFileSync(fullPath, 'utf8'));
-        const rawDate = data.date || '1970-01-01';
-        const cover = data.cover || 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000&auto=format&fit=crop';
-        return { slug: fileName.replace(/\.md$/, ''), title: data.title || '碎片记录', description: data.description || content.substring(0, 60), cover: cover, date: rawDate, formattedDate: formatUpdateTime(rawDate) };
-      }).sort((a, b) => {
-        const dateA = new Date(a.date).getTime();
-        const dateB = new Date(b.date).getTime();
-        if (dateB !== dateA) return dateB - dateA;
-        return b.slug.localeCompare(a.slug);
-      });
-    }
-  } catch (e) {}
-  const top5Chatters = allChatters.length > 0 ? allChatters.slice(0, 5) : [{ slug: 'none', title: '暂无记录', description: '记录一段思绪...', cover: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000&auto=format&fit=crop', date: '', formattedDate: '' }];
-
-  const chatterCount = allChatters.length;
+  const momentsDirectory = path.join(process.cwd(), 'moments');
+  const momentCount = fs.existsSync(momentsDirectory) ? fs.readdirSync(momentsDirectory).filter(f => f.endsWith('.md')).length : 0;
   const realPhotoCount = albums.reduce((total, album) => total + album.photos.length, 0);
   const latestAlbum = albums.length > 0 ? albums[0] : { id: '', title: '照片墙', description: '查看摄影', cover: siteConfig.photoWallImage, date: '' };
 
@@ -103,7 +83,7 @@ export default function Home() {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full">
                 {/* 手机上占满1列，电脑上占7列 */}
                 <div className="col-span-1 lg:col-span-7 flex flex-col">
-                    <ProfileCard postCount={allPosts.length} chatterCount={chatterCount} photoCount={realPhotoCount}/>
+                    <ProfileCard postCount={allPosts.length} momentCount={momentCount} photoCount={realPhotoCount}/>
                 </div>
                 {/* 手机上占满1列，电脑上占5列 */}
                 <div className="col-span-1 lg:col-span-5 flex flex-col">
@@ -139,7 +119,11 @@ export default function Home() {
                   {/* 手机上单列，平板上分3列比例分布 */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full flex-1">
                     <div className="sm:col-span-2 flex flex-col min-h-[200px]">
-                      <LatestChatterCarousel chatters={top5Chatters} />
+                      <Link href="/resources" className="relative overflow-hidden flex flex-col justify-end flex-1 min-h-[200px] rounded-3xl border border-white/40 shadow-xl p-6 text-white group">
+                        <img src="/covers/notes.jpg" alt="" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 to-slate-900/15" />
+                        <div className="relative"><p className="text-xs tracking-widest mb-2">LEARNING LIBRARY</p><h3 className="text-2xl font-bold">学习资料 ↗</h3><p className="text-sm mt-2 text-white/85">收藏课程讲义、学习网站与实用教程</p></div>
+                      </Link>
                     </div>
                     <div className="sm:col-span-1 flex flex-col min-h-[120px]">
                       <ThemeToggleBlock />

@@ -3,9 +3,15 @@
 import { useState, useMemo, useEffect } from 'react';
 import Navbar from '../../components/Navbar';
 import PageTransition from '../../components/PageTransition';
-import { albums, Album } from '../../data/albums';
+import { albums as initialAlbums, Album } from '../../data/albums';
+
+import ContentComposer, { readContent } from '../../components/ContentComposer';
 
 export default function PhotoWallClient() {
+  const [albums,setAlbums]=useState(initialAlbums);
+  const [loadNotice,setLoadNotice]=useState('');
+  async function refreshAlbums(){try{const saved=await readContent<Album>('albums'); const merged=[...saved,...initialAlbums.filter(a=>!saved.some(b=>b.id===a.id))];setAlbums(merged);setCurrentAlbum(current=>current?merged.find(a=>a.id===current.id)||null:null);}catch{setLoadNotice('无法读取本地相册，请检查浏览器设置。');}}
+  useEffect(()=>{refreshAlbums();},[]);
   const [currentAlbum, setCurrentAlbum] = useState<Album | null>(null);
   const [selectedImage, setSelectedImage] = useState<{url: string, caption?: string} | null>(null);
 
@@ -37,7 +43,7 @@ export default function PhotoWallClient() {
     ).filter(photo => photo.caption?.toLowerCase().includes(activeQuery));
 
     return { matchedAlbums, matchedPhotos };
-  }, [activeQuery]);
+  }, [activeQuery, albums]);
 
   return (
     <div className="min-h-screen relative pb-32">
@@ -46,6 +52,7 @@ export default function PhotoWallClient() {
       <PageTransition>
         <div className="w-full max-w-7xl mx-auto mt-28 px-4 sm:px-10 relative z-10">
 
+          <ContentComposer kind="photos" albums={albums} onSaved={refreshAlbums}/><p role="status">{loadNotice}</p>
           {!currentAlbum && (
             <div className="animate-fade-in-up">
               <div className="flex flex-col md:flex-row justify-between items-center mb-16 gap-6">

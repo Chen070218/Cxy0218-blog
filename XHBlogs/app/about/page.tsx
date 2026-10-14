@@ -92,10 +92,9 @@ export default async function AboutPage() {
   }
 
   const posts = getDirActivities('posts', '文章', 'posts');
-  const chatters = getDirActivities('chatters', '杂谈', 'chatter');
   const moments = getDirActivities('moments', '说说', 'moments');
 
-  const allActivities = [...posts, ...chatters, ...moments].sort((a, b) => {
+  const allActivities = [...posts, ...moments].sort((a, b) => {
     return new Date(b.date).getTime() - new Date(a.date).getTime();
   });
 

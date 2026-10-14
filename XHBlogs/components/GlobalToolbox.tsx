@@ -32,7 +32,7 @@ export default function GlobalToolbox() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
             transition={{ duration: 0.3, type: "spring", stiffness: 300, damping: 25 }}
-            className="mb-2 bg-white/70 dark:bg-slate-800/80 backdrop-blur-2xl border border-white/50 dark:border-white/10 shadow-2xl rounded-3xl p-4 w-64 flex flex-col gap-4 overflow-hidden"
+            className="mb-2 bg-white/70 dark:bg-slate-800/80 backdrop-blur-2xl border border-white/50 dark:border-white/10 shadow-2xl rounded-3xl p-5 w-80 max-w-[calc(100vw-48px)] max-h-[calc(100dvh-110px)] overflow-y-auto flex flex-col gap-4 overflow-hidden"
           >
             {/* 动态渲染：工具箱导航栏 */}
             <div className="flex flex-wrap gap-2 border-b border-slate-300/50 dark:border-slate-700/50 pb-3">
@@ -71,15 +71,13 @@ export default function GlobalToolbox() {
       </AnimatePresence>
 
       {/* 悬浮主开关按钮 */}
-      <button
+      <button aria-label={isOpen ? "收起计算器" : "打开计算器"} aria-expanded={isOpen}
         onClick={() => { setIsOpen(!isOpen); if (!isOpen && !activeToolId) setActiveToolId(TOOL_REGISTRY[0].id); }}
-        className={`w-12 h-12 rounded-full flex items-center justify-center shadow-xl backdrop-blur-xl border border-white/40 dark:border-white/10 transition-all duration-500 hover:scale-110 active:scale-95 z-50
-          ${isOpen ? 'bg-indigo-500 text-white rotate-45' : 'bg-white/70 dark:bg-slate-800/80 text-slate-700 dark:text-white'}
+        className={`px-4 h-12 gap-2 rounded-full flex items-center justify-center shadow-xl backdrop-blur-xl border border-white/40 dark:border-white/10 transition-all duration-500 hover:scale-110 active:scale-95 z-50
+          ${isOpen ? 'bg-indigo-500 text-white' : 'bg-white/70 dark:bg-slate-800/80 text-slate-700 dark:text-white'}
         `}
       >
-        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isOpen ? "M12 4v16m8-8H4" : "M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"} />
-        </svg>
+        <span aria-hidden="true">{isOpen ? '✕' : '🧮'}</span><span>{isOpen ? '收起' : '计算器'}</span>
       </button>
 
     </div>

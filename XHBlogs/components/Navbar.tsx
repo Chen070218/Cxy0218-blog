@@ -70,19 +70,18 @@ export default function Navbar() {
 
   const navLinks = [
     { name: '首页', href: '/' },
+    { name: '课程', href: '/courses' },
     { name: '项目', href: '/projects' },
     { name: '归档', href: '/timeline' },
     { name: '照片墙', href: '/photowall' },
     { name: '音乐', href: '/music' },
-    { name: '灵境', href: '/tree' },
     { name: '说说', href: '/moments' },
-    { name: '杂谈', href: '/chatter' },
-    { name: '友链', href: '/friends' },
+    { name: '学习资料', href: '/resources' },
     { name: '关于', href: '/about' },
   ];
 
-  // 🌟 核心：过滤掉“灵境”，专供手机端使用，保证圆盘自动重新均匀排布
-  const mobileNavLinks = navLinks.filter(link => link.href !== '/tree');
+  // 桌面和手机使用相同的栏目。
+  const mobileNavLinks = navLinks;
 
   return (
     <>
@@ -94,7 +93,7 @@ export default function Navbar() {
             <span className="text-indigo-500 mx-1">{siteConfig.navSuffix || 'の'}</span>
             {siteConfig.navAfter || '宝藏之地'}
           </Link>
-          <nav className="flex gap-8 text-sm font-bold">
+          <nav className="flex gap-3 lg:gap-5 text-xs lg:text-sm font-bold">
             {/* PC端依然使用全量的 navLinks */}
             {navLinks.map((link) => {
               const isActive = pathname === link.href || pathname === `${link.href}/`;

@@ -1,13 +1,18 @@
 "use client";
 
 import { useState, useMemo, useRef, useEffect } from 'react';
+import ContentComposer, { readContent, LocalPost } from './ContentComposer';
 import TimelineNode from './TimelineNode';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, Sparkles, LayoutGrid, ListTree, Calendar, Hash, ArrowUp } from 'lucide-react';
 import Link from 'next/link';
 
-export default function TimelineClient({ posts: initialPosts, tags }: { posts: any[], tags: { name: string, count: number }[] }) {
+export default function TimelineClient({ posts: initialPosts, tags: initialTags }: { posts: any[], tags: { name: string, count: number }[] }) {
   const [posts, setPosts] = useState(initialPosts);
+  const [loadNotice,setLoadNotice]=useState('');
+  async function refreshPosts(){try{const saved=await readContent<LocalPost>('posts');setPosts([...saved,...initialPosts].sort((a,b)=>new Date(b.date).getTime()-new Date(a.date).getTime()));}catch{setLoadNotice('无法读取本地归档，请检查浏览器设置。');}}
+  useEffect(()=>{refreshPosts();},[initialPosts]);
+  const tags=useMemo(()=>{const counts:Record<string,number>={};posts.forEach(p=>(p.tags||[]).forEach((t:string)=>{counts[t]=(counts[t]||0)+1;}));return Object.entries(counts).map(([name,count])=>({name,count})).sort((a,b)=>b.count-a.count);},[posts]);
   const [selectedTag, setSelectedTag] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -85,6 +90,7 @@ export default function TimelineClient({ posts: initialPosts, tags }: { posts: a
         </p>
       </div>
 
+      <ContentComposer kind="posts" onSaved={()=>{setSelectedTag('All');setSearchQuery('');refreshPosts();}}/><p role="status">{loadNotice}</p>
       <div className="flex flex-col items-center gap-8 mb-16 relative z-[99]">
 
         <div className="relative w-full max-w-lg group" ref={searchContainerRef}>
@@ -114,7 +120,7 @@ export default function TimelineClient({ posts: initialPosts, tags }: { posts: a
                   <div className="flex flex-col py-2">
                     {searchResults.map((post) => (
                       <Link
-                        href={`/posts/${post.slug}`}
+                        href={post.href || `/posts/${post.slug}`}
                         key={post.slug}
                         onClick={() => setIsDropdownOpen(false)}
                         className="px-6 py-4 hover:bg-indigo-50 dark:hover:bg-indigo-500/10 transition-colors group border-b border-slate-100/50 dark:border-slate-800/50 last:border-0 flex flex-col gap-1.5"
@@ -200,7 +206,7 @@ export default function TimelineClient({ posts: initialPosts, tags }: { posts: a
                   <motion.div key={post.slug} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.3, delay: idx * 0.05 }}>
                     <div className="bg-white/60 dark:bg-slate-800/70 backdrop-blur-xl border border-white/50 dark:border-slate-700/50 rounded-2xl md:rounded-3xl overflow-hidden shadow-lg flex flex-col h-full group relative hover:-translate-y-1 transition-transform duration-300">
 
-                      <Link href={`/posts/${post.slug}`} className="block flex-1 flex flex-col cursor-pointer">
+                      <Link href={post.href || `/posts/${post.slug}`} className="block flex-1 flex flex-col cursor-pointer">
                         {/* 🌟 图片高度自适应：手机变矮，电脑变高 */}
                         <div className="relative h-28 sm:h-36 md:h-40 overflow-hidden">
                           <img src={post.cover} alt={post.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />

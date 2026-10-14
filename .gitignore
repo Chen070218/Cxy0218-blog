@@ -1,0 +1,16 @@
+# ===== 依赖与运行环境（可重新生成 / 体积过大，不入库）=====
+node/
+npm-cache/
+node_modules/
+.next/
+out/
+build/
+*.tsbuildinfo
+
+# ===== 本地临时文件 =====
+*.bak
+*.log
+npm-debug.log*
+.Temp/
+.DS_Store
+Thumbs.db
