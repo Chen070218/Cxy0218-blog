@@ -2,6 +2,19 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import MoonFox from './MoonFox';
+
+type ChatMessage = { role: 'user' | 'assistant'; content: string };
+type Provider = 'deepseek' | 'gemini';
+
+// 桌宠的 AI 后端：默认 DeepSeek，可在气泡面板里切换
+const PROVIDERS: { id: Provider; label: string }[] = [
+  { id: 'deepseek', label: 'DeepSeek' },
+  { id: 'gemini', label: 'Gemini' },
+];
+
+// 快捷提问：点一下就发，不用自己打字
+const QUICK_ASKS = ['今晚该做什么？', '夸夸我', '讲个关于月亮的故事', '帮我打打气'];
 
 export default function CyberCat() {
   const [isPetted, setIsPetted] = useState(false);
@@ -9,6 +22,9 @@ export default function CyberCat() {
   const [showInput, setShowInput] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [isThinking, setIsThinking] = useState(false);
+  const [history, setHistory] = useState<ChatMessage[]>([]);
+  const [provider, setProvider] = useState<Provider>('deepseek');
+  const [modelTag, setModelTag] = useState<string | null>(null);
 
   const chatTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -25,76 +41,82 @@ export default function CyberCat() {
   const handlePetCat = () => {
     if (isPetted) return;
     setIsPetted(true);
-    speak("呼噜噜... 摸得本喵很舒服喵~", 2000);
+    speak('唔……准你摸一小会儿。', 2200);
     setTimeout(() => {
       setIsPetted(false);
     }, 2000);
+  };
+
+  // --- 🔌 统一的对话入口：聊天、喂食、快捷提问都走这里 ---
+  const sendMessage = async (message: string, thinkingText = '月色流转，且等本座一算～') => {
+    const text = message.trim();
+    if (!text || isThinking) return;
+
+    setIsThinking(true);
+    speak(thinkingText, 12000);
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        // history 带上前面几轮，心月狐才记得住刚才聊了什么
+        body: JSON.stringify({ message: text, history, provider }),
+      });
+
+      const data: any = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        const detail = data?.error ? `唔……${data.error}` : '唔……本座的星辉被打断了';
+        speak(detail, 7000);
+        return;
+      }
+
+      const reply: string = data?.reply || '哼，本座今日不想说话。';
+      speak(reply, Math.min(15000, 4000 + reply.length * 150));
+      setModelTag(data?.model ? `${data.provider} · ${data.model}` : null);
+      setHistory((prev) => [...prev, { role: 'user', content: text }, { role: 'assistant', content: reply }].slice(-8));
+    } catch (error) {
+      speak('星轨断了……你的网络出问题了吧？', 4200);
+    } finally {
+      setIsThinking(false);
+    }
   };
 
   // --- 🐟 交互事件：喂小鱼干 ---
   const handleFeed = async (e: React.MouseEvent) => {
     e.stopPropagation(); // 阻止触发摸猫或拖拽
     if (isThinking) return;
-
     setShowInput(false); // 喂食时关掉输入框
-    setIsThinking(true);
-    speak("嗷呜！真好吃喵！本喵吃饱了要说两句...", 6000);
-
-    try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: "我刚刚喂了你一条美味的小鱼干！你有什么表示？" }),
-      });
-
-      if (!res.ok) throw new Error('API Error');
-
-      const data = await res.json();
-      speak(data.reply, 8000);
-    } catch (error) {
-      speak("吧唧吧唧... 鱼干好吃，但本喵卡壳了喵...", 4000);
-    } finally {
-      setIsThinking(false);
-    }
+    await sendMessage('我给心月狐呈上一条小鱼干，请发表感想。', '小鱼干……本座就勉为其难地收下了。');
   };
 
   // --- 💬 交互事件：发送聊天 ---
   const handleChatSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inputValue.trim() || isThinking) return;
-
-    const userMessage = inputValue;
+    const userMessage = inputValue.trim();
+    if (!userMessage || isThinking) return;
     setInputValue('');
     setShowInput(false);
-    setIsThinking(true);
-    speak("让本喵想想喵...", 10000);
+    await sendMessage(userMessage);
+  };
 
-    try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMessage }),
-      });
-
-      if (!res.ok) throw new Error('API Error');
-
-      const data = await res.json();
-      speak(data.reply, 8000);
-    } catch (error) {
-      speak("铲屎官的网线被老鼠咬断了吧？喵！", 4000);
-    } finally {
-      setIsThinking(false);
-    }
+  // --- ⚡ 交互事件：快捷提问 ---
+  const handleQuickAsk = async (question: string) => {
+    if (isThinking) return;
+    setShowInput(false);
+    setInputValue('');
+    await sendMessage(question);
   };
 
   // --- ⏳ 随机挂机语录 ---
   useEffect(() => {
     const randomBarks = [
-      "喵呜~ 今天天气真不错喵~",
-      "好困哦，想睡觉喵...",
-      "铲屎官，快去敲代码！",
-      "我的小鱼干藏哪里去了？",
-      "怎么没人理本喵...",
+      "今夜月色不错，不做点什么吗？",
+      "困了就去睡，本座守着。",
+      "代码写完了吗，人类。",
+      "小鱼干，本座要小鱼干。",
+      "……别走神，看着本座。",
+      "星辉有点暗，许个愿吧。",
     ];
     const randomTalkInterval = setInterval(() => {
       if (!speech && !showInput && !isThinking && Math.random() > 0.8) {
@@ -105,7 +127,6 @@ export default function CyberCat() {
 
     return () => clearInterval(randomTalkInterval);
   }, [speech, showInput, isThinking]);
-
 
   return (
     <motion.div
@@ -127,13 +148,16 @@ export default function CyberCat() {
               style={{ pointerEvents: 'none', transformOrigin: 'bottom center' }}
             >
               {speech}
+              {modelTag && (
+                <span className="block mt-1 text-[10px] text-slate-400 dark:text-slate-500">{modelTag}</span>
+              )}
               <div className="absolute -bottom-[6px] left-1/2 -translate-x-1/2 w-3 h-3 bg-white dark:bg-slate-800 border-b border-r border-gray-100 dark:border-slate-700 transform rotate-45"></div>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
 
-      {/* 🐈 猫咪本体 & 交互按钮区 */}
+      {/* 🦊 心月狐本体 & 交互按钮区 */}
       <div className="relative">
 
         {/* 🌟 核心修改区：去掉了 opacity-0 和 group-hover，让按钮常驻显示 */}
@@ -165,43 +189,12 @@ export default function CyberCat() {
             </button>
         </div>
 
-        {/* 猫咪图片容器 */}
+        {/* 心月狐本体 */}
         <div
           className="w-[120px] h-[120px] relative cursor-pointer"
           onClick={handlePetCat}
         >
-          <style>{`
-            .cat-sprite {
-              width: 100%;
-              height: 100%;
-              background-image: url('/siamese-cat.png'); 
-              background-size: 300% 300%; 
-              background-repeat: no-repeat;
-              image-rendering: pixelated; 
-            }
-            .cat-idle {
-              animation: idle-frames 1.2s infinite;
-              background-position-y: 0%; 
-            }
-            .cat-petted {
-              animation: pet-frames 0.8s infinite;
-              background-position-y: 50%; 
-            }
-            .cat-thinking {
-              animation: idle-frames 0.6s infinite;
-              background-position-y: 0%; 
-            }
-            @keyframes idle-frames {
-              0%, 33.32% { background-position-x: 0%; }
-              33.33%, 66.65% { background-position-x: 50%; }
-              66.66%, 100% { background-position-x: 100%; }
-            }
-            @keyframes pet-frames {
-              0%, 49.99% { background-position-x: 0%; }
-              50%, 100% { background-position-x: 50%; }
-            }
-          `}</style>
-          <div className={`cat-sprite drop-shadow-2xl ${isPetted ? 'cat-petted' : isThinking ? 'cat-thinking' : 'cat-idle'}`} />
+          <MoonFox state={isPetted ? 'petted' : isThinking ? 'thinking' : 'idle'} />
         </div>
       </div>
 
@@ -213,28 +206,83 @@ export default function CyberCat() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.9 }}
             onSubmit={handleChatSubmit}
-            className="absolute -bottom-14 bg-white dark:bg-slate-800 p-1.5 rounded-full shadow-lg flex items-center border border-gray-200 dark:border-slate-700 w-56 z-20"
+            className="absolute -bottom-32 bg-white dark:bg-slate-800 p-2 rounded-2xl shadow-lg border border-gray-200 dark:border-slate-700 w-64 z-20"
+            onClick={(e) => e.stopPropagation()}
           >
-            <input
-              type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              placeholder="跟煤球说点啥喵..."
-              className="bg-transparent border-none outline-none text-sm px-3 py-1 w-full dark:text-white placeholder-gray-400"
-              disabled={isThinking}
-              autoFocus
-            />
-            <button
-              type="submit"
-              disabled={isThinking || !inputValue.trim()}
-              className={`rounded-full p-1.5 ml-1 flex items-center justify-center transition-colors ${
-                isThinking || !inputValue.trim() ? 'bg-gray-300 text-gray-500' : 'bg-blue-500 hover:bg-blue-600 text-white'
-              }`}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-                <path d="M3.105 2.289a.75.75 0 00-.826.95l1.414 4.925A1.5 1.5 0 005.135 9.25h6.115a.75.75 0 010 1.5H5.135a1.5 1.5 0 00-1.442 1.086l-1.414 4.926a.75.75 0 00.826.95 28.896 28.896 0 0015.293-7.154.75.75 0 000-1.115A28.897 28.897 0 003.105 2.289z" />
-              </svg>
-            </button>
+            <div className="flex items-center">
+              <input
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                placeholder="对心月狐说点什么…"
+                className="bg-transparent border-none outline-none text-sm px-3 py-1 w-full dark:text-white placeholder-gray-400"
+                disabled={isThinking}
+                autoFocus
+              />
+              <button
+                type="submit"
+                disabled={isThinking || !inputValue.trim()}
+                className={`rounded-full p-1.5 ml-1 flex items-center justify-center transition-colors ${
+                  isThinking || !inputValue.trim() ? 'bg-gray-300 text-gray-500' : 'bg-blue-500 hover:bg-blue-600 text-white'
+                }`}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
+                  <path d="M3.105 2.289a.75.75 0 00-.826.95l1.414 4.925A1.5 1.5 0 005.135 9.25h6.115a.75.75 0 010 1.5H5.135a1.5 1.5 0 00-1.442 1.086l-1.414 4.926a.75.75 0 00.826.95 28.896 28.896 0 0015.293-7.154.75.75 0 000-1.115A28.897 28.897 0 003.105 2.289z" />
+                </svg>
+              </button>
+            </div>
+
+            {/* ⚡ 快捷提问 */}
+            <div className="flex flex-wrap gap-1 mt-2 px-1">
+              {QUICK_ASKS.map((q) => (
+                <button
+                  key={q}
+                  type="button"
+                  disabled={isThinking}
+                  onClick={() => handleQuickAsk(q)}
+                  className={`text-[11px] px-2 py-1 rounded-full border transition-colors ${
+                    isThinking
+                      ? 'border-gray-200 text-gray-400 dark:border-slate-700 dark:text-slate-500'
+                      : 'border-gray-200 text-slate-600 hover:bg-blue-50 hover:text-blue-600 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-700'
+                  }`}
+                >
+                  {q}
+                </button>
+              ))}
+            </div>
+
+            {/* 🔌 后端切换 + 清空记忆 */}
+            <div className="flex items-center justify-between mt-2 px-1 pb-0.5">
+              <div className="flex items-center gap-1">
+                <span className="text-[11px] text-slate-400 dark:text-slate-500">脑子：</span>
+                {PROVIDERS.map((p) => (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onClick={() => setProvider(p.id)}
+                    className={`text-[11px] px-2 py-0.5 rounded-full transition-colors ${
+                      provider === p.id
+                        ? 'bg-blue-500 text-white'
+                        : 'text-slate-500 hover:bg-gray-100 dark:text-slate-400 dark:hover:bg-slate-700'
+                    }`}
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setHistory([]);
+                  setModelTag(null);
+                  speak('刚才的事，本座已经忘了～', 3000);
+                }}
+                className="text-[11px] text-slate-400 hover:text-rose-500 dark:text-slate-500"
+                title="清空多轮对话记忆"
+              >
+                清空记忆{history.length > 0 ? `（${history.length}）` : ''}
+              </button>
+            </div>
           </motion.form>
         )}
       </AnimatePresence>
