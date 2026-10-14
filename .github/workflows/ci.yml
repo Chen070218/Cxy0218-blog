@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: XHBlogs
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: XHBlogs/package-lock.json
+      - name: 安装依赖
+        run: npm ci
+      - name: 构建（webpack）
+        run: npx next build --webpack
+        env:
+          NEXT_TELEMETRY_DISABLED: '1'

@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# 允许提交示例文件（真实密钥仍被忽略）
+!.env.local.example
