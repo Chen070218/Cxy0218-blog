@@ -90,8 +90,8 @@ export default function Navbar() {
         <div className="w-[90%] max-w-6xl mx-auto h-16 flex items-center justify-between px-4 sm:px-[30px] box-border">
           <Link href="/" className="text-xl font-black text-slate-800 dark:text-white tracking-tighter hover:text-indigo-600 dark:hover:text-indigo-400 transition-all duration-300">
             {siteConfig.navTitle || siteConfig.authorName}
-            <span className="text-indigo-500 mx-1">{siteConfig.navSuffix || 'の'}</span>
-            {siteConfig.navAfter || '宝藏之地'}
+            {siteConfig.navSuffix ? (<span className="text-indigo-500 mx-1">{siteConfig.navSuffix}</span>) : null}
+            {siteConfig.navAfter}
           </Link>
           <nav className="flex gap-3 lg:gap-5 text-xs lg:text-sm font-bold">
             {/* PC端依然使用全量的 navLinks */}
