@@ -1,6 +1,8 @@
 @echo off
 chcp 65001 >nul
 cd /d "%~dp0XHBlogs"
+if exist "%~dp0node\node.exe" set "PATH=%~dp0node;%PATH%"
+set "NEXT_TELEMETRY_DISABLED=1"
 where node >nul 2>nul
 if errorlevel 1 (
  echo 请先安装 Node.js 20.9 或更新版本，再运行本文件。
