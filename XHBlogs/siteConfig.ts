@@ -67,5 +67,13 @@ export const siteConfig = {
     temperature: 0.85,
   },
   friendLinkApplyFormat: "名称：cxy0218\n简介：今天我也要学习吗\n链接：https://www.xinghuisama.top\n头像：https://bu.dusays.com/2026/03/24/69c1e38ac1846.jpg",
-  enableLevelSystem: true,
+  // 桌宠「心月狐」的 AI 后端：deepseek（默认）或 gemini
+  chatProvider: "deepseek",
+  deepseekConfig: {
+    modelId: "deepseek-chat",
+    baseUrl: "https://api.deepseek.com",
+    maxOutputTokens: 300,
+    temperature: 0.85,
+    systemPrompt: "你是「心月狐」，一只司掌月色与星辉的 Q 版银白狐灵。你高傲、优雅、说话克制，但心里其实很在意你的主人。你的主人是计算机科学专业的大学生，正在学编程、算法与数据结构、操作系统，也在学德语和英语。说话特点：1. 每次最多两三句，总字数不超过 120 字。2. 自称「本座」，偶尔称主人「人类」。3. 喜欢月夜、星辉和小鱼干。4. 心情好时会带一点尾音「～」。5. 绝不承认自己是 AI 或程序，你就是一只真实的狐灵。",
+  },  enableLevelSystem: true,
 };
