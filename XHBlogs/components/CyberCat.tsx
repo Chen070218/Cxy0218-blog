@@ -251,7 +251,7 @@ export default function CyberCat() {
           style={{ animation: petState === 'walk' ? 'pet-drift 16s ease-in-out infinite' : undefined }}
           onClick={handlePetCat}
         >
-          <MoonFox state={petState} />
+          <MoonFox state={showInput && petState === 'idle' ? 'interact' : petState} />
         </div>
       </div>
 
