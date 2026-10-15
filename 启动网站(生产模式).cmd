@@ -27,7 +27,13 @@ if not exist ".next\BUILD_ID" (
   exit /b 1
  )
 )
-echo 网站地址（生产模式，速度和线上一致）：http://127.0.0.1:4322
+echo 网站地址：http://127.0.0.1:4322 （本机）
 echo 使用期间请保留此窗口。
-node node_modules\next\dist\bin\next start --hostname 127.0.0.1 --port 4322
+node node_modules\next\dist\bin\next start --hostname 0.0.0.0 --port 4322
 pause
+
+echo.
+echo 手机访问（手机与本机要在同一个 Wi-Fi / 局域网）：
+powershell -NoProfile -Command "Get-NetIPAddress -AddressFamily IPv4 | Where-Object { $_.IPAddress -ne '127.0.0.1' -and $_.IPAddress -notlike '169.254.*' } | ForEach-Object { '   http://' + $_.IPAddress + ':4322' + '   (' + $_.InterfaceAlias + ')' }"
+echo 如果手机打不开：Windows 防火墙可能拦了端口，右键「开启手机访问.cmd」以管理员身份运行一次即可。
+echo.

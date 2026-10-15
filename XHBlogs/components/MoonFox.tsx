@@ -1,167 +1,258 @@
 "use client";
 
-import React from 'react';
+import React from "react";
 
-export type PetState = 'idle' | 'petted' | 'thinking';
+/** 心月狐桌宠的八种状态（对应设定稿里的待机/走动/开心/生气/睡觉/好奇/趴着，另加思考态） */
+export type PetState = "idle" | "walk" | "happy" | "angry" | "sleep" | "curious" | "lie" | "think";
+
+// 取自设定稿「色彩参考」：冷色调、银白发、红黑白配色
+const C = {
+  hair: "#f4f1ee",
+  hairShade: "#d9d3ce",
+  hairDeep: "#bdb6b0",
+  earTip: "#2c2429",
+  skin: "#fdeae2",
+  skinShade: "#f2cfc6",
+  eye: "#cf3b34",
+  eyeDeep: "#8e211d",
+  lash: "#372c31",
+  red: "#c22c2c",
+  redDeep: "#8b1c1c",
+  black: "#221c21",
+  white: "#ffffff",
+  gold: "#e5c07b",
+  blush: "#f19a9a",
+};
 
 /**
- * 桌宠形象：Q 版银白狐灵「心月狐」（原创 SVG，不依赖任何外部图片）
- * - idle     ：轻轻飘浮，尾巴左右摆，偶尔抖耳朵
- * - petted   ：眯眼笑，腮红变浓，星辉闪得更快
- * - thinking ：半睁眼，头顶浮现旋转的月环
- * 支持 prefers-reduced-motion：系统开启「减少动态效果」时保持静止。
+ * 桌宠形象：Q 版「心月狐」（原创 SVG，无外部图片）
+ * 状态：idle 待机 / walk 走动 / happy 开心 / angry 生气 / sleep 睡觉 / curious 好奇 / lie 趴着 / think 思考
+ * 说明：没有图像生成工具，所以这里用矢量画，不依赖 PNG 序列图；支持 prefers-reduced-motion 降级。
  */
-export default function MoonFox({ state = 'idle' }: { state?: PetState }) {
+export default function MoonFox({ state = "idle" }: { state?: PetState }) {
+  const closedEyes = state === "sleep" || state === "happy" || state === "lie";
+  const halfEyes = state === "think";
+
   return (
-    <svg viewBox="0 0 120 120" className={`moonfox moonfox--${state} w-full h-full overflow-visible`} role="img" aria-label="Q 版心月狐">
+    <svg viewBox="0 0 120 120" className={`mfx mfx--${state} w-full h-full overflow-visible`} role="img" aria-label="心月狐（Q 版桌宠）">
       <defs>
-        <radialGradient id="mf-glow" cx="50%" cy="50%">
-          <stop offset="0%" stopColor="#c7d2fe" stopOpacity="0.9" />
-          <stop offset="100%" stopColor="#c7d2fe" stopOpacity="0" />
+        <radialGradient id="mfx-glow" cx="50%" cy="50%">
+          <stop offset="0%" stopColor="#cfd9ff" stopOpacity="0.85" />
+          <stop offset="100%" stopColor="#cfd9ff" stopOpacity="0" />
         </radialGradient>
-        <linearGradient id="mf-fur" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id="mfx-tail" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor="#ffffff" />
-          <stop offset="55%" stopColor="#eaefff" />
-          <stop offset="100%" stopColor="#c6d2f6" />
+          <stop offset="60%" stopColor="#eae5e1" />
+          <stop offset="100%" stopColor="#c9c2bd" />
         </linearGradient>
-        <linearGradient id="mf-tail" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#f1f4ff" />
-          <stop offset="65%" stopColor="#bfcaf5" />
-          <stop offset="100%" stopColor="#93a6ea" />
-        </linearGradient>
-        <linearGradient id="mf-moon" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#fde68a" />
-          <stop offset="100%" stopColor="#f0abfc" />
+        <linearGradient id="mfx-kimono" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#ffffff" />
+          <stop offset="100%" stopColor="#efe9e6" />
         </linearGradient>
       </defs>
 
-      <circle cx="60" cy="60" r="48" fill="url(#mf-glow)" opacity={state === 'thinking' ? 0.95 : 0.65} />
+      <circle cx="60" cy="62" r="46" fill="url(#mfx-glow)" opacity={state === "think" ? 0.9 : 0.5} />
 
-      <g className="mf-body">
-        {/* 大尾巴（Q 版：粗、卷） */}
-        <g className="mf-tail">
-          <path
-            d="M80 90c19 4 31-6 29-21-2-13-14-18-24-13 11 3 17 11 15 19-2 9-11 14-20 15z"
-            fill="url(#mf-tail)"
-          />
-          <path d="M88 56c9 2 14 10 12 18 5-10-1-17-12-18z" fill="#ffffff" opacity="0.85" />
+      <g className="mfx-body">
+        {/* 大尾巴 */}
+        <g className="mfx-tail">
+          <path d="M78 88c20 6 34-4 33-20-1-13-14-20-25-15 12 4 18 12 16 20-2 10-12 15-24 15z" fill="url(#mfx-tail)" />
+          <path d="M88 53c9 2 15 10 13 19 5-11-1-19-13-19z" fill={C.hairDeep} opacity="0.55" />
         </g>
 
-        {/* 小身体 */}
-        <ellipse cx="60" cy="90" rx="21" ry="17" fill="url(#mf-fur)" />
-        <ellipse cx="60" cy="95" rx="12" ry="10" fill="#ffffff" opacity="0.9" />
+        {/* 腿与鞋 */}
+        <ellipse cx="50" cy="104" rx="7" ry="4.6" fill={C.white} />
+        <ellipse cx="70" cy="104" rx="7" ry="4.6" fill={C.white} />
+        <ellipse cx="50" cy="107" rx="7.4" ry="3.2" fill={C.black} />
+        <ellipse cx="70" cy="107" rx="7.4" ry="3.2" fill={C.black} />
 
-        {/* 短爪 */}
-        <ellipse cx="48" cy="106" rx="7.5" ry="4.4" fill="#e3e9ff" />
-        <ellipse cx="72" cy="106" rx="7.5" ry="4.4" fill="#e3e9ff" />
+        {/* 身体（红白黑和风） */}
+        <path d="M60 68c14 0 21 9 22 21 0 8-10 12-22 12s-22-4-22-12c1-12 8-21 22-21z" fill="url(#mfx-kimono)" />
+        <path d="M40 84c3 10 3 15 2 19-6-3-9-8-9-14 0-3 3-5 7-5z" fill={C.red} />
+        <path d="M80 84c-3 10-3 15-2 19 6-3 9-8 9-14 0-3-3-5-7-5z" fill={C.red} />
+        <path d="M60 70c5 0 8 4 8 8l-8 6-8-6c0-4 3-8 8-8z" fill={C.black} />
+        <path d="M60 70c3 0 5 2 5 5l-5 4-5-4c0-3 2-5 5-5z" fill={C.red} />
+        <ellipse cx="60" cy="90" rx="15" ry="7" fill={C.black} opacity="0.9" />
+        <path d="M52 88h16v3H52z" fill={C.gold} opacity="0.8" />
 
-        {/* 大耳朵 */}
-        <g className="mf-ear mf-ear-l">
-          <path d="M38 32 30 6l28 16z" fill="url(#mf-fur)" stroke="#e9edff" strokeWidth="1.5" strokeLinejoin="round" />
-          <path d="M39 29 35 13l17 8z" fill="#f9c9dd" />
+        {/* 手 */}
+        <ellipse cx="40" cy="86" rx="5" ry="4" fill={C.white} />
+        <ellipse cx="80" cy="86" rx="5" ry="4" fill={C.white} />
+
+        {/* 头发（后层）+ 头 */}
+        <ellipse cx="60" cy="60" rx="33" ry="31" fill={C.hair} />
+        <circle cx="60" cy="54" r="29" fill={C.skin} />
+        <path d="M31 54c0-16 13-27 29-27s29 11 29 27c0 4-1 7-2 10-4-12-14-19-27-19s-23 7-27 19c-1-3-2-6-2-10z" fill={C.hair} />
+        <path d="M33 52c4-11 14-17 27-17s23 6 27 17c-6-7-16-10-27-10s-21 3-27 10z" fill={C.hairShade} opacity="0.5" />
+        {/* 两侧长发 */}
+        <path d="M32 58c-2 14-2 26 2 36 3-2 6-3 8-3-3-10-4-21-3-33z" fill={C.hair} />
+        <path d="M88 58c2 14 2 26-2 36-3-2-6-3-8-3 3-10 4-21 3-33z" fill={C.hair} />
+        <path d="M34 74c0 8 1 14 3 18-2 0-4 1-5 2-3-6-4-13-3-20z" fill={C.hairShade} opacity="0.45" />
+
+        {/* 狐耳（白毛 + 黑尖） */}
+        <g className="mfx-ear mfx-ear-l">
+          <path d="M38 32 30 6l26 16z" fill={C.hair} stroke={C.hairShade} strokeWidth="1.2" strokeLinejoin="round" />
+          <path d="M38 32 30 6l10 10z" fill={C.earTip} />
+          <path d="M40 29 36 14l14 8z" fill={C.blush} opacity="0.55" />
         </g>
-        <g className="mf-ear mf-ear-r">
-          <path d="M82 32 90 6 62 22z" fill="url(#mf-fur)" stroke="#e9edff" strokeWidth="1.5" strokeLinejoin="round" />
-          <path d="M81 29 85 13l-17 8z" fill="#f9c9dd" />
+        <g className="mfx-ear mfx-ear-r">
+          <path d="M82 32 90 6 64 22z" fill={C.hair} stroke={C.hairShade} strokeWidth="1.2" strokeLinejoin="round" />
+          <path d="M82 32 90 6l-10 10z" fill={C.earTip} />
+          <path d="M80 29 84 14l-14 8z" fill={C.blush} opacity="0.55" />
         </g>
-
-        {/* 大头（Q 版比例：头几乎和身体一样大） */}
-        <circle cx="60" cy="52" r="31" fill="url(#mf-fur)" />
-
-        {/* 额上月纹 */}
-        <path className="mf-mark" d="M60 24a8.5 8.5 0 1 0 0 17 6.4 6.4 0 1 1 0-17z" fill="url(#mf-moon)" />
+        {/* 耳饰：小红花 */}
+        <g>
+          <circle cx="36" cy="30" r="2.6" fill={C.red} />
+          <circle cx="32.6" cy="27.6" r="2.2" fill={C.red} opacity="0.9" />
+          <circle cx="39.4" cy="27.4" r="2.2" fill={C.red} opacity="0.9" />
+          <circle cx="36" cy="30" r="1" fill={C.gold} />
+        </g>
+        {/* 额前印记 */}
+        <path d="M60 30a7 7 0 1 0 0 14 5.2 5.2 0 1 1 0-14z" fill={C.gold} opacity="0.85" />
 
         {/* 眼睛 */}
-        {state === 'petted' ? (
-          <g stroke="#333a63" strokeWidth="2.6" strokeLinecap="round" fill="none">
-            <path d="M43 53q5-6 10 0" />
-            <path d="M67 53q5-6 10 0" />
-          </g>
-        ) : (
-          <g>
-            <ellipse cx="48" cy="53" rx="5.2" ry={state === 'thinking' ? 3 : 6.4} fill="#333a63" />
-            <ellipse cx="72" cy="53" rx="5.2" ry={state === 'thinking' ? 3 : 6.4} fill="#333a63" />
-            <circle cx="46.2" cy="50.6" r="2.2" fill="#ffffff" />
-            <circle cx="70.2" cy="50.6" r="2.2" fill="#ffffff" />
-            <circle cx="49.6" cy="55.6" r="1.1" fill="#ffffff" opacity="0.9" />
-            <circle cx="73.6" cy="55.6" r="1.1" fill="#ffffff" opacity="0.9" />
-            {state === 'thinking' && (
-              <g stroke="#333a63" strokeWidth="1.3" fill="none" opacity="0.7">
-                <path d="M42 59h11" />
-                <path d="M67 59h11" />
-              </g>
-            )}
+        <g className="mfx-eyes">
+          {closedEyes ? (
+            <g stroke={C.lash} strokeWidth="2.4" strokeLinecap="round" fill="none">
+              <path d="M43 58q5-5 10 0" />
+              <path d="M67 58q5-5 10 0" />
+            </g>
+          ) : (
+            <g>
+              <ellipse cx="48" cy="58" rx="5.6" ry={halfEyes ? 3.2 : 6.6} fill={C.white} />
+              <ellipse cx="72" cy="58" rx="5.6" ry={halfEyes ? 3.2 : 6.6} fill={C.white} />
+              <ellipse cx="48.6" cy="58.6" rx="4.4" ry={halfEyes ? 2.6 : 5.2} fill={C.eye} />
+              <ellipse cx="72.6" cy="58.6" rx="4.4" ry={halfEyes ? 2.6 : 5.2} fill={C.eye} />
+              <ellipse cx="48.6" cy="60.4" rx="2" ry="1.4" fill={C.eyeDeep} opacity="0.7" />
+              <ellipse cx="72.6" cy="60.4" rx="2" ry="1.4" fill={C.eyeDeep} opacity="0.7" />
+              <circle cx="46.6" cy="55.6" r="1.9" fill={C.white} />
+              <circle cx="70.6" cy="55.6" r="1.9" fill={C.white} />
+              <circle cx="50" cy="61" r="0.9" fill={C.white} opacity="0.85" />
+              <circle cx="74" cy="61" r="0.9" fill={C.white} opacity="0.85" />
+              <path d="M42 52q6-3 12 0" stroke={C.lash} strokeWidth="2" fill="none" strokeLinecap="round" />
+              <path d="M66 52q6-3 12 0" stroke={C.lash} strokeWidth="2" fill="none" strokeLinecap="round" />
+            </g>
+          )}
+        </g>
+
+        {/* 眉毛（生气时压低） */}
+        {state === "angry" && (
+          <g stroke={C.lash} strokeWidth="2" strokeLinecap="round">
+            <path d="M43 48l11 3" />
+            <path d="M77 48l-11 3" />
           </g>
         )}
 
         {/* 腮红 */}
-        <g fill="#f9a8d4" opacity={state === 'petted' ? 0.75 : 0.45}>
-          <ellipse cx="39" cy="62" rx="6.4" ry="3.8" />
-          <ellipse cx="81" cy="62" rx="6.4" ry="3.8" />
+        <g fill={C.blush} opacity={state === "happy" ? 0.7 : 0.42}>
+          <ellipse cx="38" cy="64" rx="6" ry="3.6" />
+          <ellipse cx="82" cy="64" rx="6" ry="3.6" />
         </g>
 
-        {/* 口鼻 */}
-        <ellipse cx="60" cy="68" rx="9.5" ry="6.4" fill="#ffffff" opacity="0.95" />
-        <path d="M60 64.4l3.2 2.8h-6.4z" fill="#333a63" />
-        <path d="M60 69q-2.6 2.4-4.6 0" stroke="#333a63" strokeWidth="1.3" fill="none" strokeLinecap="round" />
-        <path d="M60 69q2.6 2.4 4.6 0" stroke="#333a63" strokeWidth="1.3" fill="none" strokeLinecap="round" />
-
-        {/* 胡须 */}
-        <g stroke="#cfd8f7" strokeWidth="1.1" strokeLinecap="round" opacity="0.9">
-          <path d="M33 64h-9" />
-          <path d="M35 70l-9 2" />
-          <path d="M87 64h9" />
-          <path d="M85 70l9 2" />
-        </g>
-
-        {/* 星辉 */}
-        <g className="mf-sparkle mf-sparkle-1" fill="url(#mf-moon)">
-          <path d="M24 42l2 4.6L30.6 48 26 50.6 24 55.4l-2-4.8L17.4 48 22 46.6z" />
-        </g>
-        <g className="mf-sparkle mf-sparkle-2" fill="#a5b4fc">
-          <path d="M97 34l1.6 3.6L102 39l-3.6 1.4L97 44l-1.6-3.6L92 39l3.4-1.4z" />
-        </g>
-        <g className="mf-sparkle mf-sparkle-3" fill="#f9a8d4">
-          <path d="M28 82l1.4 3.2L32.6 86l-3.2 1.4L28 90.6l-1.4-3.2L23.4 86l3.2-1.4z" />
-        </g>
-
-        {/* 思考时的月环 */}
-        <g className="mf-halo">
-          <circle cx="60" cy="52" r="39" fill="none" stroke="#a5b4fc" strokeWidth="1.8" strokeDasharray="7 9" opacity="0.9" />
-        </g>
+        {/* 嘴 */}
+        {state === "happy" ? (
+          <path d="M56 68q4 5 8 0q-4 3-8 0z" fill={C.lash} />
+        ) : state === "angry" ? (
+          <path d="M56 70q4-4 8 0" stroke={C.lash} strokeWidth="1.6" fill="none" strokeLinecap="round" />
+        ) : (
+          <path d="M57 68q3 2.4 6 0" stroke={C.lash} strokeWidth="1.4" fill="none" strokeLinecap="round" />
+        )}
       </g>
 
+      {/* 睡觉：Zzz */}
+      {state === "sleep" && (
+        <g className="mfx-zzz" fill={C.hairDeep} fontStyle="italic" fontWeight="900">
+          <text x="86" y="34" fontSize="11">Z</text>
+          <text x="94" y="24" fontSize="14">Z</text>
+          <text x="103" y="14" fontSize="17">Z</text>
+        </g>
+      )}
+
+      {/* 好奇：问号 */}
+      {state === "curious" && (
+        <g className="mfx-mark">
+          <circle cx="94" cy="26" r="11" fill={C.white} opacity="0.9" />
+          <text x="94" y="31" fontSize="15" fontWeight="900" textAnchor="middle" fill={C.red}>?</text>
+        </g>
+      )}
+
+      {/* 生气：井字怒气符号 */}
+      {state === "angry" && (
+        <g className="mfx-mark" stroke={C.red} strokeWidth="2.2" strokeLinecap="round">
+          <path d="M88 22v12" />
+          <path d="M82 28h12" />
+          <path d="M90 20v6" opacity="0.7" />
+        </g>
+      )}
+
+      {/* 开心：飘出的爱心 */}
+      {state === "happy" && (
+        <g className="mfx-hearts" fill={C.blush}>
+          <path className="mfx-heart mfx-heart-1" d="M92 30c1.6-3 6-2.4 6 1 0 2.4-3 4.6-6 7-3-2.4-6-4.6-6-7 0-3.4 4.4-4 6-1z" />
+          <path className="mfx-heart mfx-heart-2" d="M28 34c1.2-2.2 4.4-1.8 4.4 0.8 0 1.8-2.2 3.4-4.4 5.2-2.2-1.8-4.4-3.4-4.4-5.2 0-2.6 3.2-3 4.4-0.8z" />
+        </g>
+      )}
+
+      {/* 思考：月环 */}
+      {state === "think" && (
+        <g className="mfx-halo">
+          <circle cx="60" cy="54" r="38" fill="none" stroke={C.gold} strokeWidth="1.6" strokeDasharray="7 9" opacity="0.85" />
+        </g>
+      )}
+
       <style>{`
-        .moonfox { transform-origin: 50% 60%; }
-        .moonfox .mf-body { animation: mf-float 3.8s ease-in-out infinite; }
-        .moonfox .mf-tail { transform-origin: 80px 90px; animation: mf-tail 2.8s ease-in-out infinite; }
-        .moonfox .mf-ear { animation: mf-ear 5s ease-in-out infinite; }
-        .moonfox .mf-ear-l { transform-origin: 38px 32px; }
-        .moonfox .mf-ear-r { transform-origin: 82px 32px; }
-        .moonfox .mf-sparkle { transform-origin: center; animation: mf-twinkle 2.6s ease-in-out infinite; }
-        .moonfox .mf-sparkle-2 { animation-delay: .6s; }
-        .moonfox .mf-sparkle-3 { animation-delay: 1.2s; }
-        .moonfox .mf-halo { opacity: 0; }
-        .moonfox .mf-mark { animation: mf-mark 4s ease-in-out infinite; }
+        .mfx { transform-origin: 50% 62%; }
+        .mfx-body { animation: mfx-float 3.8s ease-in-out infinite; }
+        .mfx-tail { transform-origin: 78px 88px; animation: mfx-tail 2.9s ease-in-out infinite; }
+        .mfx-ear { animation: mfx-ear 5.4s ease-in-out infinite; }
+        .mfx-ear-l { transform-origin: 38px 32px; }
+        .mfx-ear-r { transform-origin: 82px 32px; }
+        .mfx-eyes { transform-origin: 60px 58px; animation: mfx-blink 5.2s infinite; }
+        .mfx-mark { animation: mfx-pop 1.6s ease-in-out infinite; transform-origin: 90px 26px; }
+        .mfx-zzz text { animation: mfx-zzz 3s ease-in-out infinite; }
+        .mfx-zzz text:nth-child(2) { animation-delay: .4s; }
+        .mfx-zzz text:nth-child(3) { animation-delay: .8s; }
+        .mfx-heart { transform-origin: center; animation: mfx-heart 2.4s ease-in-out infinite; }
+        .mfx-heart-2 { animation-delay: .8s; }
+        .mfx-halo { transform-origin: 60px 54px; animation: mfx-spin 3.4s linear infinite; }
 
-        .moonfox--petted { animation: mf-happy 1.6s ease-in-out infinite; }
-        .moonfox--petted .mf-tail { animation-duration: 1.1s; }
-        .moonfox--petted .mf-sparkle { animation-duration: 1s; }
-        .moonfox--petted .mf-ear { animation-duration: 1.2s; }
+        .mfx--walk { animation: mfx-walk 0.62s ease-in-out infinite; }
+        .mfx--walk .mfx-tail { animation-duration: 0.9s; }
 
-        .moonfox--thinking .mf-body { animation-duration: 2.2s; }
-        .moonfox--thinking .mf-halo { opacity: .85; transform-origin: 60px 52px; animation: mf-spin 3s linear infinite; }
+        .mfx--happy { animation: mfx-hop 0.72s ease-in-out infinite; }
+        .mfx--happy .mfx-tail { animation-duration: 0.8s; }
 
-        @keyframes mf-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
-        @keyframes mf-happy { 0%,100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-3px) scale(1.06); } }
-        @keyframes mf-tail { 0%,100% { transform: rotate(-7deg); } 50% { transform: rotate(9deg); } }
-        @keyframes mf-ear { 0%,88%,100% { transform: rotate(0deg); } 92% { transform: rotate(-7deg); } 96% { transform: rotate(3deg); } }
-        @keyframes mf-twinkle { 0%,100% { opacity: .3; transform: scale(.85); } 50% { opacity: 1; transform: scale(1.15); } }
-        @keyframes mf-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes mf-mark { 0%,100% { opacity: .85; } 50% { opacity: 1; } }
+        .mfx--angry { animation: mfx-shake 0.36s ease-in-out infinite; }
+        .mfx--angry .mfx-ear-l { animation: none; transform: rotate(-16deg); }
+        .mfx--angry .mfx-ear-r { animation: none; transform: rotate(16deg); }
+
+        .mfx--sleep .mfx-body { animation: mfx-breathe 4.2s ease-in-out infinite; }
+        .mfx--sleep .mfx-tail { animation-duration: 5.5s; }
+
+        .mfx--curious .mfx-body { animation: mfx-float 3.8s ease-in-out infinite, mfx-tilt 3.2s ease-in-out infinite; }
+
+        .mfx--lie { transform: translateY(6px) scaleY(0.9); }
+        .mfx--lie .mfx-tail { animation-duration: 4.2s; }
+        .mfx--lie .mfx-body { animation: mfx-breathe 3.6s ease-in-out infinite; }
+
+        .mfx--think .mfx-body { animation-duration: 2.4s; }
+
+        @keyframes mfx-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+        @keyframes mfx-walk { 0%,100% { transform: translateY(0) rotate(-1.5deg); } 50% { transform: translateY(-3px) rotate(1.5deg); } }
+        @keyframes mfx-hop { 0%,100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-6px) scale(1.05); } }
+        @keyframes mfx-shake { 0%,100% { transform: translateX(-1.6px); } 50% { transform: translateX(1.6px); } }
+        @keyframes mfx-breathe { 0%,100% { transform: translateY(0) scale(1); } 50% { transform: translateY(1px) scale(1.02); } }
+        @keyframes mfx-tilt { 0%,100% { rotate: 0deg; } 50% { rotate: -8deg; } }
+        @keyframes mfx-tail { 0%,100% { transform: rotate(-7deg); } 50% { transform: rotate(9deg); } }
+        @keyframes mfx-ear { 0%,88%,100% { transform: rotate(0deg); } 92% { transform: rotate(-7deg); } 96% { transform: rotate(3deg); } }
+        @keyframes mfx-blink { 0%,92%,100% { transform: scaleY(1); } 95% { transform: scaleY(0.08); } }
+        @keyframes mfx-pop { 0%,100% { transform: scale(1); opacity: .9; } 50% { transform: scale(1.15); opacity: 1; } }
+        @keyframes mfx-zzz { 0% { opacity: 0; transform: translateY(4px); } 40% { opacity: 1; } 100% { opacity: 0; transform: translateY(-8px); } }
+        @keyframes mfx-heart { 0% { opacity: .2; transform: translateY(4px) scale(.8); } 45% { opacity: 1; transform: translateY(-4px) scale(1.05); } 100% { opacity: 0; transform: translateY(-12px) scale(.9); } }
+        @keyframes mfx-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
         @media (prefers-reduced-motion: reduce) {
-          .moonfox, .moonfox * { animation: none !important; }
+          .mfx, .mfx * { animation: none !important; }
         }
       `}</style>
     </svg>

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import MoonFox from './MoonFox';
+import MoonFox, { PetState } from './MoonFox';
 
 type ChatMessage = { role: 'user' | 'assistant'; content: string };
 type Provider = 'deepseek' | 'gemini';
@@ -17,7 +17,7 @@ const PROVIDERS: { id: Provider; label: string }[] = [
 const QUICK_ASKS = ['今晚该做什么？', '夸夸我', '讲个关于月亮的故事', '帮我打打气'];
 
 export default function CyberCat() {
-  const [isPetted, setIsPetted] = useState(false);
+  const [petState, setPetState] = useState<PetState>('idle');
   const [speech, setSpeech] = useState<string | null>(null);
   const [showInput, setShowInput] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -39,12 +39,10 @@ export default function CyberCat() {
 
   // --- 🖱️ 交互事件：摸猫猫 ---
   const handlePetCat = () => {
-    if (isPetted) return;
-    setIsPetted(true);
+    if (petState === 'happy') return;
+    setPetState('happy');
     speak('唔……准你摸一小会儿。', 2200);
-    setTimeout(() => {
-      setIsPetted(false);
-    }, 2000);
+    setTimeout(() => setPetState('idle'), 2200);
   };
 
   // --- 🔌 统一的对话入口：聊天、喂食、快捷提问都走这里 ---
@@ -53,6 +51,7 @@ export default function CyberCat() {
     if (!text || isThinking) return;
 
     setIsThinking(true);
+    setPetState('think');
     speak(thinkingText, 12000);
 
     try {
@@ -75,8 +74,12 @@ export default function CyberCat() {
       speak(reply, Math.min(15000, 4000 + reply.length * 150));
       setModelTag(data?.model ? `${data.provider} · ${data.model}` : null);
       setHistory((prev) => [...prev, { role: 'user', content: text }, { role: 'assistant', content: reply }].slice(-8));
+      setPetState('happy');
+      setTimeout(() => setPetState('idle'), 2600);
     } catch (error) {
       speak('星轨断了……你的网络出问题了吧？', 4200);
+      setPetState('angry');
+      setTimeout(() => setPetState('idle'), 2200);
     } finally {
       setIsThinking(false);
     }
@@ -108,6 +111,18 @@ export default function CyberCat() {
     await sendMessage(question);
   };
 
+  // --- 🐾 自主行为：没人互动时自己在 待机 / 走动 / 好奇 / 趴着 / 睡觉 之间切换 ---
+  useEffect(() => {
+    if (isThinking || showInput || speech) return;
+    const timer = setTimeout(() => {
+      const pool: PetState[] = ['walk', 'curious', 'lie', 'idle', 'idle', 'sleep'];
+      const next = pool[Math.floor(Math.random() * pool.length)];
+      setPetState(next);
+      setTimeout(() => setPetState('idle'), next === 'sleep' ? 6000 : 4200);
+    }, 9000 + Math.random() * 6000);
+    return () => clearTimeout(timer);
+  }, [petState, isThinking, showInput, speech]);
+
   // --- ⏳ 随机挂机语录 ---
   useEffect(() => {
     const randomBarks = [
@@ -136,6 +151,8 @@ export default function CyberCat() {
       whileDrag={{ scale: 1.1, cursor: "grabbing" }}
       className="fixed bottom-20 right-20 z-[9999] flex flex-col items-center group cursor-grab active:cursor-grabbing"
     >
+      <style dangerouslySetInnerHTML={{ __html: `@keyframes pet-drift { 0%,100% { transform: translateX(0); } 50% { transform: translateX(-150px); } }` }} />
+
       {/* 💬 聊天气泡 */}
       <div className="relative w-full flex justify-center mb-6">
         <AnimatePresence>
@@ -192,9 +209,10 @@ export default function CyberCat() {
         {/* 心月狐本体 */}
         <div
           className="w-[120px] h-[120px] relative cursor-pointer"
+          style={{ animation: petState === 'walk' ? 'pet-drift 16s ease-in-out infinite' : undefined }}
           onClick={handlePetCat}
         >
-          <MoonFox state={isPetted ? 'petted' : isThinking ? 'thinking' : 'idle'} />
+          <MoonFox state={petState} />
         </div>
       </div>
 
