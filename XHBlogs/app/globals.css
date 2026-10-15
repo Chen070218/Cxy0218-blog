@@ -112,3 +112,11 @@ input[type=range]::-webkit-slider-thumb {
 @media (prefers-reduced-motion: reduce) {
   .page-enter { animation: none; }
 }
+
+/* 卡片进入动画（角色图鉴等列表用；纯 CSS，合成层） */
+@keyframes cardEnter {
+  from { opacity: 0; transform: translate3d(0, 12px, 0); }
+  to   { opacity: 1; transform: translate3d(0, 0, 0); }
+}
+.card-enter { animation: cardEnter 0.36s cubic-bezier(0.16, 1, 0.3, 1) both; }
+@media (prefers-reduced-motion: reduce) { .card-enter { animation: none; } }
