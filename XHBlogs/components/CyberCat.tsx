@@ -41,7 +41,7 @@ export default function CyberCat() {
   const handlePetCat = () => {
     if (petState === 'happy') return;
     setPetState('happy');
-    speak('唔……准你摸一小会儿。', 2200);
+    speak('唔……准你摸一小会儿。( ˘ ³˘)♥', 2200);
     setTimeout(() => setPetState('idle'), 2200);
   };
 
@@ -90,7 +90,7 @@ export default function CyberCat() {
     e.stopPropagation(); // 阻止触发摸猫或拖拽
     if (isThinking) return;
     setShowInput(false); // 喂食时关掉输入框
-    await sendMessage('我给心月狐呈上一条小鱼干，请发表感想。', '小鱼干……本座就勉为其难地收下了。');
+    await sendMessage('我给心月狐呈上一条小鱼干，请发表感想。', '小鱼干……本座就勉为其难地收下了 (๑•̀ㅂ•́)و✧');
   };
 
   // --- 💬 交互事件：发送聊天 ---
@@ -123,15 +123,54 @@ export default function CyberCat() {
     return () => clearTimeout(timer);
   }, [petState, isThinking, showInput, speech]);
 
+  // --- 📣 其它工具（番茄钟等）可以让桌宠说话 ---
+  useEffect(() => {
+    const onSay = (event: Event) => {
+      const detail = (event as CustomEvent).detail || {};
+      if (typeof detail.text === "string") {
+        speak(detail.text, detail.ms || 6000);
+        if (detail.state) {
+          setPetState(detail.state as PetState);
+          setTimeout(() => setPetState("idle"), detail.ms || 6000);
+        }
+      }
+    };
+    window.addEventListener("pet-say", onSay);
+    return () => window.removeEventListener("pet-say", onSay);
+  }, []);
+
+  // --- 👋 每天第一次打开时打个招呼 ---
+  useEffect(() => {
+    try {
+      const key = "xh-pet-greeted";
+      const today = new Date().toDateString();
+      if (localStorage.getItem(key) !== today) {
+        localStorage.setItem(key, today);
+        setTimeout(() => speak("你来啦～今天也一起加油吧 (๑•̀ㅂ•́)و✧", 7000), 1600);
+      }
+    } catch {}
+  }, []);
+
+  // --- 🕰️ 久坐提醒：长时间没人互动就关心一句 ---
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      speak("已经坐很久啦，站起来舒展一下吧 (｡•́︿•̀｡)", 7000);
+    }, 12 * 60 * 1000);
+    return () => clearTimeout(timer);
+  }, [speech]);
   // --- ⏳ 随机挂机语录 ---
   useEffect(() => {
     const randomBarks = [
       "今夜月色不错，不做点什么吗？",
-      "困了就去睡，本座守着。",
-      "代码写完了吗，人类。",
-      "小鱼干，本座要小鱼干。",
+      "困了就去睡，本座守着。( ˘ ³˘)♥",
+      "代码写完了吗，人类。写不动就歇会儿～",
+      "小鱼干，本座要小鱼干 (｡•́︿•̀｡)",
       "……别走神，看着本座。",
-      "星辉有点暗，许个愿吧。",
+      "坐久了记得起来动动，不然脖子会疼哦。",
+      "喝口水吧，本座可不希望你头疼。",
+      "你专注的样子……唔，还算顺眼 (๑•̀ㅂ•́)و✧",
+      "有点安静呢。本座在听，你慢慢说。",
+      "偷偷讲，偶尔也觉得夜里太长了……不过有你在。",
     ];
     const randomTalkInterval = setInterval(() => {
       if (!speech && !showInput && !isThinking && Math.random() > 0.8) {
@@ -232,7 +271,7 @@ export default function CyberCat() {
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                placeholder="对心月狐说点什么…"
+                placeholder="和心月狐说点什么…（聊聊今天？）"
                 className="bg-transparent border-none outline-none text-sm px-3 py-1 w-full dark:text-white placeholder-gray-400"
                 disabled={isThinking}
                 autoFocus
