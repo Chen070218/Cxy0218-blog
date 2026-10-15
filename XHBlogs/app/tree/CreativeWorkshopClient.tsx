@@ -7,8 +7,26 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {Beaker, Rocket, Trees, Wrench} from 'lucide-react'; // 🌟 暂时移除了 Sofa 图标
 import { siteConfig } from '../../siteConfig'; // 🌟 引入站点配置
 
-import AlchemyLab from './AlchemyLab';
-import DijiangModel from './DijiangModel';
+import dynamic from 'next/dynamic';
+
+// 这两个模块体积不小（都内含 three.js），改成按需加载：
+// 进入本页时不再阻塞主线程解析 three.js，切到对应标签才拉取
+const AlchemyLab = dynamic(() => import('./AlchemyLab'), {
+  ssr: false,
+  loading: () => <ModuleLoading label="炼金工坊加载中…" />,
+});
+const DijiangModel = dynamic(() => import('./DijiangModel'), {
+  ssr: false,
+  loading: () => <ModuleLoading label="帝江模型加载中…" />,
+});
+
+function ModuleLoading({ label }: { label: string }) {
+  return (
+    <div className="w-full min-h-[420px] flex items-center justify-center rounded-2xl border border-white/40 dark:border-white/10 bg-white/40 dark:bg-slate-800/40">
+      <span className="text-sm font-bold text-slate-500 dark:text-slate-300">{label}</span>
+    </div>
+  );
+}
 // import OperatorRecreation from './OperatorRecreation'; // 🌟 先注释掉，以后需要随时可以加回来
 
 export default function CreativeWorkshopClient({ posts = [], chatters = [], moments = [] }: any) {

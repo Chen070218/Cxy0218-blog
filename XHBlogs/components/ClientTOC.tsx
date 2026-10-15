@@ -74,9 +74,12 @@ export default function ClientTOC({ toc }: { toc: TocItem[] }) {
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    setTimeout(handleScroll, 100);
+    const initialScrollTimer = setTimeout(handleScroll, 100);
 
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(initialScrollTimer);
+    };
   }, [toc]);
 
   const scrollToHeading = (e: React.MouseEvent, id: string) => {
