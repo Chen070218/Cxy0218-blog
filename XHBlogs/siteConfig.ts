@@ -68,7 +68,7 @@ export const siteConfig = {
     maxOutputTokens: 150,
     temperature: 0.85,
   },
-  friendLinkApplyFormat: "名称：cxy0218\n简介：今天我也要学习吗\n链接：https://www.xinghuisama.top\n头像：https://bu.dusays.com/2026/03/24/69c1e38ac1846.jpg",
+  friendLinkApplyFormat: "名称：cxy0218\n简介：今天我也要学习吗\n链接：https://www.xinghuisama.top\n头像：/characters/xinyuehu-square.webp",
   // 桌宠「心月狐」的 AI 后端：deepseek（默认）或 gemini
   chatProvider: "deepseek",
   deepseekConfig: {
