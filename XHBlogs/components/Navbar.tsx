@@ -78,6 +78,8 @@ export default function Navbar() {
     { name: '说说', href: '/moments' },
     { name: '学习资料', href: '/resources' },
       { name: '打卡', href: '/checkin' },
+      { name: '杂谈', href: '/chatter' },
+      { name: '创意工坊', href: '/tree' },
       { name: '关于', href: '/about' },
   ];
 
@@ -94,7 +96,7 @@ export default function Navbar() {
             {siteConfig.navSuffix ? (<span className="text-indigo-500 mx-1">{siteConfig.navSuffix}</span>) : null}
             {siteConfig.navAfter}
           </Link>
-          <nav className="flex gap-3 lg:gap-5 text-xs lg:text-sm font-bold">
+          <nav className="flex gap-3 lg:gap-5 text-xs lg:text-sm font-bold min-w-0 overflow-x-auto scroll-smooth">
             {/* PC端依然使用全量的 navLinks */}
             {navLinks.map((link) => {
               const isActive = pathname === link.href || pathname === `${link.href}/`;
