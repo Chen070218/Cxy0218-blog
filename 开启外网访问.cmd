@@ -10,5 +10,5 @@ echo 下面会出现一个 https://xxx.lhr.life 的地址，手机用它可以�
 echo 注意：这个地址是临时的，关掉本窗口就失效，每次重开地址也会变。
 echo 想要固定地址，请把仓库推送到 GitHub，让 Vercel 部署（见 开发笔记.md）。
 echo.
-ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=NUL -o ServerAliveInterval=30 -R 80:localhost:4322 nokey@localhost.run
+ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=NUL -o ServerAliveInterval=30 -R 80:127.0.0.1:4322 nokey@localhost.run
 pause
