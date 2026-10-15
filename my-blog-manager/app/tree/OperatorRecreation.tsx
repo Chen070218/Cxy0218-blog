@@ -161,7 +161,7 @@ export default function OperatorRecreation() {
           >
             {/* 主体 GIF */}
             <img
-              src="/spine/shu/Shu.gif"
+              src="/spine/shu/Shu.webp"
               alt="Shu Walking"
               style={{ filter: "drop-shadow(0 0 1px black) drop-shadow(0 0 1px black) drop-shadow(0 0 1px black)" }}
               className="relative z-10 w-full h-full object-contain pointer-events-none"
