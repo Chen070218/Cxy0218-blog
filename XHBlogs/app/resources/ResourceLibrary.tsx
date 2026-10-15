@@ -31,9 +31,13 @@ export default function ResourceLibrary({ projectMode = false, initialItems = []
   useEffect(() => {
     try {
       const raw = localStorage.getItem(storageKey);
-      const saved = raw ? JSON.parse(raw) : initialItems;
-      if (!validList(saved)) throw new Error();
-      setItems(saved);
+      const saved = raw ? JSON.parse(raw) : null;
+      // 仓库自带的基础清单 + 本地新增/修改的条目（同 id 以本地为准）：
+      // 换设备、清缓存也能看到基础内容，本地加的东西也不会丢。
+      const merged = Array.isArray(saved) && validList(saved)
+        ? [...initialItems.filter(item => !saved.some((s: Resource) => s.id === item.id)), ...saved]
+        : initialItems;
+      setItems(merged as Resource[]);
       setReady(true);
     } catch { setNotice('资料读取失败，请检查浏览器存储设置后刷新。'); }
   }, [storageKey]);
