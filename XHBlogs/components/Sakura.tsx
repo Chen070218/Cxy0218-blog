@@ -1,53 +1,53 @@
 "use client";
 import { useEffect, useState } from 'react';
+import { usePerfProfile } from './usePerfProfile';
 
-interface Petal {
-  id: number;
-  left: string;
-  size: number;
-  duration: number;
-  delay: number;
-}
+interface Petal { id: number; left: string; size: number; duration: number; delay: number; }
 
+/** 樱花飘落：同样只在合成层跑，数量随性能档位缩放 */
 export default function Sakura() {
+  const { scale, visible } = usePerfProfile();
   const [petals, setPetals] = useState<Petal[]>([]);
 
   useEffect(() => {
-    const generated = Array.from({ length: 40 }).map((_, i) => ({
+    const count = Math.round(20 * scale);
+    if (count <= 0) { setPetals([]); return; }
+    setPetals(Array.from({ length: count }).map((_, i) => ({
       id: i,
       left: `${Math.random() * 100}%`,
-      size: 8 + Math.random() * 12, // 8px 到 20px 大小的花瓣
-      duration: 6 + Math.random() * 8, // 飘落时间 6-14 秒
-      delay: Math.random() * -15, // 随机错开下落时间
-    }));
-    setPetals(generated);
-  }, []);
+      size: 8 + Math.random() * 12,
+      duration: 6 + Math.random() * 8,
+      delay: Math.random() * -15,
+    })));
+  }, [scale]);
+
+  if (petals.length === 0) return null;
 
   return (
     <div className="fixed inset-0 w-full h-full pointer-events-none z-10 overflow-hidden">
       <style>{`
         @keyframes sakuraFall {
-          0% { transform: translate(0, -10vh) rotate(0deg); opacity: 0; }
+          0% { transform: translate3d(0, -10vh, 0) rotate(0deg); opacity: 0; }
           10% { opacity: 1; }
           80% { opacity: 1; }
-          100% { transform: translate(15vw, 110vh) rotate(360deg); opacity: 0; }
+          100% { transform: translate3d(15vw, 110vh, 0) rotate(360deg); opacity: 0; }
         }
       `}</style>
 
       {petals.map(p => (
         <div
           key={p.id}
-          className="absolute top-0 bg-pink-300/70 shadow-[0_0_5px_rgba(255,182,193,0.6)]"
+          className="absolute top-0 bg-pink-300/70 will-change-transform"
           style={{
             left: p.left,
             width: `${p.size}px`,
             height: `${p.size * 1.2}px`,
-            // 樱花特有的圆角形状
             borderRadius: '100% 0 100% 0',
             animation: `sakuraFall ${p.duration}s linear infinite`,
             animationDelay: `${p.delay}s`,
+            animationPlayState: visible ? 'running' : 'paused',
           }}
-        ></div>
+        />
       ))}
     </div>
   );

@@ -208,7 +208,7 @@ export default function CloudPlayer({ songIds }: { songIds: string[] }) {
 
         <div className="flex items-center gap-5 relative z-10 mb-6 mt-2">
           <div className={`w-20 h-20 rounded-full border-2 border-white/50 shadow-lg flex-shrink-0 overflow-hidden relative ${isPlaying ? 'animate-[spin_6s_linear_infinite]' : ''}`}>
-            <img src={currentSong.cover} alt="cover" className="w-full h-full object-cover" />
+            <img decoding="async" src={currentSong.cover} alt="cover" className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-black/10"></div>
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 bg-white/80 backdrop-blur-sm rounded-full border border-gray-300 shadow-inner"></div>
           </div>

@@ -36,7 +36,7 @@ export default function SectionCover({ storageKey, title, subtitle, image, eyebr
     <section className={`section-cover ${compact ? 'section-cover-compact' : ''}`} aria-label={title + '封面'}>
       {/* Native img permits local uploads and arbitrary user-configured image hosts. */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={failed ? '/covers/notes.jpg' : selected} alt="" onError={() => setFailed(true)} />
+      <img decoding="async" src={failed ? '/covers/notes.jpg' : selected} alt="" onError={() => setFailed(true)} />
       <div className="section-cover-shade" />
       <div className="section-cover-copy"><span>{eyebrow}</span><h1>{title}</h1>{subtitle && <p>{subtitle}</p>}</div>
       <button className="cover-change" aria-label={`更换${title}封面`} onClick={() => {setDraft(custom);setError('');dialog.current?.showModal();}}><ImagePlus size={16}/><span>更换封面</span></button>
@@ -46,7 +46,7 @@ export default function SectionCover({ storageKey, title, subtitle, image, eyebr
       <p>仅保存在当前浏览器，不会自动上传到服务器。</p>
       <label>图片链接<input aria-label="封面图片链接" value={draft.startsWith('data:') ? '' : draft} placeholder="https://… 或 /covers/notes.jpg" onChange={e => setDraft(e.target.value)}/></label>
       <label>或上传图片<input type="file" accept="image/jpeg,image/png,image/webp" onChange={e => upload(e.target.files?.[0])}/></label>
-      {draft && validCover(draft) && <img className="cover-preview" src={draft} alt="封面预览"/>}
+      {draft && validCover(draft) && <img decoding="async" className="cover-preview" src={draft} alt="封面预览"/>}
       <p role="status">{error}</p>
       <div className="cover-actions"><button onClick={() => save('')}><RotateCcw size={15}/>恢复默认</button><button className="cover-primary" onClick={() => save(draft)}>保存封面</button></div>
     </dialog>

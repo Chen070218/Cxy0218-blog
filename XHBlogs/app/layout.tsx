@@ -71,13 +71,14 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <div id="app-mount-root" className="flex-1 flex flex-col transition-opacity duration-1000">
               <div className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden">
                 {!siteConfig.useGradient && <BackgroundSlider />}
-                <div className="absolute inset-0 z-[-9] bg-white/30 dark:bg-slate-900/40 backdrop-blur-md transition-colors duration-1000"></div>
+                {/* 全屏 backdrop-blur 去掉了：它盖在会动的背景上，等于每帧重新模糊整屏。改用半透明罩 + 背景图自身模糊 */}
+                <div className="absolute inset-0 z-[-9] bg-white/35 dark:bg-slate-900/45 transition-colors duration-1000"></div>
 
                 <div
-                  className="absolute inset-0 z-[-8] opacity-60 dark:opacity-20 mix-blend-color transition-opacity duration-1000 transform-gpu"
+                  className="absolute -inset-[20%] z-[-8] opacity-60 dark:opacity-20 mix-blend-color transition-opacity duration-1000 will-change-transform"
                   style={{
                     background: `linear-gradient(-45deg, ${siteConfig.themeColors.join(', ')})`,
-                    backgroundSize: '400% 400%',
+                    backgroundSize: '100% 100%',
                     animation: 'gradientMove 15s ease infinite' // 🌟 全端保留渐变流动
                   }}
                 ></div>
@@ -121,9 +122,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 
             <style suppressHydrationWarning dangerouslySetInnerHTML={{ __html: `
               @keyframes gradientMove { 
-                0% { background-position: 0% 50%; } 
-                50% { background-position: 100% 50%; } 
-                100% { background-position: 0% 50%; } 
+                0% { transform: translate3d(-6%, -4%, 0) scale(1.12); } 
+                50% { transform: translate3d(6%, 4%, 0) scale(1.12); } 
+                100% { transform: translate3d(-6%, -4%, 0) scale(1.12); } 
               }
             `}} />
           </MusicProvider>

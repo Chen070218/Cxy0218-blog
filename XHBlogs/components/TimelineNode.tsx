@@ -27,7 +27,7 @@ export default function TimelineNode({ post, index }: { post: any, index: number
 
           {/* 上半部分：封面图 */}
           <div className="w-full h-40 sm:h-48 overflow-hidden relative bg-slate-200 dark:bg-slate-700">
-            <img
+            <img loading="lazy" decoding="async"
               src={post.cover}
               alt={post.title}
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
