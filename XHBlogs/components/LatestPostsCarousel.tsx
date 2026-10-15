@@ -1,5 +1,6 @@
 // components/LatestPostsCarousel.tsx
 "use client";
+import SmartImage from './SmartImage';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -37,7 +38,7 @@ export default function LatestPostsCarousel({ posts }: { posts: any[] }) {
           transition={{ duration: 0.8 }}
           className="absolute inset-0 z-0"
         >
-          <img loading="lazy" decoding="async" src={currentPost.cover} className="w-full h-full object-cover opacity-90 transition-transform duration-1000 group-hover:scale-105" alt={currentPost.title} />
+          <SmartImage fill sizes="(max-width: 768px) 90vw, 900px" src={currentPost.cover} alt={currentPost.title} className="object-cover opacity-90 transition-transform duration-1000 group-hover:scale-105" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
         </motion.div>
       </AnimatePresence>

@@ -1,3 +1,4 @@
+import SmartImage from '../components/SmartImage';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
@@ -107,7 +108,7 @@ export default function Home() {
 
                   {/* 照片墙大海报 */}
                   <Link href="/photowall" className="w-full rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl overflow-hidden transition-all duration-700 hover:scale-[1.02] relative group min-h-[200px] sm:min-h-[220px] flex-shrink-0">
-                    <img decoding="async" src={latestAlbum.cover} className="w-full h-full absolute inset-0 object-cover transition-transform duration-700 group-hover:scale-105 opacity-90"/>
+                    <SmartImage fill sizes="(max-width: 768px) 100vw, 800px" src={latestAlbum.cover} alt={latestAlbum.title} className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-90" />
                     <div className="absolute inset-0 bg-black/30 dark:bg-black/50 group-hover:bg-black/10 transition-colors duration-500"></div>
                     <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 right-6">
                       <h3 className="text-2xl sm:text-3xl font-bold text-white mb-1 sm:mb-2 underline decoration-pink-400">{latestAlbum.title}</h3>
@@ -120,7 +121,7 @@ export default function Home() {
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full flex-1">
                     <div className="sm:col-span-2 flex flex-col min-h-[200px]">
                       <Link href="/resources" className="relative overflow-hidden flex flex-col justify-end flex-1 min-h-[200px] rounded-3xl border border-white/40 shadow-xl p-6 text-white group">
-                        <img decoding="async" src="/covers/notes.jpg" alt="" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                        <SmartImage fill sizes="(max-width: 640px) 100vw, 640px" src="/covers/notes.jpg" alt="" className="object-cover transition-transform duration-700 group-hover:scale-105" />
                         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 to-slate-900/15" />
                         <div className="relative"><p className="text-xs tracking-widest mb-2">LEARNING LIBRARY</p><h3 className="text-2xl font-bold">学习资料 ↗</h3><p className="text-sm mt-2 text-white/85">收藏课程讲义、学习网站与实用教程</p></div>
                       </Link>

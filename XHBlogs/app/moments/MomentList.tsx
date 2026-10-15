@@ -1,4 +1,5 @@
 "use client";
+import SmartImage from '../../components/SmartImage';
 
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
@@ -74,7 +75,7 @@ export default function MomentList({ moments, authorName, avatarUrl }: any) {
             const isLastVisible = idx === 8 && count > 9;
             return (
               <div key={idx} onClick={() => setLightbox({ images, index: idx })} className="group relative aspect-square overflow-hidden rounded-lg md:rounded-xl bg-slate-200/20 dark:bg-slate-700/20 border border-slate-200/50 dark:border-white/10 cursor-zoom-in">
-                <img loading="lazy" decoding="async" src={src} alt="moment" className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                <SmartImage fill sizes="(max-width: 768px) 33vw, 320px" src={src} alt="moment" className="object-cover group-hover:scale-110 transition-transform duration-500" />
                 {isLastVisible && (
                   <div className="absolute inset-0 bg-black/60 flex items-center justify-center text-white backdrop-blur-[2px]">
                     <span className="text-lg md:text-xl font-black">+{count - 9}</span>

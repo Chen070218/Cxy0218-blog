@@ -1,3 +1,4 @@
+import SmartImage from '../../../components/SmartImage';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
@@ -136,7 +137,7 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
 
           <article className="flex-1 bg-white/60 dark:bg-slate-800/50 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/40 dark:border-white/10 overflow-hidden transition-colors duration-700">
             <div className="w-full aspect-video bg-slate-200 dark:bg-slate-700 relative group">
-              <img decoding="async" src={postData.cover} alt="封面" className="w-full h-full object-cover opacity-90 transition-transform duration-1000 group-hover:scale-105" />
+              <SmartImage fill sizes="(max-width: 1024px) 100vw, 760px" src={postData.cover} alt="封面" className="object-cover opacity-90 transition-transform duration-1000 group-hover:scale-105" />
             </div>
 
             <div className="p-5 md:p-12 relative">

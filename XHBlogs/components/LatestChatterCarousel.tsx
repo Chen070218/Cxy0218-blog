@@ -1,5 +1,6 @@
 // components/LatestChatterCarousel.tsx
 "use client";
+import SmartImage from './SmartImage';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -41,7 +42,7 @@ export default function LatestChatterCarousel({ chatters }: { chatters: any[] })
           transition={{ duration: 0.8, ease: "easeInOut" }}
           className="absolute inset-0 z-0"
         >
-          <img loading="lazy" decoding="async" src={currentChatter.cover} className="w-full h-full object-cover opacity-80 dark:opacity-60 transition-transform duration-1000 group-hover:scale-105" alt="Chatter Cover" />
+          <SmartImage fill sizes="(max-width: 768px) 90vw, 900px" src={currentChatter.cover} alt="Chatter Cover" className="object-cover opacity-80 dark:opacity-60 transition-transform duration-1000 group-hover:scale-105" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-black/10"></div>
         </motion.div>
       </AnimatePresence>

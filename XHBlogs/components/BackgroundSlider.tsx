@@ -1,4 +1,5 @@
 "use client";
+import SmartImage from './SmartImage';
 import { useEffect, useState } from 'react';
 import { siteConfig } from '../siteConfig';
 import { usePerfProfile } from './usePerfProfile';
@@ -32,16 +33,9 @@ export default function BackgroundSlider() {
 
   return (
     <div className="absolute inset-0 z-[-10] overflow-hidden">
-      <div
-        key={index}
-        className="absolute inset-0 transform-gpu bg-cover bg-center"
-        style={{
-          backgroundImage: `url(${current})`,
-          filter: 'blur(10px)',
-          transform: 'scale(1.08)',
-          animation: reducedMotion ? undefined : 'bg-fade 1.6s ease-out',
-        }}
-      />
+      <div key={index} className="absolute inset-0 transform-gpu" style={{ animation: reducedMotion ? undefined : 'bg-fade 1.6s ease-out' }}>
+        <SmartImage fill priority sizes="100vw" src={current} alt="" className="object-cover blur-[10px] scale-[1.08]" />
+      </div>
       <style dangerouslySetInnerHTML={{ __html: `@keyframes bg-fade { from { opacity: 0.35; } to { opacity: 1; } }` }} />
     </div>
   );
