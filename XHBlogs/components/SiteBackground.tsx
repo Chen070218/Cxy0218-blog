@@ -7,7 +7,7 @@ import { usePerfProfile } from "./usePerfProfile";
 /**
  * 站点背景：三层叠出来的主题背景
  *
- *  1) 氛围层：几张主题图轮播，重度模糊 + 压暗，只负责色调 —— 因为糊掉了，低分辨率拉伸也看不出来
+ *  1) 氛围层：几张主题图轮播，轻微柔化 + 适度压暗（保持能看清画面） —— 并叠一层明暗罩保证正文可读
  *  2) 立绘层：右侧一张清晰立绘，用遮罩淡出到背景；窄屏隐藏，避免挡住正文
  *  3) 暗角层：四周压暗，让中间内容更聚焦，也让文字更好读
  *
@@ -39,8 +39,8 @@ export default function SiteBackground() {
           className="absolute inset-[-6%] bg-cover bg-center"
           style={{
             backgroundImage: `url(${current})`,
-            filter: "blur(26px) saturate(1.15) brightness(0.55)",
-            transform: "scale(1.06)",
+            filter: "blur(4px) saturate(1.05) brightness(0.62)",
+            transform: "scale(1.02)",
             animation: reducedMotion ? undefined : "site-bg-fade 1.8s ease-out both",
           }}
         />
