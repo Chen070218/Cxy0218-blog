@@ -14,3 +14,6 @@ npm-debug.log*
 .Temp/
 .DS_Store
 Thumbs.db
+
+# 交给外部 AI 的项目说明（本地留档，不进公开仓库）
+项目说明-给Kimi.md

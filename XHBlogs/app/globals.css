@@ -1,4 +1,6 @@
 @import "tailwindcss";
+/* 自托管字体：思源宋体可变版（按 unicode-range 分片，浏览器只下用到的字），不再依赖 Google Fonts */
+@import "@fontsource-variable/noto-serif-sc";
 
 /* 1. 声明暗黑模式变体 */
 @custom-variant dark (&:where(.dark, .dark *));
@@ -6,7 +8,8 @@
 /* 2. 基础环境与性能优化 */
 @layer base {
   :root {
-    --font-serif: var(--font-serif), "Source Han Serif SC", "Noto Serif SC", "Songti SC", "SimSun", serif;
+    /* 注意：原来是 var(--font-serif) 套 var(--font-serif)，属于循环引用（无效 CSS），一并修掉 */
+    --font-serif: "Noto Serif SC Variable", "Noto Serif SC", "Source Han Serif SC", "Songti SC", "SimSun", serif;
   }
 
   body {
