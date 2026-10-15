@@ -77,6 +77,7 @@ export default function Navbar() {
     { name: '音乐', href: '/music' },
     { name: '说说', href: '/moments' },
     { name: '学习资料', href: '/resources' },
+      { name: '打卡', href: '/checkin' },
       { name: '关于', href: '/about' },
   ];
 
