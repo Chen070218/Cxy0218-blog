@@ -16,7 +16,7 @@ export default function SplashScreen() {
       setShow(true);
       const timer = setTimeout(() => {
         exitSplash();
-      }, 2200);
+      }, 1200);
       return () => clearTimeout(timer);
     } else {
       // 容错处理：确保直接访问时类名存在

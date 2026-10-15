@@ -37,8 +37,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: `
-              #app-mount-root { opacity: 0; visibility: hidden; pointer-events: none; }
-              html.splash-seen #app-mount-root { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }
+              /* 原来这里把整页内容隐藏，必须等 JS 激活并跑完开机动画才显示：
+                 手机在慢速网络下会长时间白屏（JS 若失败甚至永久白屏）。
+                 现在内容始终可见，开机动画只当作一层覆盖层。 */
+              html.splash-seen #app-mount-root { opacity: 1; visibility: visible; pointer-events: auto; }
             `
           }}
         />

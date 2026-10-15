@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // 打开内置压缩（HTML/JS/CSS 走 gzip/br 传输）：实测不开启时首页 60KB、最大 JS 块 216KB 全量下发，
+  // 手机走隧道访问会非常慢。开启后体积约为原来的 1/3。
+  compress: true,
   devIndicators: false,
   // 🚨 核心修改 1：关掉纯静态导出，让 Vercel 帮你把 API 跑起来！
   // output: 'export',
