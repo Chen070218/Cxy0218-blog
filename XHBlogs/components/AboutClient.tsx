@@ -1,4 +1,5 @@
 "use client";
+import SmartImage from './SmartImage';
 
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -126,13 +127,13 @@ export default function AboutClient({
     <div className="bg-white/60 dark:bg-slate-800/50 backdrop-blur-xl rounded-[40px] shadow-2xl border border-white/40 dark:border-white/10 overflow-hidden transition-colors duration-700 relative">
 
       <div className="w-full h-40 sm:h-48 md:h-64 relative bg-slate-200 dark:bg-slate-700 overflow-hidden group">
-        <img decoding="async" src={coverImage} alt="About Hero" className="w-full h-full object-cover opacity-90 transition-transform duration-1000 group-hover:scale-105" />
+        <SmartImage fill sizes="100vw" src={coverImage} alt="About Hero" className="object-cover opacity-90 transition-transform duration-1000 group-hover:scale-105" />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent"></div>
       </div>
 
       <div className="px-5 sm:px-8 md:px-16 pb-10 md:pb-16 relative">
         <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-white dark:border-slate-800 shadow-2xl overflow-hidden -mt-12 md:-mt-16 relative z-20 bg-white">
-          <img decoding="async" src={siteConfig.avatarUrl} alt="avatar" className="w-full h-full object-cover" />
+          <SmartImage fill sizes="128px" src={siteConfig.avatarUrl} alt="avatar" className="object-cover" />
         </div>
 
         {/* 🌟 核心修复区：手机端排版优雅适配 */}
