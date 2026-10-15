@@ -1,3 +1,7 @@
+import { siteConfig } from '../../siteConfig';
+
+export const metadata = { title: '关于 | ' + siteConfig.title, description: siteConfig.bio };
+
 // src/app/about/page.tsx
 import fs from 'fs';
 import path from 'path';
@@ -101,6 +105,7 @@ export default async function AboutPage() {
   return (
     <div className="min-h-screen relative pb-20">
       <Navbar />
+      <h1 className="sr-only">关于我</h1>
       <PageTransition>
         <main className="w-[95%] md:w-[90%] max-w-4xl mx-auto mt-24 md:mt-28 relative z-10">
 
