@@ -45,7 +45,7 @@ export default function LocalPostPage() {
           </article>
         ) : (
           <section className="course-panel" style={{ marginTop: 20 }}>
-            <h2>本地归档</h2>
+            <h1 style={{ fontSize: 28, fontWeight: 800, margin: "8px 0 12px" }}>本地归档</h1>
             <p className="course-notice">
               这里显示的是<strong>在浏览器里创建的草稿</strong>，它们只存在当前设备，换电脑或清理浏览器数据后就看不到了。
               已发布到仓库的文章在下面，任何设备都能打开。

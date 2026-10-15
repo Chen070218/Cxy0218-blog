@@ -7,5 +7,10 @@ export const metadata = {
 };
 
 export default function MusicPage() {
-  return <MusicClient />;
+  return (
+    <>
+      <h1 className="sr-only">音乐馆</h1>
+      <MusicClient />
+    </>
+  );
 }
