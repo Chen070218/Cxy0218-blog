@@ -36,10 +36,10 @@ export const siteConfig = {
   photoWallImage: "/photos/329a8f2e4296.webp",
   cloudMusicIds: ["1809646618", "3361076230", "1859390262"],
   social: {
-    github: "",
+    github: "https://github.com/Chen070218",
     gitee: "",
     google: "",
-    email: "",
+    email: "18926434408@163.com",
     qq: "1124533793",
     wechat: "cxy0218",
   },
@@ -70,7 +70,7 @@ export const siteConfig = {
     maxOutputTokens: 150,
     temperature: 0.85,
   },
-  friendLinkApplyFormat: "名称：cxy0218\n简介：今天我也要学习吗\n链接：https://www.xinghuisama.top\n头像：/characters/xinyuehu-square.webp",
+  friendLinkApplyFormat: "名称：cxy0218\n简介：编程、德语和一只叫心月狐的桌面狐狸\n链接：https://chen070218.github.io/Cxy0218-blog/\n头像：/characters/xinyuehu-square.webp",
   // 桌宠「心月狐」的 AI 后端：deepseek（默认）或 gemini
   chatProvider: "deepseek",
   deepseekConfig: {
