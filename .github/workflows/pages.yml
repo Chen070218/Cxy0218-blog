@@ -1,0 +1,53 @@
+name: Deploy site to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      STATIC_EXPORT: '1'
+      NEXT_PUBLIC_BASE_PATH: '/${{ github.event.repository.name }}'
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: XHBlogs/package-lock.json
+      # 静态托管没有服务端，/api 路由无法导出，构建前移开
+      - name: Move API routes aside (static export has no server)
+        run: mv XHBlogs/app/api XHBlogs/app/_api_disabled
+      - name: Install dependencies
+        run: npm ci
+        working-directory: XHBlogs
+      - name: Build static site
+        run: npx next build --webpack
+        working-directory: XHBlogs
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: XHBlogs/out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -20,3 +20,7 @@ Thumbs.db
 
 # 本地工具（如 cloudflared，不入库）
 tools/
+
+# wrangler（Cloudflare）本地状态与日志
+.wrangler/
+.wrangler-cfg/
