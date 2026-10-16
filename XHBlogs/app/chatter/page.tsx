@@ -38,7 +38,6 @@ export default function ChatterPage() {
   return (
     <div className="min-h-screen relative pb-20">
       <Navbar />
-      <h1 className="sr-only">杂谈</h1>
       <PageTransition>
         <main className="w-[92%] md:w-[90%] max-w-6xl mx-auto mt-24 md:mt-28">
           <header className="mb-8 md:mb-10">

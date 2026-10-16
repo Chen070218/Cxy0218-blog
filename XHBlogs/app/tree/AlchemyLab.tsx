@@ -363,6 +363,8 @@ export default function AlchemyLab({ posts = [], chatters = [], moments = [] }: 
     const fetchGitalkComments = async () => {
       try {
         const { owner, repo } = siteConfig.gitalkConfig;
+        // 没配置 GitHub 仓库时直接跳过，别去打一个不存在的地址
+        if (!owner || !repo) return;
         const targetLabel = `workshop-${currentMonthStr}`;
         const issueRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues?labels=${targetLabel}`);
         const issues = await issueRes.json();

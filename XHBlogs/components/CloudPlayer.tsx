@@ -12,7 +12,7 @@ const formatTime = (time: number) => {
 };
 
 export default function CloudPlayer() {
-  const { playlist, currentSong, isPlaying, progress, currentTime, duration, currentLyric, isLoading, togglePlay, nextSong, prevSong, handleSeek } = useMusic();
+  const { playlist, currentSong, isPlaying, progress, currentTime, duration, currentLyric, isLoading, unavailable, togglePlay, nextSong, prevSong, handleSeek } = useMusic();
   const [displayedLyric, setDisplayedLyric] = useState("");
   // 🌟 初始化路由
   const router = useRouter();
@@ -42,6 +42,11 @@ export default function CloudPlayer() {
         <span className="text-slate-800 dark:text-white font-bold tracking-widest animate-pulse text-sm">CONNECTING...</span>
       </div>
     );
+  }
+
+  // 纯静态部署没有 /api/music，这时不显示“没有音乐”的空壳卡片
+  if (unavailable) {
+    return null;
   }
 
   if (playlist.length === 0 || !currentSong) {

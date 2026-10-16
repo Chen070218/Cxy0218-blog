@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useRef, useEffect, ReactNode } from 'react';
 import { siteConfig } from '../siteConfig';
+import { withBasePath } from '../sitePath';
 
 // 【增强版 LRC 歌词解析】
 function parseLrc(lrcText: string) {
@@ -46,6 +47,8 @@ interface MusicContextType {
   duration: number;
   currentLyric: string;
   isLoading: boolean;
+  /** 音乐接口不可用（例如纯静态托管没有 /api/music）时为 true */
+  unavailable: boolean;
   volume: number;
   isMuted: boolean;
   playMode: PlayMode;
@@ -72,6 +75,7 @@ export function MusicProvider({ children }: { children: ReactNode }) {
   const [lyrics, setLyrics] = useState<{ time: number; text: string }[]>([]);
   const [currentLyric, setCurrentLyric] = useState("正在连接高可用神经云端...");
   const [isLoading, setIsLoading] = useState(true);
+  const [unavailable, setUnavailable] = useState(false);
 
   // 🌟 2. 新增音量和播放模式状态
   const [volume, setVolumeState] = useState(1);
@@ -84,7 +88,12 @@ export function MusicProvider({ children }: { children: ReactNode }) {
     let isMounted = true;
     const fetchMusicData = async () => {
       try {
-        const res = await fetch(`/api/music?ids=${siteConfig.cloudMusicIds.join(',')}`);
+        const res = await fetch(withBasePath(`/api/music?ids=${siteConfig.cloudMusicIds.join(',')}`));
+        if (!res.ok) {
+          // 静态托管没有这个接口：静默降级，不要显示成“播放列表出错”的空卡片
+          if (isMounted) { setUnavailable(true); setIsLoading(false); }
+          return;
+        }
         const rawResults = await res.json();
 
         const mergedPlaylist = rawResults
@@ -105,7 +114,7 @@ export function MusicProvider({ children }: { children: ReactNode }) {
           setIsLoading(false);
         }
       } catch (error) {
-        if (isMounted) { setCurrentLyric("网络初始化失败"); setIsLoading(false); }
+        if (isMounted) { setUnavailable(true); setCurrentLyric("网络初始化失败"); setIsLoading(false); }
       }
     };
 
@@ -243,6 +252,7 @@ export function MusicProvider({ children }: { children: ReactNode }) {
 
   return (
     <MusicContext.Provider value={{
+        unavailable,
         playlist, currentIndex, currentSong, isPlaying, progress, currentTime, duration, currentLyric, isLoading,
         volume, isMuted, playMode, // 暴露新状态
         togglePlay, nextSong, prevSong, handleSeek,

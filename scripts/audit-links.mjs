@@ -60,7 +60,7 @@ const isPageUrl = (raw) => {
 
 async function probe(url) {
   try {
-    const res = await fetch(url, { redirect: 'follow' });
+    const res = await fetch(url, { redirect: 'follow', signal: AbortSignal.timeout(20000) });
     return { status: res.status, type: res.headers.get('content-type') || '' };
   } catch (error) {
     return { status: 'ERR', type: String(error?.message || error) };
@@ -79,7 +79,9 @@ while (queue.length && pageStatus.size < maxPages) {
     continue;
   }
 
-  const html = await fetch(url).then((r) => r.text());
+  const html = await fetch(url, { signal: AbortSignal.timeout(20000) })
+    .then((r) => r.text())
+    .catch(() => '');
   for (const link of extractUrls(html, url)) {
     if (isPageUrl(link)) {
       if (!seen.has(link) && !queue.includes(link)) queue.push(link);

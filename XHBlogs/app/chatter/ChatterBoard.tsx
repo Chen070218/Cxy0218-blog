@@ -129,7 +129,7 @@ export default function ChatterBoard({ chatters }: { chatters: Chatter[] }) {
 
                   {chatter.title && (
                     // 🌟 核心修改 6：标题压缩 text-sm md:text-xl
-                    <h3 className="text-sm md:text-xl font-bold text-slate-800 dark:text-white mb-1.5 md:mb-4 leading-tight group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2 md:line-clamp-none">{chatter.title}</h3>
+                    <h2 className="text-sm md:text-xl font-bold text-slate-800 dark:text-white mb-1.5 md:mb-4 leading-tight group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2 md:line-clamp-none">{chatter.title}</h2>
                   )}
 
                   {/* 🌟 核心修改 7：正文压缩，限制行数 */}

@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import MoonFox, { PetState } from './MoonFox';
+import { withBasePath } from '../sitePath';
 
 type ChatMessage = { role: 'user' | 'assistant'; content: string };
 type Provider = 'deepseek' | 'gemini';
@@ -55,7 +56,7 @@ export default function CyberCat() {
     speak(thinkingText, 12000);
 
     try {
-      const res = await fetch('/api/chat', {
+      const res = await fetch(withBasePath('/api/chat'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         // history 带上前面几轮，心月狐才记得住刚才聊了什么

@@ -124,6 +124,8 @@ export default function Navbar() {
               setIsMobileMenuOpen(true);
             }
           }}
+          aria-label="打开导航菜单"
+          aria-expanded={isMobileMenuOpen}
           className={`fixed top-1/2 right-0 -translate-y-1/2 w-12 h-28 bg-indigo-500/80 backdrop-blur-xl rounded-l-full shadow-[-5px_0_20px_rgba(99,102,241,0.4)] z-[60] flex items-center justify-center transition-all duration-500 border-y border-l border-white/30 touch-none ${isMobileMenuOpen ? 'translate-x-full opacity-0 pointer-events-none' : 'translate-x-0 opacity-100'}`}
         >
           <div className="flex flex-col gap-1.5 items-center justify-center mr-2">
