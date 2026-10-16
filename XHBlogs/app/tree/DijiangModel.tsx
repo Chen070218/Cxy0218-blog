@@ -10,6 +10,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { Float, Html } from '@react-three/drei';
 
 import LabComments from '../../components/LabComments';
+import { withBasePath } from '../../sitePath';
 import { siteConfig } from '../../siteConfig';
 
 import { albums } from '../../data/albums';
@@ -146,7 +147,7 @@ const StackedTacticalHUD = ({ records, color, categoryName, isImageStyle, router
               {records.map((r: any) => (
                 isImageStyle ? (
                   <div key={r.id} onClick={() => handleItemClick(r)} className="relative w-full aspect-video shrink-0 overflow-hidden shadow-md group cursor-pointer border border-[#333] bg-[#222] rounded-xl">
-                    <img decoding="async" src={r.image} alt={r.title} className="absolute inset-0 w-full h-full object-cover blur-[2px] group-hover:blur-0 transition-all duration-500 scale-110 opacity-70 group-hover:opacity-100" />
+                    <img decoding="async" src={withBasePath(r.image)} alt={r.title} className="absolute inset-0 w-full h-full object-cover blur-[2px] group-hover:blur-0 transition-all duration-500 scale-110 opacity-70 group-hover:opacity-100" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent transition-colors duration-500" />
                     <div className="absolute right-0 top-0 bottom-0 w-1 opacity-80" style={{ backgroundColor: color }} />
                     <div className="relative z-10 p-4 h-full flex flex-col justify-end">
@@ -179,7 +180,7 @@ const StackedTacticalHUD = ({ records, color, categoryName, isImageStyle, router
                 >
                   {isImageStyle ? (
                     <>
-                      <img decoding="async" src={r.image} className="absolute inset-0 w-full h-full object-cover blur-[2px] opacity-50" alt="" />
+                      <img decoding="async" src={withBasePath(r.image)} className="absolute inset-0 w-full h-full object-cover blur-[2px] opacity-50" alt="" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent" />
                       <div className="relative z-10 p-4 h-full flex flex-col justify-end text-left">
                          <div className="text-[10px] text-amber-500 font-mono drop-shadow-md mb-1">{formatDisplayDate(r.date)}</div>

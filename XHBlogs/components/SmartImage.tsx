@@ -3,6 +3,8 @@
 import Image from 'next/image';
 import React from 'react';
 
+import { withBasePath } from '@/sitePath';
+
 /** 允许走 Next 图片优化的远程主机（自己的图床） */
 const ALLOWED_REMOTE_HOSTS = ['bu.dusays.com'];
 
@@ -29,15 +31,18 @@ function hostOf(url: string) {
  * 这样既拿到优化，又不会因为 hostname 没配而整页报错。
  */
 export default function SmartImage({ src, alt = '', className, fill, width = 1200, height = 900, sizes, priority }: SmartImageProps) {
-  const isRemote = /^https?:\/\//i.test(src);
-  const canOptimize = !isRemote || ALLOWED_REMOTE_HOSTS.includes(hostOf(src));
+  // 静态导出（output: 'export' + unoptimized）时 next/image 不会自己补 basePath，
+  // 所以这里统一补一次；没有配 basePath 时它是原样返回。
+  const finalSrc = withBasePath(src);
+  const isRemote = /^https?:\/\//i.test(finalSrc);
+  const canOptimize = !isRemote || ALLOWED_REMOTE_HOSTS.includes(hostOf(finalSrc));
 
   if (!canOptimize) {
-    return <img src={src} alt={alt} className={className} sizes={sizes} loading={priority ? 'eager' : 'lazy'} decoding="async" />;
+    return <img src={finalSrc} alt={alt} className={className} sizes={sizes} loading={priority ? 'eager' : 'lazy'} decoding="async" />;
   }
 
   const common = {
-    src,
+    src: finalSrc,
     alt,
     className,
     sizes: sizes || (fill ? '100vw' : undefined),

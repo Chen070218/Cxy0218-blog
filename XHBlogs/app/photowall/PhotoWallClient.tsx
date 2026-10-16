@@ -7,6 +7,7 @@ import PageTransition from '../../components/PageTransition';
 import { albums as initialAlbums, Album } from '../../data/albums';
 
 import ContentComposer, { readContent } from '../../components/ContentComposer';
+import { withBasePath } from '../../sitePath';
 
 export default function PhotoWallClient() {
   const [albums,setAlbums]=useState(initialAlbums);
@@ -213,7 +214,7 @@ export default function PhotoWallClient() {
           </button>
 
           <img loading="lazy" decoding="async"
-            src={selectedImage.url}
+            src={withBasePath(selectedImage.url)}
             alt={selectedImage.caption || '全屏照片'}
             className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
             onClick={(e) => e.stopPropagation()}

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import MoonFoxSvg from "./MoonFoxSvg";
+import { withBasePath } from "@/sitePath";
 
 /** 心月狐桌宠的九种状态（对应设定稿里的 Q 版姿势） */
 export type PetState = "idle" | "walk" | "happy" | "angry" | "sleep" | "curious" | "lie" | "think" | "interact";
@@ -12,7 +13,7 @@ export type PetState = "idle" | "walk" | "happy" | "angry" | "sleep" | "curious"
  * 思考态复用「好奇」姿势。
  * 如果精灵图加载失败，自动回落到手绘 SVG 版（components/MoonFoxSvg.tsx），保证桌宠不会消失。
  */
-const SPRITES: Record<PetState, string> = {
+const SPRITE_FILES: Record<PetState, string> = {
   idle: "/pet/idle.png",
   walk: "/pet/walk.png",
   happy: "/pet/happy.png",
@@ -23,6 +24,11 @@ const SPRITES: Record<PetState, string> = {
   think: "/pet/curious.png",
   interact: "/pet/interact.png",
 };
+
+// 站点挂在子路径时（GitHub Pages）这些静态图也要带前缀
+const SPRITES = Object.fromEntries(
+  Object.entries(SPRITE_FILES).map(([key, file]) => [key, withBasePath(file)]),
+) as Record<PetState, string>;
 
 const ALL_SPRITES = Array.from(new Set(Object.values(SPRITES)));
 

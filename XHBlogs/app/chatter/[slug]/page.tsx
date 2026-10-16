@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import { prefixHtml } from "../../../sitePath";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { unified } from "unified";
@@ -80,7 +81,7 @@ export default async function ChatterDetail({ params }: { params: Promise<{ slug
                   </span>
                 ))}
               </div>
-              <div className="prose prose-slate dark:prose-invert max-w-none mt-6" dangerouslySetInnerHTML={{ __html: item.contentHtml }} />
+              <div className="prose prose-slate dark:prose-invert max-w-none mt-6" dangerouslySetInnerHTML={{ __html: prefixHtml(item.contentHtml) }} />
             </div>
           </article>
         </main>

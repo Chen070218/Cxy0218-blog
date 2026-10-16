@@ -1,4 +1,5 @@
 import SmartImage from '../../../components/SmartImage';
+import { prefixHtml } from '../../../sitePath';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
@@ -256,7 +257,7 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
                 <div
                   id="article-content"
                   className="prose prose-slate dark:prose-invert prose-base md:prose-lg max-w-none text-slate-800 dark:text-slate-200 transition-colors duration-700 scroll-smooth"
-                  dangerouslySetInnerHTML={{ __html: postData.contentHtml }}
+                  dangerouslySetInnerHTML={{ __html: prefixHtml(postData.contentHtml) }}
                 />
               </div>
 

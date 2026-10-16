@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { ImagePlus, RotateCcw, X } from 'lucide-react';
+import { withBasePath } from '../sitePath';
 
 type Props = { storageKey: string; title: string; subtitle?: string; image: string; eyebrow?: string; compact?: boolean };
 export function validCover(value: string): boolean {
@@ -36,7 +37,7 @@ export default function SectionCover({ storageKey, title, subtitle, image, eyebr
     <section className={`section-cover ${compact ? 'section-cover-compact' : ''}`} aria-label={title + '封面'}>
       {/* Native img permits local uploads and arbitrary user-configured image hosts. */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img decoding="async" src={failed ? '/covers/notes.jpg' : selected} alt="" onError={() => setFailed(true)} />
+      <img decoding="async" src={failed ? withBasePath('/covers/notes.jpg') : selected} alt="" onError={() => setFailed(true)} />
       <div className="section-cover-shade" />
       <div className="section-cover-copy"><span>{eyebrow}</span><h1>{title}</h1>{subtitle && <p>{subtitle}</p>}</div>
       <button className="cover-change" aria-label={`更换${title}封面`} onClick={() => {setDraft(custom);setError('');dialog.current?.showModal();}}><ImagePlus size={16}/><span>更换封面</span></button>

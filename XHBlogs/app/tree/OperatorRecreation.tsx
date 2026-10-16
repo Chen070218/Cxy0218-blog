@@ -1,5 +1,6 @@
 "use client";
 import SmartImage from '../../components/SmartImage';
+import { withBasePath } from '../../sitePath';
 
 import { useRef, useState, useEffect } from 'react';
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion';
@@ -161,7 +162,7 @@ export default function OperatorRecreation() {
           >
             {/* 主体动图（动态 WebP，保持原生 img：走 next/image 会被压成静图） */}
             <img loading="lazy" decoding="async"
-              src="/spine/shu/Shu.webp"
+              src={withBasePath("/spine/shu/Shu.webp")}
               alt="Shu Walking"
               style={{ filter: "drop-shadow(0 0 1px black) drop-shadow(0 0 1px black) drop-shadow(0 0 1px black)" }}
               className="relative z-10 w-full h-full object-contain pointer-events-none"

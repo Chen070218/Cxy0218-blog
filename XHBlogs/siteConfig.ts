@@ -1,9 +1,11 @@
 // siteConfig.ts - 你的全站“控制中心”
 
+import { withBasePath } from './sitePath';
+
 export const siteConfig = {
   // 1. 网站标题与博主信息
   title: "cxy0218",
-  faviconUrl: "/characters/xinyuehu-square.webp",
+  faviconUrl: withBasePath("/characters/xinyuehu-square.webp"),
   authorName: "cxy0218",
   bio: "海南比勒费尔德应用科学大学计算机科学专业 2025 级本科生，正在学习编程、算法与数据结构、操作系统、人工智能基础，以及德语和英语。",
 
@@ -15,16 +17,16 @@ export const siteConfig = {
   navAfter: "",
 
   // 2. 头像设置 (支持网络链接，或将图片放入 public 文件夹后使用 "/me.jpg")
-  avatarUrl: "/characters/xinyuehu-square.webp",
+  avatarUrl: withBasePath("/characters/xinyuehu-square.webp"),
 
   // 3. 网站背景设置 (二选一)
   // 如果想用纯图片背景，请在下面 bgImage 写路径，并将 useGradient 设为 false
   useGradient: false,
   themeColors: ["#a18cd1", "#fbc2eb", "#a1c4fd", "#c2e9fb"], // 呼吸流动的颜色组合
 // 修改这里：变成图片数组
-  bgImages: ["/bg/ambient-1.webp", "/bg/ambient-3.webp"],
+  bgImages: [withBasePath("/bg/ambient-1.webp"), withBasePath("/bg/ambient-3.webp")],
   // 右侧的清晰立绘（小屏自动隐藏）
-  portraitImage: "/bg/portrait.webp",
+  portraitImage: withBasePath("/bg/portrait.webp"),
   portraitAlt: "心月狐",
 
   // 4. 文章默认封面图 (当 Markdown 没写 cover 时显示)

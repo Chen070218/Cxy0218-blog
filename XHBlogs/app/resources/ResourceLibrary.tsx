@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import ConfirmDelete from '../../components/ConfirmDelete';
 import LocalFiles, { addLocalFiles, removeLocalFiles } from '../../components/LocalFiles';
 import SectionCover from '../../components/SectionCover';
+import { withBasePath } from '../../sitePath';
 
 type Resource = { id: string; title: string; url: string; category: string; note: string };
 
@@ -73,7 +74,7 @@ export default function ResourceLibrary({ projectMode = false, initialItems = []
   const categories = ['全部', ...Array.from(new Set(items.map(item => item.category)))];
   const shown = items.filter(item => (category === '全部' || item.category === category) && `${item.title} ${item.category} ${item.note}`.toLowerCase().includes(query.trim().toLowerCase()));
   return <main className="course-shell">
-    <SectionCover storageKey={projectMode ? "projects" : "resources"} image={projectMode ? "/covers/projects.jpg" : "/covers/notes.jpg"} eyebrow={projectMode ? "MY PROJECTS / 项目文件夹" : "LEARNING LIBRARY / 学习资料"} title={projectMode ? "把想法，整理成自己的项目" : "让每一次学习，都有迹可循"} subtitle="收纳本地文档、图片、代码和链接，随时下载取回。" />
+    <SectionCover storageKey={projectMode ? "projects" : "resources"} image={projectMode ? withBasePath("/covers/projects.jpg") : withBasePath("/covers/notes.jpg")} eyebrow={projectMode ? "MY PROJECTS / 项目文件夹" : "LEARNING LIBRARY / 学习资料"} title={projectMode ? "把想法，整理成自己的项目" : "让每一次学习，都有迹可循"} subtitle="收纳本地文档、图片、代码和链接，随时下载取回。" />
     <section className="course-panel" aria-label={projectMode ? "项目文件夹" : "学习资料库"}>
       <div className="course-toolbar"><div><h2>{projectMode ? "我的项目" : "我的资料库"} <span className="study-count">{items.length} 份</span></h2><p className="course-notice">按课程或主题分类，随时找回需要的资料。</p></div><div className="cover-actions"><button className="cover-primary" disabled={!ready || busy} onClick={() => open(null)}>＋ 添加{noun}</button></div></div>
       <label className="study-search">搜索{noun}<input type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="搜索名称、分类或备注…" /></label>

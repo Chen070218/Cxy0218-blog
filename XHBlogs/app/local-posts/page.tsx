@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Navbar from '../../components/Navbar';
 import { readContent, LocalPost } from '../../components/ContentComposer';
+import { withBasePath } from '../../sitePath';
 
 // 已发布的文章（仓库里的 posts/）
 const published = [
@@ -37,7 +38,7 @@ export default function LocalPostPage() {
           <article className="course-panel" style={{ marginTop: 20 }}>
             {post.cover ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img loading="lazy" decoding="async" src={post.cover} alt="归档封面" style={{ width: '100%', maxHeight: 320, objectFit: 'cover', borderRadius: 18 }} />
+              <img loading="lazy" decoding="async" src={withBasePath(post.cover)} alt="归档封面" style={{ width: '100%', maxHeight: 320, objectFit: 'cover', borderRadius: 18 }} />
             ) : null}
             <h1 style={{ fontSize: 32, fontWeight: 800, margin: '24px 0' }}>{post.title}</h1>
             <p>{post.date} · {post.tags.join(' / ')}</p>

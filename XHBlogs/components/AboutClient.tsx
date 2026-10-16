@@ -1,5 +1,6 @@
 "use client";
 import SmartImage from './SmartImage';
+import { prefixHtml } from '../sitePath';
 
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -212,7 +213,7 @@ export default function AboutClient({
                     .prose pre code { font-size: 0.9em !important; }
                   }
                 `}</style>
-                <div className="prose prose-slate dark:prose-invert prose-base md:prose-lg max-w-none text-slate-800 dark:text-slate-200 font-serif transition-colors duration-700 leading-relaxed scroll-smooth" dangerouslySetInnerHTML={{ __html: contentHtml }} />
+                <div className="prose prose-slate dark:prose-invert prose-base md:prose-lg max-w-none text-slate-800 dark:text-slate-200 font-serif transition-colors duration-700 leading-relaxed scroll-smooth" dangerouslySetInnerHTML={{ __html: prefixHtml(contentHtml) }} />
               </div>
               <div className="mt-12 md:mt-16"></div>
             </motion.div>
