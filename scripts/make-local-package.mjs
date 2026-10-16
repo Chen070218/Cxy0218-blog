@@ -14,10 +14,14 @@ const ROOT = path.resolve(import.meta.dirname, '..');
 const XH = path.join(ROOT, 'XHBlogs');
 const DIST = path.join(ROOT, 'dist');
 const PKG_NAME = 'cxy0218-本地版';
-const PKG = path.join(DIST, PKG_NAME);
-const SITE = path.join(PKG, 'site');
 // 复用上一次的构建产物（调试打包脚本时用）
 const SKIP_BUILD = process.argv.includes('--skip-build');
+// 含密钥的版本只发给老师本人；公开分享（GitHub Release）必须用 --no-key
+const NO_KEY = process.argv.includes('--no-key');
+// 两种版本分开输出，避免互相覆盖
+const SUFFIX = NO_KEY ? '-无密钥' : '';
+const PKG = path.join(DIST, PKG_NAME + SUFFIX);
+const SITE = path.join(PKG, 'site');
 
 const rmrf = (target) => fs.rmSync(target, { recursive: true, force: true });
 const copyDir = (from, to) => fs.cpSync(from, to, { recursive: true, force: true });
@@ -69,6 +73,9 @@ for (const junk of [
   path.join(SITE, '.wrangler'),
   path.join(SITE, 'functions'),
   path.join(SITE, '.dev.vars'),
+  path.join(SITE, '.env.local'),
+  path.join(SITE, '.env'),
+  path.join(SITE, '.env.production'),
   path.join(SITE, 'AGENTS.md'),
   path.join(SITE, 'CLAUDE.md'),
   path.join(SITE, '.env.local.example'),
@@ -81,8 +88,14 @@ for (const junk of [
   rmrf(junk);
 }
 
+// standalone 会连带把源码目录里的 .env* 复制过来，这里兜底清一遍，
+// 之后要不要写密钥完全由上面的 NO_KEY 决定
+for (const entry of fs.readdirSync(SITE)) {
+  if (entry.startsWith('.env')) rmrf(path.join(SITE, entry));
+}
+
 // AI 对话要用的密钥放在 site/.env.local，运行时由 Next 自动读取
-const deepseek = readEnvValue(path.join(XH, '.env.local'), 'DEEPSEEK_API_KEY') || readEnvValue(path.join(XH, '.dev.vars'), 'DEEPSEEK_API_KEY');
+const deepseek = NO_KEY ? '' : readEnvValue(path.join(XH, '.env.local'), 'DEEPSEEK_API_KEY') || readEnvValue(path.join(XH, '.dev.vars'), 'DEEPSEEK_API_KEY');
 if (deepseek) {
   fs.writeFileSync(path.join(SITE, '.env.local'), `DEEPSEEK_API_KEY=${deepseek}\n`, 'utf8');
 }
@@ -143,7 +156,9 @@ fs.writeFileSync(
       : '需要机器上装有 Node.js 20 或更新版本。',
     '',
     '【哪些功能要联网】',
-    '- 右下角桌宠的 AI 对话（调用 DeepSeek 接口）：需要联网',
+    NO_KEY
+      ? '- 右下角桌宠的 AI 对话：这个版本里没有内置 API 密钥，需要在 site\\.env.local 里补一行 DEEPSEEK_API_KEY=你的密钥 才能聊天'
+      : '- 右下角桌宠的 AI 对话（调用 DeepSeek 接口）：需要联网',
     '- 首页音乐播放器（代理网易云接口）、首页天气：需要联网',
     '- 其它页面（文章、相册、打卡、番茄钟、课程表、创意工坊等）全部离线可用',
     '',
@@ -154,14 +169,16 @@ fs.writeFileSync(
     '- 想换端口：编辑 启动网站.cmd 里的 PORT',
     '',
     '【注意】',
-    'site\\.env.local 里保存着桌宠对话用的 API 密钥，仅用于本地演示，请不要把这个文件夹上传到公开网盘或公开仓库。',
+    NO_KEY
+      ? '这个版本不含任何密钥，可以放心公开分享。'
+      : 'site\\.env.local 里保存着桌宠对话用的 API 密钥，仅用于本地演示，请不要把这个文件夹上传到公开网盘或公开仓库。',
     '',
   ].join('\r\n'),
   'utf8',
 );
 
 console.log('[5/5] 打包 zip…');
-const zip = path.join(DIST, `${PKG_NAME}.zip`);
+const zip = path.join(DIST, `${PKG_NAME}${SUFFIX}.zip`);
 rmrf(zip);
 writeZip(PKG, zip);
 
