@@ -27,3 +27,6 @@ tools/
 
 # Cloudflare API Token（只放本地，绝不入库）
 .cf-token
+
+# 打包产物（给老师的本地版 zip、静态导出的压缩包）
+dist/
