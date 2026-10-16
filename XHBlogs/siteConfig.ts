@@ -33,7 +33,7 @@ export const siteConfig = {
   defaultPostCover: withBasePath("/screenshots/01-home.webp"),
 
   // 5. 首页照片墙预览图
-  photoWallImage: "https://bu.dusays.com/2026/03/24/69c1e38b4c370.jpg",
+  photoWallImage: "/photos/329a8f2e4296.webp",
   cloudMusicIds: ["1809646618", "3361076230", "1859390262"],
   social: {
     github: "",
