@@ -10,7 +10,9 @@ export default function SplashScreen() {
 
   useEffect(() => {
     setIsMounted(true);
-    const hasSeenSplash = sessionStorage.getItem('hasSeenSplash') === 'true';
+    // 带 ?nosplash=1 时直接跳过开机动画（截图/演示用，对普通访客没有影响）
+    const skipSplash = typeof window !== "undefined" && new URLSearchParams(window.location.search).has("nosplash");
+    const hasSeenSplash = skipSplash || sessionStorage.getItem('hasSeenSplash') === 'true';
 
     if (!hasSeenSplash) {
       setShow(true);

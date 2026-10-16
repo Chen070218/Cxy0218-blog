@@ -35,3 +35,19 @@ set "NEXT_TELEMETRY_DISABLED=1"
 ## 小结
 
 迁移的要点其实就两条：环境尽量做成便携的（放进项目目录），以及把启动脚本里"依赖外部环境"的地方提前兜住——少一个假设，就少一个换机器时要重新排查的坑。
+## 迁移后顺手修的几个问题
+
+环境跑起来之后还处理了几处「不修不行」的细节：
+
+```bat
+:: 启动脚本：优先使用随包内置的 Node，并关掉遥测
+if exist "%~dp0node\node.exe" set "PATH=%~dp0node;%PATH%"
+set "NEXT_TELEMETRY_DISABLED=1"
+```
+
+- 本机没有系统级 Node，脚本第一句 `where node` 就会失败退出 —— 改为优先用项目自带的便携版 Node；
+- 不加 `NEXT_TELEMETRY_DISABLED=1` 时，Next 16 写遥测配置会抛 `EXDEV` 并让进程退出；
+- 顺带把「内容必须等 JS 才显示」的规则删掉，手机慢网下不再长时间白屏；
+- 图片全部走 WebP 按尺寸下发，并把三张 900KB 级别的图压到几十 KB。
+
+![写完并整理后的文章列表](/screenshots/05-posts.webp)
