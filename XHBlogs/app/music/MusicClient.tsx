@@ -10,7 +10,7 @@ import { useMusic } from '../../components/MusicProvider';
 export default function MusicClient() {
   const {
     playlist, currentSong, isPlaying, progress, currentTime, duration, currentLyric,
-    isLoading, togglePlay, nextSong, prevSong, handleSeek,
+    isLoading, unavailable, togglePlay, nextSong, prevSong, handleSeek,
     playSong, selectSong,
     playMode, togglePlayMode,
     volume, setVolume, isMuted, toggleMute
@@ -113,6 +113,20 @@ export default function MusicClient() {
       (song.artist || song.author || '').toLowerCase().includes(lowerQuery)
     );
   }, [playlist, searchQuery]);
+
+  if (unavailable) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center gap-3 text-center px-6">
+        <span className="text-6xl">🎧</span>
+        <h1 className="text-2xl md:text-3xl font-black tracking-widest text-slate-800 dark:text-white">音乐播放器</h1>
+        <p className="text-sm text-slate-500 dark:text-slate-400 max-w-md leading-relaxed">
+          当前部署是纯静态版本，没有可以代理网易云接口的服务端，所以这里暂时取不到歌单。
+          本地运行或部署到 Cloudflare 版站点时，这个播放器会正常工作。
+        </p>
+        <p className="text-[11px] text-slate-400 dark:text-slate-500">歌单配置在 siteConfig.ts 的 cloudMusicIds 里</p>
+      </div>
+    );
+  }
 
   if (isLoading || !currentSong) {
     return (
