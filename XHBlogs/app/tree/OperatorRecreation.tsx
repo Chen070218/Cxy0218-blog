@@ -6,7 +6,7 @@ import { useRef, useState, useEffect } from 'react';
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion';
 
 // ==========================================
-// 🌟 黍姐姐的专属语音库
+// 🌟 心月狐的专属语音库
 // ==========================================
 const SHU_QUOTES = [
   "好好吃饭，好好休息。剩下的，交给我。",
@@ -19,7 +19,7 @@ const SHU_QUOTES = [
 ];
 
 // ==========================================
-// 🌟 干员休息处主组件 (全新 PRTS 通讯气泡版)
+// 🌟 共鸣者休息处主组件 (全新终端通讯气泡版)
 // ==========================================
 export default function OperatorRecreation() {
   const containerRef = useRef<HTMLDivElement>(null);

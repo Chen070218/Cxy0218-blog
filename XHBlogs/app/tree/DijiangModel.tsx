@@ -22,7 +22,7 @@ function seededRandom(seed: number) {
 }
 
 // ==========================================
-// 🌟 0. 终末地/罗德岛 干员信物徽章组件 (OperatorToken)
+// 🌟 0. 终末地/黑海岸 共鸣者信物徽章组件 (OperatorToken)
 // ==========================================
 const OperatorToken = ({ badge, locked = false }: any) => {
   const tierStyles: Record<number, string> = {
@@ -308,7 +308,7 @@ const HologramShip = ({ activeCategory, currentRecords, router }: any) => {
 
           <DijiangParticleModel />
 
-          <TacticalPoint position={[-1.0, -0.5, 1.5]} color="#0ea5e9" categoryName="PRTS_DB"
+          <TacticalPoint position={[-1.0, -0.5, 1.5]} color="#0ea5e9" categoryName="TERMINAL_DB"
                          isActive={activeCategory === 'post'} records={currentRecords.filter((r:any) => r.type === 'post')} isImageStyle={true} router={router} />
           <TacticalPoint position={[-1.5, -2, 1.5]} color="#eab308" categoryName="LOGS"
                          isActive={activeCategory === 'chatter'} records={currentRecords.filter((r:any) => r.type === 'chatter')} isImageStyle={true} router={router} />
@@ -403,15 +403,15 @@ export default function DijiangModel({ posts = [], chatters = [], moments = [] }
     const ownedIds = new Set();
 
     const levelConfig = [
-      { num: 1, tier: 1, title: '预备干员' }, { num: 2, tier: 2, title: '正式干员' },
-      { num: 3, tier: 3, title: '精英干员' }, { num: 5, tier: 4, title: '资深干员' },
+      { num: 1, tier: 1, title: '预备共鸣者' }, { num: 2, tier: 2, title: '正式共鸣者' },
+      { num: 3, tier: 3, title: '精英共鸣者' }, { num: 5, tier: 4, title: '资深共鸣者' },
       { num: 10, tier: 5, title: '高级资深' }, { num: 15, tier: 6, title: '战术指挥' },
       { num: 20, tier: 7, title: '协议主管' }, { num: 30, tier: 8, title: '终末枢纽' },
-      { num: 40, tier: 9, title: '塔卫二领航' }, { num: 50, tier: 10, title: '罗德岛之眼' }
+      { num: 40, tier: 9, title: '索拉里斯领航' }, { num: 50, tier: 10, title: '黑海岸之眼' }
     ];
     levelConfig.forEach(conf => {
       const id = `lvl-${conf.num}`;
-      allCatalogBadges.push({ id, title: conf.title, typeLabel: `PRTS授权 Lv.${conf.num}`, condition: `权限等级达到 Lv.${conf.num}`, icon: Shield, colorTier: conf.tier, group: 'level' });
+      allCatalogBadges.push({ id, title: conf.title, typeLabel: `终端授权 Lv.${conf.num}`, condition: `权限等级达到 Lv.${conf.num}`, icon: Shield, colorTier: conf.tier, group: 'level' });
       if (level >= conf.num) ownedIds.add(id);
     });
 
@@ -420,7 +420,7 @@ export default function DijiangModel({ posts = [], chatters = [], moments = [] }
       { num: 100, tier: 4, title: '机密档案' }, { num: 150, tier: 5, title: '源石解析' },
       { num: 200, tier: 6, title: '协议核心' }, { num: 250, tier: 7, title: '灾兽洞察' },
       { num: 300, tier: 8, title: '遗迹启示' }, { num: 400, tier: 9, title: '终末真理' },
-      { num: 450, tier: 9, title: '塔卫二全书' }, { num: 500, tier: 10, title: '普瑞赛斯之忆' }
+      { num: 450, tier: 9, title: '索拉里斯全书' }, { num: 500, tier: 10, title: '今州之忆' }
     ];
     postChatterConfig.forEach(conf => {
       const idPost = `post-${conf.num}`;
@@ -448,7 +448,7 @@ export default function DijiangModel({ posts = [], chatters = [], moments = [] }
     const photoConfig = [
       { num: 10, tier: 3, title: '镜头校准' },
       { num: 50, tier: 6, title: '战地纪实' },
-      { num: 100, tier: 10, title: '泰拉全景' }
+      { num: 100, tier: 10, title: '索拉里斯全景' }
     ];
     photoConfig.forEach(conf => {
       const id = `photo-${conf.num}`;
@@ -457,13 +457,13 @@ export default function DijiangModel({ posts = [], chatters = [], moments = [] }
     });
 
     const friendConfig = [
-      { num: 10, tier: 3, title: '临时干员' },
+      { num: 10, tier: 3, title: '临时共鸣者' },
       { num: 20, tier: 6, title: '战术分队' },
       { num: 50, tier: 10, title: '跨界同盟' }
     ];
     friendConfig.forEach(conf => {
       const id = `friend-${conf.num}`;
-      allCatalogBadges.push({ id, title: conf.title, typeLabel: '协同协议', condition: `缔结 ${conf.num} 份干员协议`, icon: Users, colorTier: conf.tier, group: 'friend' });
+      allCatalogBadges.push({ id, title: conf.title, typeLabel: '协同协议', condition: `缔结 ${conf.num} 份共鸣者协议`, icon: Users, colorTier: conf.tier, group: 'friend' });
       if (totalFriends >= conf.num) ownedIds.add(id);
     });
 
@@ -546,7 +546,7 @@ export default function DijiangModel({ posts = [], chatters = [], moments = [] }
     setActiveCategory(activeCategory === cat ? null : cat);
   };
 
-  if (!mounted) return <div className="min-h-[80vh] flex items-center justify-center text-slate-500 font-mono tracking-widest bg-transparent">CONNECTING TO PRTS...</div>;
+  if (!mounted) return <div className="min-h-[80vh] flex items-center justify-center text-slate-500 font-mono tracking-widest bg-transparent">CONNECTING TO TERMINAL...</div>;
 
   return (
     <motion.div
@@ -563,7 +563,7 @@ export default function DijiangModel({ posts = [], chatters = [], moments = [] }
       `}} />
 
       {/* ========================================== */}
-      {/* 🌟 罗德岛人事中心：干员档案板 (Operator Profile) */}
+      {/* 🌟 黑海岸人事中心：共鸣者档案板 (Operator Profile) */}
       {/* ========================================== */}
       {rpgStats && (
         <div className="w-full max-w-6xl mb-8 px-4 z-30 flex flex-col gap-4 relative mt-2">
@@ -582,7 +582,7 @@ export default function DijiangModel({ posts = [], chatters = [], moments = [] }
                 <span className="text-white font-black text-xl tracking-widest flex items-center gap-2 drop-shadow-md">
                   OPERATOR PROFILE
                 </span>
-                <span className="text-slate-400 text-[10px] font-mono tracking-[0.3em] mt-0.5 uppercase bg-black/50 w-max px-2 py-0.5 border border-[#333]">PRTS LINK ESTABLISHED</span>
+                <span className="text-slate-400 text-[10px] font-mono tracking-[0.3em] mt-0.5 uppercase bg-black/50 w-max px-2 py-0.5 border border-[#333]">TERMINAL LINK ESTABLISHED</span>
               </div>
             </div>
 
@@ -610,7 +610,7 @@ export default function DijiangModel({ posts = [], chatters = [], moments = [] }
                 <span className="text-[#eab308] font-mono text-sm font-black">+{rpgStats.todayExp} EXP</span>
               </div>
               <div className="flex flex-col items-center flex-1 md:flex-none">
-                <span className="text-slate-400 text-[9px] font-bold tracking-[0.2em] mb-1.5">PRTS SYNC</span>
+                <span className="text-slate-400 text-[9px] font-bold tracking-[0.2em] mb-1.5">TERMINAL SYNC</span>
                 {rpgStats.isCheckedInToday ? (
                   <span className="text-[#10b981] text-[10px] font-black tracking-widest border border-[#10b981] px-2 py-0.5 bg-[#10b981]/10">ONLINE</span>
                 ) : (
@@ -671,7 +671,7 @@ export default function DijiangModel({ posts = [], chatters = [], moments = [] }
             >
               <div className="flex justify-between items-center px-6 py-4 border-b border-[#eab308]/50 bg-[#111] relative">
                 <div className="absolute inset-0 bg-[repeating-linear-gradient(-45deg,transparent,transparent_10px,rgba(255,255,255,0.02)_10px,rgba(255,255,255,0.02)_20px)] pointer-events-none" />
-                <h2 className="text-[#eab308] font-black tracking-widest flex items-center gap-2 text-lg uppercase"><Grid size={20} /> PRTS Master Database</h2>
+                <h2 className="text-[#eab308] font-black tracking-widest flex items-center gap-2 text-lg uppercase"><Grid size={20} /> TERMINAL MASTER DATABASE</h2>
                 <button onClick={() => setShowCatalog(false)} className="text-slate-500 hover:text-white transition-colors z-10"><X size={24} /></button>
               </div>
 
@@ -785,7 +785,7 @@ export default function DijiangModel({ posts = [], chatters = [], moments = [] }
 
           <button onClick={() => handleCategoryClick('post', countPost)} className={`flex items-center gap-4 w-60 p-2 border transition-all duration-300 backdrop-blur-md shadow-sm ${activeCategory === 'post' ? 'bg-[#0ea5e9] border-[#0ea5e9] text-white' : 'bg-[#1e1e1e]/80 border-[#333] hover:bg-[#2a2a2a] text-slate-300'}`}>
             <div className={`p-2 ${activeCategory === 'post' ? 'bg-white/20' : 'bg-[#111] border border-[#333] text-[#0ea5e9]'}`}><FileText size={16} /></div>
-            <div className="text-left flex-1"><div className="text-sm font-bold tracking-wider">PRTS_DB</div><div className={`text-[9px] font-mono ${activeCategory === 'post' ? 'text-white/80' : 'text-slate-500'}`}>情报卷宗</div></div>
+            <div className="text-left flex-1"><div className="text-sm font-bold tracking-wider">TERMINAL_DB</div><div className={`text-[9px] font-mono ${activeCategory === 'post' ? 'text-white/80' : 'text-slate-500'}`}>情报卷宗</div></div>
           </button>
 
           <button onClick={() => handleCategoryClick('chatter', countChatter)} className={`flex items-center gap-4 w-60 p-2 border transition-all duration-300 backdrop-blur-md shadow-sm ${activeCategory === 'chatter' ? 'bg-[#eab308] border-[#eab308] text-[#111]' : 'bg-[#1e1e1e]/80 border-[#333] hover:bg-[#2a2a2a] text-slate-300'}`}>

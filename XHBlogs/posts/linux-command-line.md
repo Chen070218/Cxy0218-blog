@@ -1,5 +1,6 @@
 ---
 title: "Linux 操作系统：我平时最常用的一批命令行操作"
+cover: "/screenshots/06-post.webp"
 date: "2026-10-14 20:30:00"
 tags: ["Linux", "操作系统", "命令行"]
 mood: ''

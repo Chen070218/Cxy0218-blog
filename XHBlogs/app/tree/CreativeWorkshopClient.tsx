@@ -83,8 +83,8 @@ export default function CreativeWorkshopClient({ posts = [], chatters = [], mome
       // 计算当前等级的经验百分比进度
       const progressPercent = ((remainingExp / expNeededForNextLevel) * 100).toFixed(1);
 
-      // 5. 打印高度拟真化的控制台干员档案
-      console.groupCollapsed(`🛡️ [罗德岛数据终端] 干员 cxy0218 个人综合档案同步...`);
+      // 5. 打印高度拟真化的控制台共鸣者档案
+      console.groupCollapsed(`🛡️ [黑海岸数据终端] 共鸣者 cxy0218 个人综合档案同步...`);
       console.log(`%c[当前等级] Lv.${level}`, 'color: #6366f1; font-weight: 900; font-size: 16px; text-shadow: 0 0 4px rgba(99,102,241,0.3);');
       console.log(`%c[升级进度] ${remainingExp} / ${expNeededForNextLevel} EXP (${progressPercent}%)`, 'color: #10b981; font-weight: bold;');
       console.log(`[总计累计] ${totalExp} EXP`);
@@ -134,7 +134,7 @@ export default function CreativeWorkshopClient({ posts = [], chatters = [], mome
                 <Rocket size={16} /> 帝江号舰船
               </button>
 
-              {/* 🌟 第三选项干员休息处暂时隐藏 */}
+              {/* 🌟 第三选项共鸣者休息处暂时隐藏 */}
 
               {/* 滑动背景块动画：自动平分两等份 */}
               <motion.div

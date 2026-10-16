@@ -30,7 +30,7 @@ export const siteConfig = {
   portraitAlt: "心月狐",
 
   // 4. 文章默认封面图 (当 Markdown 没写 cover 时显示)
-  defaultPostCover: "https://bu.dusays.com/2026/03/24/69c1e38b346cb.jpg",
+  defaultPostCover: withBasePath("/screenshots/01-home.webp"),
 
   // 5. 首页照片墙预览图
   photoWallImage: "https://bu.dusays.com/2026/03/24/69c1e38b4c370.jpg",
@@ -47,7 +47,7 @@ export const siteConfig = {
     photos: 128, // 照片墙数量可以手动写死或动态计算
   },
   chatterTitle: "云端杂谈", // 你可以改成任何你喜欢的名字
-  chatterDescription: "代码、学术、提瓦特与泰拉大陆的碎片记录",
+  chatterDescription: "代码、学术与索拉里斯的碎片记录",
 
 
   // 👇 【新增】：全局背景弹幕配置

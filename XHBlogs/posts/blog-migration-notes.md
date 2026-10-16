@@ -1,5 +1,6 @@
 ---
 title: "把博客从 C 盘搬到 D 盘：一次环境迁移的踩坑记录"
+cover: "/screenshots/05-posts.webp"
 date: "2026-10-14 21:30:00"
 tags: ["Next.js", "环境配置", "踩坑"]
 mood: ''

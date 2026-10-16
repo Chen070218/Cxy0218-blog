@@ -1,5 +1,6 @@
 ---
 title: "算法与数据结构：排序算法到底怎么选"
+cover: "/screenshots/09-resources.webp"
 date: "2026-10-14 19:30:00"
 tags: ["算法", "数据结构", "复杂度"]
 mood: ''

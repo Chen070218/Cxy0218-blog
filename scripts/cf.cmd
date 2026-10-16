@@ -1,6 +1,6 @@
 @echo off
-rem Cloudflare 部署辅助脚本：把 wrangler 的参数原样传进去
-rem 用法： scripts\cf.cmd pages dev out --port 4399
+rem Cloudflare deploy helper: passes all arguments straight to wrangler.
+rem usage: scripts\cf.cmd pages dev out --port 4399
 rem        scripts\cf.cmd pages deploy out --project-name=cxy0218-blog --branch=main
 setlocal
 set "PROJ=%~dp0.."
