@@ -63,8 +63,11 @@ The site runs as a **fully static export** and is published in two places:
 
 | Target | URL | How it is built |
 | --- | --- | --- |
-| Cloudflare Pages | `https://cxy0218-blog.pages.dev` | `scripts/deploy-cloudflare.mjs` (static export + `wrangler pages deploy`) |
-| GitHub Pages | `https://chen070218.github.io/Cxy0218-blog/` | `.github/workflows/pages.yml` on every push to `main` |
+| **Cloudflare Pages** (primary, full features) | `https://cxy0218-blog.pages.dev` | `scripts/deploy-cf.cmd` (static export + `wrangler pages deploy`) |
+| GitHub Pages (static mirror) | `https://chen070218.github.io/Cxy0218-blog/` | `.github/workflows/pages.yml` on every push to `main` |
+
+Cloudflare is the primary address because it can run the Pages Functions described below, so the
+pet chat and the music player work there. GitHub Pages only serves static files.
 
 A static export has no Node server, so the route handlers under `app/api` are moved aside during
 the build (`scripts/build-static.cmd` does this automatically and restores them afterwards) and
@@ -82,12 +85,24 @@ Cloudflare build leaves it empty.
 ### Redeploying
 
 ```bash
-# Cloudflare (token from https://dash.cloudflare.com/profile/api-tokens, "Pages: Edit")
-set CLOUDFLARE_API_TOKEN=xxxxx
-node scripts/deploy-cloudflare.mjs
+# Cloudflare — one-time browser login, then build + upload
+scripts\cf.cmd login --browser=false     # open the printed link once and click "Allow"
+scripts\deploy-cf.cmd
 
 # Or just push to main — GitHub Pages rebuilds itself
 git push origin main
+```
+
+`scripts/deploy-cloudflare.mjs` is the token-based alternative (for CI or a machine without a
+browser): it reads `CLOUDFLARE_API_TOKEN` (or `.cf-token`), creates the project, writes
+`DEEPSEEK_API_KEY` and deploys.
+
+Setting a secret needs one extra deployment because Pages injects environment variables at
+deploy time:
+
+```bash
+scripts\cf.cmd pages secret put DEEPSEEK_API_KEY --project-name=cxy0218-blog
+scripts\deploy-cf.cmd
 ```
 
 ### Checking the deployed site

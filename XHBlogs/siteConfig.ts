@@ -70,7 +70,7 @@ export const siteConfig = {
     maxOutputTokens: 150,
     temperature: 0.85,
   },
-  friendLinkApplyFormat: "名称：cxy0218\n简介：编程、德语和一只叫心月狐的桌面狐狸\n链接：https://chen070218.github.io/Cxy0218-blog/\n头像：/characters/xinyuehu-square.webp",
+  friendLinkApplyFormat: "名称：cxy0218\n简介：编程、德语和一只叫心月狐的桌面狐狸\n链接：https://cxy0218-blog.pages.dev/\n头像：/characters/xinyuehu-square.webp",
   // 桌宠「心月狐」的 AI 后端：deepseek（默认）或 gemini
   chatProvider: "deepseek",
   deepseekConfig: {
