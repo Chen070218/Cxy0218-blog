@@ -24,3 +24,6 @@ tools/
 # wrangler（Cloudflare）本地状态与日志
 .wrangler/
 .wrangler-cfg/
+
+# Cloudflare API Token（只放本地，绝不入库）
+.cf-token

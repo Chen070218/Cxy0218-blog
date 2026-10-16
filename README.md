@@ -8,7 +8,7 @@ a time-tracking board, a Pomodoro timer and a small AI desktop pet.
 
 - **Blog** — Markdown posts with GFM, KaTeX math and syntax highlighting; an index page at `/posts` and per-post pages.
 - **Moments & chatters** — short "moments" with an image lightbox, plus longer informal posts.
-- **Photo wall** — albums with a zoomable lightbox; images are served as on-demand WebP through the Next image optimizer.
+- **Photo wall** — albums with a zoomable lightbox; photos are stored in the repository as WebP files (max 1600px, roughly 100 KB each) produced by `scripts/localize-images.mjs`, so the wall no longer depends on an external image host.
 - **Course planner** — a weekly timetable seeded from the current semester; lessons can be edited in the browser.
 - **Study library** — curated study links that ship with the repository, plus your own local entries.
 - **Time tracking** — categories, a start/stop timer, notes, star ratings, per-day records, a month heat-map, streaks, and JSON export/import backup.
@@ -59,9 +59,45 @@ preview) and `开启外网访问.cmd` (temporary public URL through an SSH tunne
 
 ## Deployment
 
-The site is deployed on **Vercel**. When importing this repository set **Root Directory** to
-`XHBlogs` and add `DEEPSEEK_API_KEY` under the project's environment variables. `vercel.json`
-already pins the build command to `next build --webpack`.
+The site runs as a **fully static export** and is published in two places:
+
+| Target | URL | How it is built |
+| --- | --- | --- |
+| Cloudflare Pages | `https://cxy0218-blog.pages.dev` | `scripts/deploy-cloudflare.mjs` (static export + `wrangler pages deploy`) |
+| GitHub Pages | `https://chen070218.github.io/Cxy0218-blog/` | `.github/workflows/pages.yml` on every push to `main` |
+
+A static export has no Node server, so the route handlers under `app/api` are moved aside during
+the build (`scripts/build-static.cmd` does this automatically and restores them afterwards) and
+re-implemented as **Cloudflare Pages Functions** in `XHBlogs/functions/api`:
+
+- `functions/api/chat.ts` — the desktop pet's DeepSeek chat, streaming-free JSON, key read from the
+  `DEEPSEEK_API_KEY` environment variable only.
+- `functions/api/music.ts` — proxies the NetEase Cloud Music detail/lyric endpoints.
+
+GitHub Pages (a project site) is served from a sub-path, so every hard-coded asset URL is prefixed
+through `XHBlogs/sitePath.ts` (`withBasePath` for plain `<img>`/CSS/Markdown, `prefixHtml` for
+rendered Markdown). The GitHub Pages build sets `NEXT_PUBLIC_BASE_PATH=/Cxy0218-blog`; the
+Cloudflare build leaves it empty.
+
+### Redeploying
+
+```bash
+# Cloudflare (token from https://dash.cloudflare.com/profile/api-tokens, "Pages: Edit")
+set CLOUDFLARE_API_TOKEN=xxxxx
+node scripts/deploy-cloudflare.mjs
+
+# Or just push to main — GitHub Pages rebuilds itself
+git push origin main
+```
+
+### Checking the deployed site
+
+```bash
+node scripts/audit-links.mjs https://chen070218.github.io/Cxy0218-blog/ 40
+```
+
+The checker walks every page, follows internal links and reports any page, image, stylesheet or
+script that does not return `200`.
 
 ## Content and data
 
