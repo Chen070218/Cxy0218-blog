@@ -281,7 +281,7 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
             <SidebarLyric />
 
             <div className="bg-white/60 dark:bg-slate-800/50 backdrop-blur-xl rounded-3xl p-6 border border-white/40 dark:border-white/10 shadow-xl">
-              <h3 className="font-black text-slate-900 dark:text-white mb-4 border-l-4 border-indigo-500 pl-2 text-sm">RECOMMENDED</h3>
+              <h3 className="font-black text-slate-900 dark:text-white mb-4 border-l-4 border-indigo-500 pl-2 text-sm">再看几篇</h3>
               <div className="space-y-4">
                 {recentPosts.map(p => (
                   <Link key={p.slug} href={`/posts/${p.slug}`} className="group block">

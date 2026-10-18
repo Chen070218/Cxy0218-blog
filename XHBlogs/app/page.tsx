@@ -123,7 +123,7 @@ export default function Home() {
                       <Link href="/resources" className="relative overflow-hidden flex flex-col justify-end flex-1 min-h-[200px] rounded-3xl border border-white/40 shadow-xl p-6 text-white group">
                         <SmartImage fill sizes="(max-width: 640px) 100vw, 640px" src="/covers/notes.jpg" alt="" className="object-cover transition-transform duration-700 group-hover:scale-105" />
                         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 to-slate-900/15" />
-                        <div className="relative"><p className="text-xs tracking-widest mb-2">LEARNING LIBRARY</p><h3 className="text-2xl font-bold">学习资料 ↗</h3><p className="text-sm mt-2 text-white/85">收藏课程讲义、学习网站与实用教程</p></div>
+                        <div className="relative"><p className="text-xs tracking-widest mb-2">学习资料</p><h3 className="text-2xl font-bold">讲义和常用网站 ↗</h3><p className="text-sm mt-2 text-white/85">课程讲义、查资料的网站、常用工具</p></div>
                       </Link>
                     </div>
                     <div className="sm:col-span-1 flex flex-col min-h-[120px]">

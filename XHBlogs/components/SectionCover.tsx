@@ -10,7 +10,7 @@ export function validCover(value: string): boolean {
   if (value.startsWith('/') && !value.startsWith('//')) return true;
   try { return ['http:', 'https:'].includes(new URL(value).protocol); } catch { return false; }
 }
-export default function SectionCover({ storageKey, title, subtitle, image, eyebrow = 'MY COLLECTION', compact = false }: Props) {
+export default function SectionCover({ storageKey, title, subtitle, image, eyebrow = '内容', compact = false }: Props) {
   const [custom, setCustom] = useState('');
   const [draft, setDraft] = useState('');
   const [error, setError] = useState('');

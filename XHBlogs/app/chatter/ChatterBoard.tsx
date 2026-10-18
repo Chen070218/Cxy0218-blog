@@ -47,7 +47,7 @@ export default function ChatterBoard({ chatters }: { chatters: Chatter[] }) {
           {siteConfig.chatterTitle || "源石研究笔记"}
         </h1>
         <p className="text-xs md:text-base text-slate-500 dark:text-slate-400 font-medium italic opacity-80">
-          “ {siteConfig.chatterDescription || "日常碎片与灵感记录"} ”
+          “ {siteConfig.chatterDescription || "想到什么写什么"} ”
         </p>
       </div>
 

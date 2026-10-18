@@ -1,119 +1,69 @@
 ---
-title: "把 900KB 的图片压到 50KB：一次前端性能优化的完整复盘"
+title: "站点卡了两次，我查了两遍"
 date: "2026-10-16 14:00:00"
-tags: ["性能优化", "图片优化", "CSS", "Next.js"]
+tags: ["性能", "图片", "CSS"]
 mood: "解压"
 cover: "/screenshots/04-photowall.webp"
-description: "从「切页卡、图片一张张卡出来、手机打开长时间白屏」到流畅：这篇把定位过程、每一项改动背后的原理和实测数据都记录下来。"
+description: "手机打开要等、切页面发涩、图片一张张往下蹦，最后是怎么一项项查出来的。"
 ---
 
-## 一、症状与定位
+这个站点第一次上线之后，我自己用手机打开，体验很差：先白屏几秒，然后图片一张一张往下蹦，点导航切页面的时候还会顿一下。当时以为是自己网络不好，换了 WiFi 和流量都一样，那就得查了。
 
-问题有三个表现：**切换页面卡顿**、**图片一张张「卡」出来**、**手机打开长时间白屏**。逐个查：
+![照片墙现在打开顺畅多了](/screenshots/04-photowall.webp)
 
-- 数了一遍常驻动画元素：草的 **150** 根 + 萤火虫 **50** 只 + 樱花 **40** 片 + 弹幕 15 条 ≈ **255 个无限循环动画**；
-- 抽查图片传输体积：图床上的照片单张 **903KB**（最大 945KB），而且服务器**不支持按需缩图**（试过阿里 OSS / 七牛 / 又拍云几种参数，返回的都是原图）；
-- 看 CSS 发现整页内容被藏起来了：`#app-mount-root { opacity: 0; visibility: hidden }`，必须等 JS 跑完 + 开机动画结束才显示 ✗ 手机上就是白屏。
+## 白屏是最要命的那条
 
-![照片墙：现在每张图只有几十 KB](/screenshots/04-photowall.webp)
+打开页面什么都没有，过几秒才一起出来。查 CSS 才发现问题：整页内容被设成 `opacity: 0; visibility: hidden`，要等 JS 加载完、开机动画播完才显示。只要 JS 慢一点或者出错，用户看到的就是一片白。
 
-## 二、图片：让服务端按尺寸转 WebP
+改法是内容一直在，开机动画只做一层盖在上面的遮罩，播完就淡出；动画时长也从 2.2 秒压到 1.2 秒。这个改动最直接，改完之后首屏几乎是立刻出来的。
 
-图床不给缩图，就把优化放到自己这边——开启 Next 的图片优化（服务端下载原图 → 转 WebP → 按显示尺寸下发）：
+## 图片：图床不给缩图，就自己压
 
-```ts
-// next.config.ts
-images: {
-  remotePatterns: [{ protocol: 'https', hostname: 'bu.dusays.com' }],
-  formats: ['image/webp'],
-  minimumCacheTTL: 2678400,   // 原图很少变，缓存 31 天
-},
-```
+相册里的照片都是直接引图床原图，单张 900KB 左右，最大的 945KB。我试过在网址后面加阿里 OSS、七牛、又拍云那种缩图参数，返回的还是原图，说明人家没开图片处理。
 
-再包一个 `SmartImage`：**白名单主机走优化，其它任意图床退回原生 `<img>`**，这样既拿到优化，又不会因为域名没配置而整页报错：
+后来干脆把二十张图下载下来，统一缩到宽度 1600 以内转成 WebP，放进项目的 `public/photos/` 里，数据里改成引用站内路径。压缩前一共 13.9MB，压缩后 2.9MB，单张大多在一百多 KB。
 
-```tsx
-const ALLOWED_REMOTE_HOSTS = ['bu.dusays.com'];
-export default function SmartImage({ src, fill, sizes, ...rest }: SmartImageProps) {
-  const canOptimize = !/^https?:\/\//i.test(src) || ALLOWED_REMOTE_HOSTS.includes(new URL(src).hostname);
-  if (!canOptimize) return <img src={src} className={rest.className} loading="lazy" decoding="async" />;
-  return fill ? <Image {...rest} src={src} fill sizes={sizes} /> : <Image {...rest} src={src} />;
-}
-```
+顺带一个坑：换成静态导出以后，Next 自带的图片优化是不生效的（没有服务端），所以必须提前把图压好，不能指望运行时帮你转。
 
-**实测：同一张图 903KB → 49KB / 66KB / 81KB**（不同显示尺寸），再配合 `loading="lazy"` + `decoding="async"`，首屏不再抢带宽。
+## 动画太多，而且有几处写法不对
 
-## 三、动画：只动 transform / opacity，数量砍到 1/4
+我数了一下常驻的循环动画：草 150 根、萤火虫 50 只、樱花 40 片，加上弹幕十几条，差不多两百五十个元素一直在动。手机上撑不住很正常。
 
-浏览器里最便宜的是**合成层动画**（transform / opacity），最贵的是**触发重排重绘**的属性。于是：
+数量先砍到四分之一（草 40、萤火虫 18、樱花 20）。然后处理几个写法问题：
 
-- 粒子数量砍下来：草 `150 → 40`、萤火虫 `50 → 18`、樱花 `40 → 20`；
-- 萤火虫原来在**动画里改 `box-shadow`**（每帧重绘）→ 改成静态光晕 + 只动 `opacity/transform`；
-- 弹幕原来动的是 `right`（布局属性，每帧重排）→ 改成 `transform: translate3d()`：
+萤火虫原来在动画里改 `box-shadow`，等于每一帧都要重绘一大片，改成静态光晕、只动透明度和位移。弹幕原来动的是 `right` 属性，会触发布局计算，改成 `transform: translate3d()`，交给合成层去跑。
 
-```css
-@keyframes danmaku-move {
-  from { transform: translate3d(0, 0, 0); }
-  to   { transform: translate3d(calc(-100vw - 100%), 0, 0); }
-}
-```
-
-## 四、按需运行：把「永远在跑」的东西停下来
-
-点击涟漪原来有一个**永不停止的 `requestAnimationFrame`**：即使没有任何涟漪，也在每帧清空整屏 canvas。改成「点击才启动、扩散完就停」：
+还有一个点击涟漪：canvas 上挂了一个永不停止的 `requestAnimationFrame`，就算没有涟漪也在每帧清屏。改成点击时才启动、涟漪画完就停。
 
 ```ts
 const frame = () => {
   rafId = null;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  /* …画涟漪… */
-  if (ripples.length > 0) rafId = requestAnimationFrame(frame);   // 还有才继续
-};
-const handleClick = (e) => {
-  ripples.push(new Ripple(e.clientX, e.clientY));
-  if (rafId === null) rafId = requestAnimationFrame(frame);       // 没在跑才启动
+  /* 画涟漪 */
+  if (ripples.length > 0) rafId = requestAnimationFrame(frame);
 };
 ```
 
-同时**标签页切到后台就暂停所有特效**（`visibilitychange`），不再白烧 CPU。
+另外标签页切到后台时，所有特效都停掉，不然后台还在烧 CPU、掉电。
 
-## 五、切页：从「JS 逐帧改样式」换成纯 CSS
+## 切页面那一顿
 
-页面进入动画原来用 framer-motion 在 JS 里逐帧改整页的 `opacity/y`，而页面里又有大量 `backdrop-blur` 玻璃卡片——淡入时模糊层要跟着逐帧重算，点快了多个动画就叠在一起。改成纯 CSS 动画 + **快速切页时直接跳过动画**：
+切页动画原来是用 framer-motion 在 JS 里逐帧改整页的透明度和位移。页面上又有不少毛玻璃卡片，淡入的时候模糊层要跟着一帧帧重算，点得快的时候几个动画还会叠在一起。
+
+改成纯 CSS 动画，并且加了一个判断：600 毫秒内连续切页就跳过动画，直接显示。
 
 ```tsx
-let lastNavigationAt = 0;
-export default function PageTransition({ children }: { children: ReactNode }) {
-  const shouldAnimate = useMemo(() => {
-    const now = Date.now();
-    const isRapid = now - lastNavigationAt < 600;   // 600ms 内连续切页 = 用户在快速翻页
-    lastNavigationAt = now;
-    return !isRapid;
-  }, []);
-  return <div className={shouldAnimate ? "page-enter" : undefined}>{children}</div>;
-}
+const now = Date.now();
+const isRapid = now - lastNavigationAt < 600;
+lastNavigationAt = now;
 ```
 
-## 六、白屏：内容不该等 JS
+## 字体
 
-这是最要命的一条：整页内容被 CSS 隐藏，必须等 JS 激活并跑完开机动画才显示，JS 失败就永远白屏。改法是**内容始终可见**，开机动画只作为一层覆盖层，并把动画从 2.2s 缩到 1.2s。
+三个字体原来都从 Google 取，构建时要联网，中文衬线字体还要拉好几 MB，本地构建经常卡在这一步失败。后来改成自托管，中文用的是思源宋体的可变版本，按 unicode-range 切了很多小片，浏览器只会下载页面上真正用到的那些字。
 
-## 七、字体：不再依赖 Google
+## 现在的状态
 
-原来三个字体都从 Google 取，构建时必须联网（这也是本地构建一直失败的原因），中文衬线字还要拉好几 MB。改成自托管：Geist 走 npm 包，中文用思源宋体可变版（101 个 unicode-range 分片，浏览器只下用到的字）。
+手机上第一次打开基本是瞬间出内容，切页面不会再顿，图片也不会一张一张蹦。照片墙整页从十几 MB 降到三 MB 出头。
 
-## 八、结果
-
-| 指标 | 优化前 | 优化后 |
-| --- | --- | --- |
-| 图床单张照片 | 903 KB | 49–81 KB |
-| 常驻动画元素 | ~255 个 | ~78 个 |
-| 滚动式粒子特效 | 每帧重绘 `box-shadow` | 只动 transform/opacity |
-| 点击涟漪 | 常驻 rAF 循环 | 按需运行 |
-| 切页动画 | JS 逐帧 0.8s | 纯 CSS 0.32s，快切跳过 |
-| 首屏可见时间 | 等 JS + 动画（数秒白屏） | 立即渲染 |
-| 本地构建 | 需要访问 Google 字体 | 完全离线 |
-
-## 小结
-
-这次优化没有一处是「玄学调参」：**先量（数元素、看体积、读 CSS），再改，最后回到同一张表上验证**。也让我记住两件事：图床不给缩图就自己在服务端转；以及「动 `right/top/width` 的动画」和「永远在跑的 rAF」是前端卡顿的两大常客。
+还没解决的：创意工坊那个 3D 页面首次进入还是要等一秒多，因为 three.js 和模型都不小；我想过给它加一个更明显的加载提示，但暂时没动。

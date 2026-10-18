@@ -1,50 +1,44 @@
 ---
-title: "给博客养一只 AI 桌宠：九个动作状态 + 番茄钟联动 + 接入 DeepSeek"
+title: "右下角那只狐狸：桌宠从抠图到能聊天"
 date: "2026-10-16 11:30:00"
-tags: ["React", "交互设计", "AI", "SVG"]
+tags: ["React", "交互", "AI"]
 mood: "开心"
 cover: "/screenshots/01-home.webp"
-description: "从设定稿裁出 8 个 Q 版姿势、用状态机驱动动作、让宠物在番茄钟结束时开口提醒，再把对话接到 DeepSeek：一篇完整的桌宠实现记录。"
+description: "抠图、状态机、番茄钟联动、接 DeepSeek，以及几个我自己改了好几遍的细节。"
 ---
 
-## 一、想要一只什么样的宠物
+一开始只是想让页面右下角有点活的东西。翻了设定稿，选了《鸣潮》里的心月狐——月亮、星辉、狐狸，跟站点的色调也搭。但如果只贴一张图，过两天就没人看了，所以我给它加了三件事：会自己动、点它会有反应、到点会提醒我休息。
 
-目标有三个：**会自己动**（不是一张贴图）、**能互动**（摸头/喂食/聊天）、**有实际用处**（番茄钟到点提醒我）。于是有了右下角这只 Q 版狐灵。
+![首页右下角这只就是它](/screenshots/01-home.webp)
 
-![首页右下角就是它](/screenshots/01-home.webp)
+## 抠图比想象中难
 
-## 二、形象：从设定稿裁出 8 个姿势
+设定稿上有八个小姿势，我裁下来逐个抠成透明 PNG。第一版按颜色抠，结果白头发被挖空了——底色是浅灰，跟白头发灰度太接近，颜色一筛就一起没了。
 
-形象不是画的，而是从设定稿里**抠出来的**：稿子中间那排有 8 个 Q 版姿势（待机/走动/开心/生气/睡觉/好奇/趴着/互动）。原图是浅灰底，白头发和背景灰度接近，直接按颜色抠会把头发挖空，所以改用**从四周漫水填充**的方式：只有与边缘连通的背景才透明，角色内部一律保留。
+后来换了个思路：从图片的上下左右四条边往里做"漫水填充"，只有跟边缘连着的浅色区域才算背景，角色内部的白色一律保留。
 
 ```python
-# 用局部中值估计背景，再从边缘 flood fill
 med = np.asarray(region.filter(ImageFilter.MedianFilter(size=31))).astype(np.int16)
 diff = np.abs(np.asarray(region).astype(np.int16) - med).sum(2)
-bg_like = diff < 22                       # 与局部背景足够接近
+bg_like = diff < 22
 lab, _ = ndimage.label(bg_like)
 border = set(lab[0, :]) | set(lab[-1, :]) | set(lab[:, 0]) | set(lab[:, -1])
-ink = ~np.isin(lab, list(border))         # 不是背景 = 角色
+ink = ~np.isin(lab, list(border))     # 不是背景 = 角色
 ```
 
-裁完每张 40~58KB，放进 `public/pet/`。
+抠完每张 40KB 到 58KB，放在 `public/pet/` 下面，空闲时间一次性预加载，切换动作时才不会闪一下白。
 
-## 三、状态机：九个状态，两种驱动方式
+## 九个状态
 
-状态类型先定好，然后所有动作都只是「换一个 state」：
+待机、走动、开心、生气、睡觉、好奇、趴着、思考、互动。所有行为最后都只是"换一个 state"，所以状态机本身不复杂。
 
-```ts
-export type PetState = "idle" | "walk" | "happy" | "angry" | "sleep"
-                      | "curious" | "lie" | "think" | "interact";
-```
-
-驱动方式有两种，一是**没人理的时候自己动**：
+麻烦的是它得"看起来在自己活"。没人理的时候会随机走两步或者打个盹，但我发现聊天时它还在旁边晃来晃去很出戏，于是加了几个判断：
 
 ```ts
 useEffect(() => {
-  if (isThinking || showInput || speech) return;      // 正在聊天/思考时不打扰
+  if (isThinking || showInput || speech) return;   // 正在聊天就别乱动
   const timer = setTimeout(() => {
-    const pool: PetState[] = ['walk', 'curious', 'lie', 'idle', 'idle', 'sleep'];
+    const pool = ['walk', 'curious', 'lie', 'idle', 'idle', 'sleep'];
     const next = pool[Math.floor(Math.random() * pool.length)];
     setPetState(next);
     setTimeout(() => setPetState('idle'), next === 'sleep' ? 6000 : 4200);
@@ -53,63 +47,31 @@ useEffect(() => {
 }, [petState, isThinking, showInput, speech]);
 ```
 
-二是**交互驱动**：摸头 → `happy`、发消息 → `think`、请求失败 → `angry`、打开输入框 → `interact`。
+摸头是开心，发消息是思考，请求失败就生气，点开发言框是互动。这几个都是我自己试出来的，不然它看起来像个贴图。
 
-## 四、和番茄钟联动：用一个 window 事件解耦
+## 和番茄钟怎么连
 
-番茄钟在工具箱里，桌宠在页面右下角，两者互不依赖。中间只靠一个自定义事件通信，谁都不用 import 谁：
+番茄钟在工具箱里，桌宠在页面右下角，两个组件互不相识。我一开始想让番茄钟直接调用桌宠的方法，写起来很别扭——要层层传 props，还容易循环依赖。
+
+最后用了一个 window 自定义事件当中间人：
 
 ```ts
-// 番茄钟：阶段结束时广播
+// 番茄钟：一个阶段结束时广播
 window.dispatchEvent(new CustomEvent("pet-say", {
-  detail: { text: `专注结束啦，今天第 ${next} 个番茄完成～去休息 5 分钟吧 (๑•̀ㅂ•́)و✧`,
-            state: "happy", ms: 6000 }
+  detail: { text: "专注结束啦，去休息 5 分钟吧", state: "happy", ms: 6000 }
 }));
-
-// 桌宠：收到就说话 + 换表情
-useEffect(() => {
-  const onSay = (e: Event) => {
-    const d = (e as CustomEvent).detail || {};
-    if (typeof d.text === "string") speak(d.text, d.ms || 6000);
-    if (d.state) { setPetState(d.state); setTimeout(() => setPetState("idle"), d.ms || 6000); }
-  };
-  window.addEventListener("pet-say", onSay);
-  return () => window.removeEventListener("pet-say", onSay);
-}, []);
 ```
 
-## 五、聊天接到 DeepSeek：一个路由，两个后端
+桌宠只监听 `pet-say`，谁发的它不用知道。以后再加别的功能（比如打卡结束也让它说一句），也只要发同一个事件。
 
-`/api/chat` 同时支持 DeepSeek 和 Gemini，密钥只从环境变量读，绝不写进代码：
+## 聊天接了 DeepSeek
 
-```ts
-async function askDeepSeek(message: string, history: ChatMessage[]) {
-  const key = (process.env.DEEPSEEK_API_KEY || "").trim();
-  if (!key) throw new Error("NO_KEY_DEEPSEEK");
-  const res = await fetch(`${cfg.baseUrl}/chat/completions`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
-    body: JSON.stringify({
-      model: cfg.modelId,                                  // deepseek-chat
-      messages: [{ role: "system", content: cfg.systemPrompt },
-                 ...history.slice(-8),                     // 只带最近 8 条，控制成本
-                 { role: "user", content: message }],
-      temperature: cfg.temperature, max_tokens: cfg.maxOutputTokens,
-    }),
-  });
-  ...
-}
-```
+对话走 `/api/chat`，密钥只放在环境变量里，代码里不出现。前端会把最近 8 轮一起发过去，不然它记不住上一句说了什么。
 
-前端把最近 8 轮对话一起发过去，宠物才「记得住」刚才聊了什么；没配密钥时接口返回明确的提示，宠物会直接说出来，而不是静默失败。
+没配密钥的时候接口会明确返回"还没有配置"，宠物会把这句说出来，而不是转圈半天没反应——这个提示是我在 Cloudflare 上部署完才补的，因为静态托管和带服务端的版本行为不一样。
 
-## 六、让它有点「活人感」的细节
+## 几个小地方
 
-- **每天第一次打开打招呼**（`localStorage` 记一个日期，一天只打一次）
-- **久坐 12 分钟提醒**：「已经坐很久啦，站起来舒展一下吧 (｡•́︿•̀｡)」
-- **人格化文案 + 颜文字**：被摸时说「唔……准你摸一小会儿。( ˘ ³˘)♥」
-- **尊重系统设置**：`prefers-reduced-motion` 打开时全部动画停掉
+每天第一次打开会打个招呼，用 localStorage 记日期，一天只打一次。坐太久（12 分钟没动）会提醒我站起来。系统开了"减少动态效果"时，所有动画都会停掉。
 
-## 小结
-
-桌宠看起来是「花活」，但它把好几块技术串起来了：**图像处理**（抠图）、**状态机**（动作驱动）、**事件解耦**（跨组件通信）、**服务端接口**（AI 对话）。如果只写一个静态图片，这个功能就白费了。
+现在还有一点不满意：走路的频率有点快，看着像在赶作业。等有空把帧率调慢一点。

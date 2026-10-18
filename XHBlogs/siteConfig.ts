@@ -7,7 +7,7 @@ export const siteConfig = {
   title: "cxy0218",
   faviconUrl: withBasePath("/characters/xinyuehu-square.webp"),
   authorName: "cxy0218",
-  bio: "海南比勒费尔德应用科学大学计算机科学专业 2025 级本科生，正在学习编程、算法与数据结构、操作系统、人工智能基础，以及德语和英语。",
+  bio: "海南比勒费尔德应用科学大学，计算机科学 2025 级。在学编程、算法与数据结构、操作系统，还有德语和英语。",
 
   navTitle: "cxy0218",
 
@@ -47,7 +47,7 @@ export const siteConfig = {
     photos: 128, // 照片墙数量可以手动写死或动态计算
   },
   chatterTitle: "云端杂谈", // 你可以改成任何你喜欢的名字
-  chatterDescription: "代码、学术与索拉里斯的碎片记录",
+  chatterDescription: "比文章更随便一点的东西，想到什么写什么",
 
 
   // 👇 【新增】：全局背景弹幕配置

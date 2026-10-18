@@ -16,7 +16,7 @@ export default function CheckinPage() {
       <PageTransition>
         <main className="w-[92%] md:w-[90%] max-w-6xl mx-auto mt-24 md:mt-28">
           <header className="mb-8 md:mb-10">
-            <p className="text-xs font-black tracking-[0.3em] text-indigo-600 dark:text-indigo-300 uppercase">Time Tracking</p>
+            <p className="text-xs font-black tracking-[0.3em] text-indigo-600 dark:text-indigo-300">时间记录</p>
             <h1 className="mt-2 text-3xl md:text-5xl font-black text-slate-900 dark:text-white">时间段打卡</h1>
             <p className="mt-3 text-sm md:text-base text-slate-700 dark:text-slate-300 max-w-2xl leading-relaxed">
               按分类给一段时间打卡，记下做了什么、打几分；打卡过程中还能随手记节点。月历会用颜色深浅显示每天投入了多久。

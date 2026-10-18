@@ -116,7 +116,7 @@ export default function CreativeWorkshopClient({ posts = [], chatters = [], mome
               <Trees className="text-indigo-500" size={40} /> 灵境
             </h1>
             <p className="text-slate-600 dark:text-slate-400 font-medium tracking-wider mb-8 transition-colors duration-700">
-              从神秘的记忆试管到深邃的星际巨舰，在这里封存所有的灵感与奇迹
+              两个自己折腾出来的小东西：一个做笔记的炼金台，一个能转的 3D 模型
             </p>
 
             {/* 切换开关 */}

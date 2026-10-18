@@ -97,7 +97,7 @@ export default function TimelineClient({ posts: initialPosts, tags: initialTags 
         <div className="relative w-full max-w-lg group" ref={searchContainerRef}>
           <input
             type="text"
-            placeholder="搜寻被封存的知识..."
+            placeholder="搜标题、标签…"
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);
