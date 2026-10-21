@@ -1,7 +1,7 @@
 // scripts/build-submission.mjs
-// 把 dist/提交材料/项目说明.html 转成 A4 PDF，并输出一张"打印预览"截图用于自检。
+// Converts dist/submission/project-notes.html into an A4 PDF and saves a "print preview" screenshot for a quick self-check.
 //
-// 用法： node scripts/build-submission.mjs
+// Usage: node scripts/build-submission.mjs
 
 import fs from 'fs';
 import path from 'path';
@@ -11,13 +11,13 @@ const requireFromTools = createRequire(path.join(import.meta.dirname, '..', 'too
 const puppeteer = requireFromTools('puppeteer-core');
 
 const ROOT = path.resolve(import.meta.dirname, '..');
-const DIR = path.join(ROOT, 'dist', '提交材料');
-const HTML = path.join(DIR, '项目说明.html');
-const PDF = path.join(DIR, 'cxy0218-项目说明.pdf');
+const DIR = path.join(ROOT, 'dist', 'submission');
+const HTML = path.join(DIR, 'project-notes.html');
+const PDF = path.join(DIR, 'cxy0218-project-notes.pdf');
 const PREVIEW = path.join(DIR, 'preview-print.png');
 
 if (!fs.existsSync(HTML)) {
-  console.error('[x] 找不到 ' + HTML);
+  console.error('[x] Not found: ' + HTML);
   process.exit(1);
 }
 
@@ -37,7 +37,7 @@ const fileUrl = 'file:///' + HTML.replace(/\\/g, '/').replace(/^\/+/, '');
 await page.goto(fileUrl, { waitUntil: 'load' });
 await page.evaluate(() => document.fonts.ready);
 
-// 打印预览：把 @page 的边距模拟成 body 内边距，这样截图就是纸面效果
+// Print preview: mimic the @page margins with body padding, so the screenshot looks like the printed page
 const preview = await browser.newPage();
 await preview.setViewport({ width: 794, height: 1123, deviceScaleFactor: 2 });
 await preview.goto(fileUrl, { waitUntil: 'load' });
@@ -59,5 +59,5 @@ const size = (fs.statSync(PDF).size / 1024).toFixed(0);
 
 await browser.close();
 
-console.log(`PDF: ${PDF}  (${size} KB, 约 ${pages} 页)`);
-console.log(`预览图: ${PREVIEW}`);
+console.log(`PDF: ${PDF}  (${size} KB, about ${pages} pages)`);
+console.log(`Preview: ${PREVIEW}`);

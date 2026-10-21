@@ -13,10 +13,10 @@
 
 | Script | What it does |
 | --- | --- |
-| `启动网站.cmd` | development server (hot reload), listens on all interfaces, port 4322 |
-| `启动网站(生产模式).cmd` | production build + `next start`; use this to judge real-world speed |
-| `开启外网访问.cmd` | temporary public URL over an SSH reverse tunnel (address changes每次启动) |
-| `开启手机访问.cmd` | adds a Windows Firewall rule for port 4322 (run as administrator) |
+| `start-site.cmd` | development server (hot reload), listens on all interfaces, port 4322 |
+| `start-site-production.cmd` | production build + `next start`; use this to judge real-world speed |
+| `share-public-url.cmd` | temporary public URL over an SSH reverse tunnel (the address changes on every start) |
+| `share-lan.cmd` | adds a Windows Firewall rule for port 4322 (run as administrator) |
 
 The dev server binds `0.0.0.0`, so phones on the same Wi-Fi can open
 `http://<this-pc-ip>:4322`. `127.0.0.1` only works on the machine itself.

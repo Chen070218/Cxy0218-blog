@@ -1,11 +1,11 @@
 // scripts/audit-mobile.mjs
-// 手机端体检：用 Edge 的手机视口（390x844，带触摸模拟）打开每个页面，检查
-//   - 是否出现横向溢出（内容比屏幕宽）
-//   - 是否有元素超出屏幕右侧
-//   - 控制台是否报错
-//   - 顺便截图存到临时目录，方便肉眼确认
+// Mobile audit: opens every page in Edge with a phone viewport (390x844, touch emulation) and checks
+//   - whether there is horizontal overflow (content wider than the screen)
+//   - whether any element sticks out past the right edge
+//   - whether the console reports errors
+//   - and it saves a screenshot to a temp directory for eyeballing
 //
-// 用法： node scripts/audit-mobile.mjs [起始地址] [截图目录]
+// Usage: node scripts/audit-mobile.mjs [start URL] [screenshot dir]
 
 import fs from 'fs';
 import os from 'os';
@@ -42,7 +42,7 @@ const EDGE_CANDIDATES = [
 
 const executablePath = EDGE_CANDIDATES.find((p) => fs.existsSync(p));
 if (!executablePath) {
-  console.error('没有找到 Edge');
+  console.error('Microsoft Edge not found');
   process.exit(1);
 }
 
@@ -84,7 +84,7 @@ for (const route of ROUTES) {
         if (rect.width > 0 && rect.right > window.innerWidth + 2) {
           const style = getComputedStyle(el);
           if (style.position === 'fixed' || style.position === 'absolute') continue;
-          // 代码块、横滑列表这类本身就该横向滚动的容器不算问题
+          // containers that are meant to scroll horizontally (code blocks, swipe lists) are not a problem
           let scrollable = false;
           for (let p = el.parentElement; p && p !== document.body; p = p.parentElement) {
             const ps = getComputedStyle(p);
@@ -106,17 +106,17 @@ for (const route of ROUTES) {
     });
 
     const overflow = metrics.scrollWidth > metrics.innerWidth + 2;
-    if (overflow) problems.push([route, `横向溢出：页面宽 ${metrics.scrollWidth}px > 视口 ${metrics.innerWidth}px`]);
-    if (metrics.wide.length) problems.push([route, `超出右侧的元素：${metrics.wide.join(' | ')}`]);
-    if (consoleErrors.length) problems.push([route, `控制台报错：${consoleErrors[0]}`]);
-    if (failedRequests.length) problems.push([route, `请求失败：${[...new Set(failedRequests)].slice(0, 3).join(' | ')}`]);
+    if (overflow) problems.push([route, `horizontal overflow: page width ${metrics.scrollWidth}px > viewport ${metrics.innerWidth}px`]);
+    if (metrics.wide.length) problems.push([route, `elements past the right edge: ${metrics.wide.join(' | ')}`]);
+    if (consoleErrors.length) problems.push([route, `console error: ${consoleErrors[0]}`]);
+    if (failedRequests.length) problems.push([route, `failed requests: ${[...new Set(failedRequests)].slice(0, 3).join(' | ')}`]);
 
     const name = (route === '/' ? 'home' : route.replace(/[/]/g, '_').replace(/^_|_$/g, '')) + '.png';
     await page.screenshot({ path: path.join(SHOT_DIR, name), fullPage: false });
-    console.log(`${route.padEnd(26)} ${overflow ? '横向溢出' : '宽度正常'}  截图 ${name}`);
+    console.log(`${route.padEnd(26)} ${overflow ? 'OVERFLOW' : 'width ok'}  screenshot ${name}`);
   } catch (error) {
-    problems.push([route, `打开失败：${error.message}`]);
-    console.log(`${route.padEnd(26)} 打开失败`);
+    problems.push([route, `failed to open: ${error.message}`]);
+    console.log(`${route.padEnd(26)} failed to open`);
   } finally {
     await page.close();
   }
@@ -124,11 +124,11 @@ for (const route of ROUTES) {
 
 await browser.close();
 
-console.log(`\n截图目录：${SHOT_DIR}`);
+console.log(`\nScreenshots: ${SHOT_DIR}`);
 if (problems.length === 0) {
-  console.log('✅ 手机端没有横向溢出、没有元素跑出屏幕、控制台无报错');
+  console.log('✅ No horizontal overflow, no elements off-screen, no console errors on mobile');
 } else {
-  console.log(`发现 ${problems.length} 处问题：`);
+  console.log(`Found ${problems.length} problems:`);
   for (const [route, msg] of problems) console.log(`  ${route} → ${msg}`);
 }
 process.exit(problems.length ? 1 : 0);

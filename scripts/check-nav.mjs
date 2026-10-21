@@ -1,8 +1,8 @@
 // scripts/check-nav.mjs
-// 检查「点击站内链接时，浏览器是走客户端跳转（快）还是整页刷新（慢）」。
-// 静态导出下，Next 需要预取的 RSC 数据存在命名问题，会导致点击变成整页加载。
+// Checks whether clicking an internal link triggers a client-side navigation (fast) or a full page reload (slow).
+// With a static export, the naming of the RSC data Next needs to prefetch is off, which turns clicks into full page loads.
 //
-// 用法： node scripts/check-nav.mjs [站点地址]
+// Usage: node scripts/check-nav.mjs [site URL]
 
 import fs from 'fs';
 import path from 'path';
@@ -25,9 +25,9 @@ page.on('response', (res) => {
 });
 
 const cases = [
-  { name: '首页 → 归档', from: '/', selector: 'a[href$="/posts/"]' },
-  { name: '归档 → 文章详情', from: '/posts/', selector: 'a[href*="/posts/"]' },
-  { name: '首页 → 打卡', from: '/', selector: 'a[href$="/checkin/"]' },
+  { name: 'Home → Archive', from: '/', selector: 'a[href$="/posts/"]' },
+  { name: 'Archive → Post', from: '/posts/', selector: 'a[href*="/posts/"]' },
+  { name: 'Home → Check-in', from: '/', selector: 'a[href$="/checkin/"]' },
 ];
 
 for (const c of cases) {
@@ -43,7 +43,7 @@ for (const c of cases) {
   }, c.selector);
 
   if (!found) {
-    console.log(`${c.name}：找不到链接 ${c.selector}`);
+    console.log(`${c.name}: link not found ${c.selector}`);
     continue;
   }
 
@@ -59,8 +59,8 @@ for (const c of cases) {
   const documentLoads = during.filter((r) => r.type === 'document');
   const rsc = during.filter((r) => r.url.includes('_rsc=') || r.url.endsWith('.txt'));
   console.log(
-    `${c.name}（${found}）：${ms}ms  整页请求 ${documentLoads.length} 个  RSC 数据请求 ${rsc.length} 个  → ${
-      documentLoads.length > 0 ? '整页刷新（较慢）' : '客户端跳转（快）'
+    `${c.name} (${found}): ${ms}ms  full page requests ${documentLoads.length}  RSC data requests ${rsc.length}  → ${
+      documentLoads.length > 0 ? 'full page reload (slower)' : 'client-side navigation (fast)'
     }`,
   );
 }

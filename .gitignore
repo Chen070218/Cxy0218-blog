@@ -1,4 +1,4 @@
-# ===== 依赖与运行环境（可重新生成 / 体积过大，不入库）=====
+# ===== Dependencies and runtime (regenerable / too large for the repository) =====
 node/
 npm-cache/
 node_modules/
@@ -7,7 +7,7 @@ out/
 build/
 *.tsbuildinfo
 
-# ===== 本地临时文件 =====
+# ===== Local temporary files =====
 *.bak
 *.log
 npm-debug.log*
@@ -15,21 +15,21 @@ npm-debug.log*
 .DS_Store
 Thumbs.db
 
-# 交给外部 AI 的项目说明（本地留档，不进公开仓库）
-项目说明-给Kimi.md
+# ===== Local working notes kept off the public repository =====
+docs/INTERNAL-NOTES.md
 
-# 本地工具（如 cloudflared，不入库）
+# ===== Local tooling (for example cloudflared), not part of the site =====
 tools/
 
-# wrangler（Cloudflare）本地状态与日志
+# ===== Wrangler (Cloudflare) local state and logs =====
 .wrangler/
 .wrangler-cfg/
 
-# Cloudflare API Token（只放本地，绝不入库）
+# ===== Cloudflare API token (local only, never committed) =====
 .cf-token
 
-# GitHub 令牌（只放本地，绝不入库）
+# ===== GitHub token (local only, never committed) =====
 .gh-token
 
-# 打包产物（给老师的本地版 zip、静态导出的压缩包）
+# ===== Build artefacts (the local package zip, the static export archive) =====
 dist/

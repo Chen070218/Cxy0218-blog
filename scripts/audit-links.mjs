@@ -1,10 +1,10 @@
 // scripts/audit-links.mjs
-// 链接体检：从起始地址出发遍历站内页面，检查页面里出现的每个链接/图片/脚本/样式表能不能打开。
-// 用法： node scripts/audit-links.mjs http://127.0.0.1:4400/Cxy0218-blog/ [最多页面数]
+// Link audit: starting from a URL, crawls the pages of this site and checks that every link, image, script and stylesheet on them can be opened.
+// Usage: node scripts/audit-links.mjs http://127.0.0.1:4400/Cxy0218-blog/ [max pages]
 
 const start = process.argv[2];
 if (!start) {
-  console.error('用法：node scripts/audit-links.mjs <起始地址> [最多页面数]');
+  console.error('Usage: node scripts/audit-links.mjs <start URL> [max pages]');
   process.exit(2);
 }
 
@@ -37,7 +37,7 @@ function extractUrls(html, pageUrl) {
     try {
       found.add(new URL(raw, pageUrl).href);
     } catch {
-      /* 忽略无法解析的写法 */
+      /* ignore values that cannot be parsed */
     }
   }
   return found;
@@ -86,7 +86,7 @@ while (queue.length && pageStatus.size < maxPages) {
     if (isPageUrl(link)) {
       if (!seen.has(link) && !queue.includes(link)) queue.push(link);
     } else if (!assetStatus.has(link)) {
-      assetStatus.set(link, null); // 占位，稍后统一探测
+      assetStatus.set(link, null); // placeholder, probed later in one pass
     }
   }
 }
@@ -99,7 +99,7 @@ const results = await Promise.all(
       const r = await probe(url);
       return { url, status: r.status, internal };
     }
-    return { url, status: 'skip', internal }; // 外部资源不在体检范围内
+    return { url, status: 'skip', internal }; // external resources are out of scope
   }),
 );
 
@@ -110,20 +110,20 @@ for (const r of results) {
 
 const external = results.filter((r) => !r.internal).map((r) => r.url);
 
-console.log(`起始页：${start}`);
-console.log(`页面：${pageStatus.size} 个  站内资源：${assetList.length - external.length} 个  外部资源：${external.length} 个`);
+console.log(`Start page: ${start}`);
+console.log(`Pages: ${pageStatus.size}  Internal assets: ${assetList.length - external.length}  External assets: ${external.length}`);
 console.log('');
 
 if (broken.length === 0) {
-  console.log('✅ 所有站内链接与资源都返回 200');
+  console.log('✅ Every internal link and asset returned 200');
 } else {
-  console.log(`❌ 有 ${broken.length} 个问题：`);
+  console.log(`❌ ${broken.length} problems:`);
   for (const b of broken) console.log(`  [${b.kind}] ${b.status}  ${b.url}`);
 }
 
 if (external.length) {
   console.log('');
-  console.log('外部资源（不做检查）：');
+  console.log('External resources (not checked):');
   for (const u of external) console.log('  ' + u);
 }
 

@@ -1,8 +1,8 @@
 // scripts/make-local-package.mjs
-// 打一个「本地版」压缩包：解压后双击 启动网站.cmd 就能在老师电脑上跑起来，
-// 不需要装 Node，也不需要联网安装依赖（AI 对话功能需要联网）。
+// Packs a "local version" zip: after extracting it, double-clicking start-site.cmd runs the site on the teacher's computer,
+// with no Node install and no online dependency install (the AI chat still needs a network connection).
 //
-// 用法： node scripts/make-local-package.mjs
+// Usage: node scripts/make-local-package.mjs
 
 import fs from 'fs';
 import path from 'path';
@@ -13,13 +13,13 @@ import { spawnSync } from 'node:child_process';
 const ROOT = path.resolve(import.meta.dirname, '..');
 const XH = path.join(ROOT, 'XHBlogs');
 const DIST = path.join(ROOT, 'dist');
-const PKG_NAME = 'cxy0218-本地版';
-// 复用上一次的构建产物（调试打包脚本时用）
+const PKG_NAME = 'cxy0218-local';
+// Reuse the previous build (useful when debugging this packaging script)
 const SKIP_BUILD = process.argv.includes('--skip-build');
-// 含密钥的版本只发给老师本人；公开分享（GitHub Release）必须用 --no-key
+// The build with the key is only for the teacher; public sharing (GitHub Release) must use --no-key
 const NO_KEY = process.argv.includes('--no-key');
-// 两种版本分开输出，避免互相覆盖
-const SUFFIX = NO_KEY ? '-无密钥' : '';
+// The two variants output under different names so they never overwrite each other
+const SUFFIX = NO_KEY ? '-no-key' : '';
 const PKG = path.join(DIST, PKG_NAME + SUFFIX);
 const SITE = path.join(PKG, 'site');
 
@@ -35,7 +35,7 @@ function readEnvValue(file, key) {
   return '';
 }
 
-console.log('[1/5] 构建 standalone 版本…' + (SKIP_BUILD ? '（跳过，复用现有产物）' : ''));
+console.log('[1/5] Building the standalone version…' + (SKIP_BUILD ? ' (skipped, reusing the existing build)' : ''));
 if (!SKIP_BUILD) {
   const build = spawnSync(
     process.execPath,
@@ -47,25 +47,25 @@ if (!SKIP_BUILD) {
     },
   );
   if (build.status !== 0) {
-    console.error('[x] 构建失败');
+    console.error('[x] Build failed');
     process.exit(1);
   }
 }
 
 const standalone = path.join(XH, '.next', 'standalone');
 if (!fs.existsSync(standalone)) {
-  console.error('[x] 没有找到 .next/standalone，构建可能没开启 output: standalone');
+  console.error('[x] .next/standalone not found; the build probably did not enable output: standalone');
   process.exit(1);
 }
 
-console.log('[2/5] 组装目录…');
+console.log('[2/5] Assembling the directory…');
 rmrf(PKG);
 fs.mkdirSync(DIST, { recursive: true });
 copyDir(standalone, SITE);
 copyDir(path.join(XH, '.next', 'static'), path.join(SITE, '.next', 'static'));
 copyDir(path.join(XH, 'public'), path.join(SITE, 'public'));
 
-// 只保留运行真正需要的东西
+// Keep only what is really needed at runtime
 for (const junk of [
   path.join(SITE, '.next', 'cache'),
   path.join(SITE, '.next', 'dev'),
@@ -88,19 +88,19 @@ for (const junk of [
   rmrf(junk);
 }
 
-// standalone 会连带把源码目录里的 .env* 复制过来，这里兜底清一遍，
-// 之后要不要写密钥完全由上面的 NO_KEY 决定
+// standalone also copies the .env* files from the source directory, so clean them up here as a safety net;
+// whether a key is written afterwards is decided entirely by NO_KEY above
 for (const entry of fs.readdirSync(SITE)) {
   if (entry.startsWith('.env')) rmrf(path.join(SITE, entry));
 }
 
-// AI 对话要用的密钥放在 site/.env.local，运行时由 Next 自动读取
+// The key used by the AI chat goes into site/.env.local, where Next reads it automatically at runtime
 const deepseek = NO_KEY ? '' : readEnvValue(path.join(XH, '.env.local'), 'DEEPSEEK_API_KEY') || readEnvValue(path.join(XH, '.dev.vars'), 'DEEPSEEK_API_KEY');
 if (deepseek) {
   fs.writeFileSync(path.join(SITE, '.env.local'), `DEEPSEEK_API_KEY=${deepseek}\n`, 'utf8');
 }
 
-console.log('[3/5] 复制便携版 Node…');
+console.log('[3/5] Copying the portable Node…');
 const nodeExe = path.join(ROOT, 'node', 'node.exe');
 let withNode = false;
 if (fs.existsSync(nodeExe)) {
@@ -109,9 +109,9 @@ if (fs.existsSync(nodeExe)) {
   withNode = true;
 }
 
-console.log('[4/5] 写入启动脚本与说明…');
+console.log('[4/5] Writing the launcher and instructions…');
 fs.writeFileSync(
-  path.join(PKG, '启动网站.cmd'),
+  path.join(PKG, 'start-site.cmd'),
   [
     '@echo off',
     'chcp 65001 >nul',
@@ -122,14 +122,14 @@ fs.writeFileSync(
     'set "HOSTNAME=127.0.0.1"',
     'where node >nul 2>nul',
     'if errorlevel 1 (',
-    '  echo 没有找到 Node.js：本包内应带有 node\\node.exe，请确认解压完整；',
-    '  echo 或者安装 Node.js 20 以上版本后重试。',
+    '  echo Node.js not found: this package should include node\\node.exe, so check that the archive was extracted completely;',
+    '  echo or install Node.js 20 or newer and try again.',
     '  pause',
     '  exit /b 1',
     ')',
     'echo.',
-    'echo 网站地址：http://127.0.0.1:4322',
-    'echo 浏览器会在几秒后自动打开；使用期间请保留这个窗口，关闭窗口即停止网站。',
+    'echo Site URL: http://127.0.0.1:4322',
+    'echo The browser will open in a few seconds. Keep this window open while you use the site; closing it stops the site.',
     'echo.',
     'start "" powershell -NoProfile -WindowStyle Hidden -Command "Start-Sleep -Seconds 6; Start-Process http://127.0.0.1:4322/"',
     'node server.js',
@@ -140,49 +140,49 @@ fs.writeFileSync(
 );
 
 fs.writeFileSync(
-  path.join(PKG, '使用说明.txt'),
+  path.join(PKG, 'README.txt'),
   [
-    'cxy0218 个人网站 · 本地版',
+    'cxy0218 personal website · local version',
     '',
-    '【怎么打开】',
-    '1. 把整个文件夹解压到任意位置（路径里尽量不要有特殊符号）',
-    '2. 双击 启动网站.cmd',
-    '3. 等几秒，浏览器会自动打开 http://127.0.0.1:4322',
-    '4. 看完直接关闭那个黑色窗口即可（不要关掉浏览器再点别的，窗口关了网站就停了）',
+    '[How to open it]',
+    '1. Extract the whole folder anywhere (avoid special characters in the path)',
+    '2. Double-click start-site.cmd',
+    '3. Wait a few seconds; the browser opens http://127.0.0.1:4322 automatically',
+    '4. When you are done, just close that black window (do not close the browser and keep clicking around: closing the window stops the site)',
     '',
-    '【需不需要装东西】',
+    '[Do I need to install anything]',
     withNode
-      ? '不需要。压缩包里已经带了便携版 Node，双击就能跑。'
-      : '需要机器上装有 Node.js 20 或更新版本。',
+      ? 'No. The archive already includes a portable Node, so a double-click is enough.'
+      : 'The machine needs Node.js 20 or newer.',
     '',
-    '【哪些功能要联网】',
+    '[What needs a network connection]',
     NO_KEY
-      ? '- 右下角桌宠的 AI 对话：这个版本里没有内置 API 密钥，需要在 site\\.env.local 里补一行 DEEPSEEK_API_KEY=你的密钥 才能聊天'
-      : '- 右下角桌宠的 AI 对话（调用 DeepSeek 接口）：需要联网',
-    '- 首页音乐播放器（代理网易云接口）、首页天气：需要联网',
-    '- 其它页面（文章、相册、打卡、番茄钟、课程表、创意工坊等）全部离线可用',
+      ? '- The desktop pet\'s AI chat in the bottom-right corner: this version has no built-in API key, so add a line DEEPSEEK_API_KEY=your-key to site\\.env.local before it can chat'
+      : '- The desktop pet\'s AI chat in the bottom-right corner (calls the DeepSeek API): needs a network connection',
+    '- The music player on the home page (proxies the NetEase Cloud Music API) and the weather widget: need a network connection',
+    '- Everything else (posts, photo albums, check-in, Pomodoro timer, timetable, Creative Workshop, ...) works offline',
     '',
-    '【技术信息】',
-    '- 这是 Next.js 16 的生产构建（standalone 模式），和线上站点同一套代码',
-    '- 线上地址：https://chen070218.github.io/Cxy0218-blog/',
-    '- 源码仓库：https://github.com/Chen070218/Cxy0218-blog',
-    '- 想换端口：编辑 启动网站.cmd 里的 PORT',
+    '[Technical information]',
+    '- This is the Next.js 16 production build (standalone mode), built from the same code as the live site',
+    '- Live site: https://chen070218.github.io/Cxy0218-blog/',
+    '- Source repository: https://github.com/Chen070218/Cxy0218-blog',
+    '- To change the port: edit PORT in start-site.cmd',
     '',
-    '【注意】',
+    '[Note]',
     NO_KEY
-      ? '这个版本不含任何密钥，可以放心公开分享。'
-      : 'site\\.env.local 里保存着桌宠对话用的 API 密钥，仅用于本地演示，请不要把这个文件夹上传到公开网盘或公开仓库。',
+      ? 'This version contains no keys, so it is safe to share publicly.'
+      : 'site\\.env.local holds the API key used by the pet chat. It is for local demos only; do not upload this folder to a public cloud drive or a public repository.',
     '',
   ].join('\r\n'),
   'utf8',
 );
 
-console.log('[5/5] 打包 zip…');
+console.log('[5/5] Packing the zip…');
 const zip = path.join(DIST, `${PKG_NAME}${SUFFIX}.zip`);
 rmrf(zip);
 writeZip(PKG, zip);
 
-/** 用 Node 自带的 zlib 写 zip：不依赖 tar / Compress-Archive，中文文件名也不会乱码 */
+/** Writes the zip with Node's built-in zlib: no dependency on tar / Compress-Archive, and file names are not garbled */
 function writeZip(sourceDir, zipPath) {
   const CRC_TABLE = (() => {
     const table = new Int32Array(256);
@@ -226,7 +226,7 @@ function writeZip(sourceDir, zipPath) {
     const local = Buffer.alloc(30);
     local.writeUInt32LE(0x04034b50, 0);
     local.writeUInt16LE(20, 4);
-    local.writeUInt16LE(0x0800, 6); // 文件名是 UTF-8
+    local.writeUInt16LE(0x0800, 6); // file names are UTF-8
     local.writeUInt16LE(useDeflate ? 8 : 0, 8);
     local.writeUInt16LE(0, 10);
     local.writeUInt16LE(0, 12);
@@ -273,7 +273,7 @@ function writeZip(sourceDir, zipPath) {
   end.writeUInt16LE(0, 20);
 
   fs.writeFileSync(zipPath, Buffer.concat([...chunks, centralBuf, end]));
-  console.log(`  写入 ${files.length} 个文件`);
+  console.log(`  wrote ${files.length} files`);
 }
 
 const size = (p) => {
@@ -290,7 +290,7 @@ const size = (p) => {
 };
 
 console.log('');
-console.log(`完成 ✅`);
-console.log(`  文件夹：${PKG}  (${size(PKG)} MB)`);
-console.log(`  压缩包：${zip}  (${(fs.statSync(zip).size / 1024 / 1024).toFixed(1)} MB)`);
-console.log(`  含便携 Node：${withNode ? '是' : '否'}`);
+console.log(`Done ✅`);
+console.log(`  Folder: ${PKG}  (${size(PKG)} MB)`);
+console.log(`  Archive: ${zip}  (${(fs.statSync(zip).size / 1024 / 1024).toFixed(1)} MB)`);
+console.log(`  Portable Node included: ${withNode ? 'yes' : 'no'}`);

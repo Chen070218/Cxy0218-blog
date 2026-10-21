@@ -1,13 +1,13 @@
 // scripts/deploy-cloudflare.mjs
-// 一键把站点发布到 Cloudflare Pages：
-//   1) 检查/创建 Pages 项目
-//   2) 把 DEEPSEEK_API_KEY 写进项目的环境变量（桌宠对话要用）
-//   3) 静态导出构建（不带 basePath）
-//   4) 用 wrangler 上传 out/ 目录
+// One-shot deploy of the site to Cloudflare Pages:
+//   1) check / create the Pages project
+//   2) write DEEPSEEK_API_KEY into the project's environment variables (the pet chat needs it)
+//   3) build the static export (without basePath)
+//   4) upload the out/ directory with wrangler
 //
-// 用法：
-//   set CLOUDFLARE_API_TOKEN=xxxxx     （或把令牌写进项目根目录的 .cf-token，已被 gitignore）
-//   node scripts/deploy-cloudflare.mjs [项目名]
+// Usage:
+//   set CLOUDFLARE_API_TOKEN=xxxxx     (or write the token to .cf-token in the project root, which is gitignored)
+//   node scripts/deploy-cloudflare.mjs [project name]
 
 import fs from 'fs';
 import path from 'path';
@@ -31,7 +31,7 @@ const token =
   (fs.existsSync(path.join(ROOT, '.cf-token')) ? fs.readFileSync(path.join(ROOT, '.cf-token'), 'utf8').trim() : '');
 
 if (!token) {
-  console.error('[x] 没有找到 Cloudflare API Token：请设置 CLOUDFLARE_API_TOKEN，或写到项目根目录的 .cf-token');
+  console.error('[x] Cloudflare API Token not found: set CLOUDFLARE_API_TOKEN, or write it to .cf-token in the project root');
   process.exit(1);
 }
 
@@ -48,11 +48,11 @@ const api = async (method, endpoint, body) => {
 async function main() {
   const accounts = await api('GET', '/accounts?per_page=50');
   if (!accounts.ok || !accounts.data.result?.length) {
-    console.error('[x] 读取账号失败：', JSON.stringify(accounts.data.errors || accounts.data).slice(0, 300));
+    console.error('[x] Failed to read accounts:', JSON.stringify(accounts.data.errors || accounts.data).slice(0, 300));
     process.exit(1);
   }
   const accountId = accounts.data.result[0].id;
-  console.log(`[1/4] 账号：${accounts.data.result[0].name} (${accountId})`);
+  console.log(`[1/4] Account: ${accounts.data.result[0].name} (${accountId})`);
 
   const existing = await api('GET', `/accounts/${accountId}/pages/projects/${PROJECT}`);
   if (existing.status === 404) {
@@ -61,29 +61,29 @@ async function main() {
       production_branch: 'main',
     });
     if (!created.ok) {
-      console.error('[x] 创建 Pages 项目失败：', JSON.stringify(created.data.errors || created.data).slice(0, 300));
+      console.error('[x] Failed to create the Pages project:', JSON.stringify(created.data.errors || created.data).slice(0, 300));
       process.exit(1);
     }
-    console.log(`[2/4] 已创建 Pages 项目 ${PROJECT}`);
+    console.log(`[2/4] Created Pages project ${PROJECT}`);
   } else if (existing.ok) {
-    console.log(`[2/4] Pages 项目已存在：${PROJECT}`);
+    console.log(`[2/4] Pages project already exists: ${PROJECT}`);
   } else {
-    console.error('[x] 查询项目失败：', JSON.stringify(existing.data.errors || existing.data).slice(0, 300));
+    console.error('[x] Failed to look up the project:', JSON.stringify(existing.data.errors || existing.data).slice(0, 300));
     process.exit(1);
   }
 
   const deepseek = readEnvValue(path.join(XH, '.dev.vars'), 'DEEPSEEK_API_KEY') || readEnvValue(path.join(XH, '.env.local'), 'DEEPSEEK_API_KEY');
   if (!deepseek) {
-    console.warn('[!] 本地没有找到 DEEPSEEK_API_KEY，跳过环境变量写入（桌宠对话会提示未配置）');
+    console.warn('[!] DEEPSEEK_API_KEY not found locally, skipping the environment variable (the pet chat will report that it is not configured)');
   } else {
     const envVars = { DEEPSEEK_API_KEY: { type: 'secret_text', value: deepseek } };
     const patched = await api('PATCH', `/accounts/${accountId}/pages/projects/${PROJECT}`, {
       deployment_configs: { production: { env_vars: envVars }, preview: { env_vars: envVars } },
     });
-    console.log(patched.ok ? '[3/4] 已写入 DEEPSEEK_API_KEY 环境变量' : `[!] 写入环境变量失败：${JSON.stringify(patched.data.errors || patched.data).slice(0, 200)}`);
+    console.log(patched.ok ? '[3/4] Wrote the DEEPSEEK_API_KEY environment variable' : `[!] Failed to write the environment variable: ${JSON.stringify(patched.data.errors || patched.data).slice(0, 200)}`);
   }
 
-  console.log('[4/4] 开始静态导出构建…');
+  console.log('[4/4] Building the static export…');
   const build = spawnSync(path.join(ROOT, 'scripts', 'build-static.cmd'), {
     cwd: ROOT,
     stdio: 'inherit',
@@ -91,21 +91,21 @@ async function main() {
     env: { ...process.env, NEXT_PUBLIC_BASE_PATH: '' },
   });
   if (build.status !== 0) {
-    console.error('[x] 构建失败');
+    console.error('[x] Build failed');
     process.exit(1);
   }
 
-  console.log('上传到 Cloudflare Pages…');
+  console.log('Uploading to Cloudflare Pages…');
   const deploy = spawnSync(
     path.join(ROOT, 'scripts', 'cf.cmd'),
     ['pages', 'deploy', path.join(XH, 'out'), '--project-name', PROJECT, '--branch', 'main', '--commit-dirty=true'],
     { cwd: XH, stdio: 'inherit', shell: true, env: { ...process.env, CLOUDFLARE_API_TOKEN: token } },
   );
   if (deploy.status !== 0) {
-    console.error('[x] 上传失败');
+    console.error('[x] Upload failed');
     process.exit(1);
   }
-  console.log(`\n完成 ✅  https://${PROJECT}.pages.dev`);
+  console.log(`\nDone ✅  https://${PROJECT}.pages.dev`);
 }
 
 main().catch((error) => {

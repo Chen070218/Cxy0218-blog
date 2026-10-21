@@ -1,8 +1,8 @@
 // scripts/localize-images.mjs
-// 把站内引用的外部图片（旧图床 bu.dusays.com）下载、压缩成 WebP 放进 public/photos/，
-// 再把源码里的链接换成站内路径。相册里的原图单张 1MB 上下，压缩后只有一两百 KB。
+// Downloads the external images the site references (from the old image host bu.dusays.com), compresses them to WebP into public/photos/,
+// and replaces the links in the source files with local paths. An original photo in an album is around 1 MB; after compression it is only one or two hundred KB.
 //
-// 用法： node scripts/localize-images.mjs [--dry]
+// Usage: node scripts/localize-images.mjs [--dry]
 
 import fs from 'fs';
 import path from 'path';
@@ -14,11 +14,11 @@ const XH = path.join(ROOT, 'XHBlogs');
 const OUT_DIR = path.join(XH, 'public', 'photos');
 const DRY = process.argv.includes('--dry');
 
-// sharp 装在 XHBlogs/node_modules 里，从那边解析
+// sharp lives in XHBlogs/node_modules, so resolve it from there
 const requireFromSite = createRequire(path.join(XH, 'package.json'));
 const sharp = requireFromSite('sharp');
 
-/** 需要扫描的文件：相册数据、说说、站点配置 */
+/** Files to scan: album data, moments, site config */
 function collectFiles() {
   const files = [
     path.join(XH, 'siteConfig.ts'),
@@ -50,7 +50,7 @@ async function main() {
     for (const m of text.matchAll(URL_RE)) urls.add(m[0]);
   }
 
-  console.log(`扫描到 ${urls.size} 张外部图片，来自 ${files.length} 个文件`);
+  console.log(`Found ${urls.size} external images across ${files.length} files`);
   if (DRY) {
     for (const u of urls) console.log('  ' + u);
     return;
@@ -78,11 +78,11 @@ async function main() {
         fs.writeFileSync(target, out);
         console.log(`[${index}/${urls.size}] ${name}  ${(before / 1024).toFixed(0)}KB -> ${(out.length / 1024).toFixed(0)}KB`);
       } else {
-        console.log(`[${index}/${urls.size}] ${name} 已存在，跳过下载`);
+        console.log(`[${index}/${urls.size}] ${name} already exists, skipping download`);
       }
       mapping.set(url, `/photos/${name}`);
     } catch (error) {
-      console.log(`[${index}/${urls.size}] 失败 ${url} -> ${error.message}`);
+      console.log(`[${index}/${urls.size}] failed ${url} -> ${error.message}`);
     }
   }
 
@@ -93,10 +93,10 @@ async function main() {
     if (next !== text) {
       fs.writeFileSync(file, next);
       changed++;
-      console.log(`改写 ${path.relative(ROOT, file)}`);
+      console.log(`Rewrote ${path.relative(ROOT, file)}`);
     }
   }
-  console.log(`完成：本地化 ${mapping.size} 张，改写 ${changed} 个文件`);
+  console.log(`Done: localized ${mapping.size} images, rewrote ${changed} files`);
 }
 
 main().catch((error) => {
