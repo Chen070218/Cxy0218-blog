@@ -11,7 +11,7 @@ import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 
 type ActivityRecord = {
   id: string;
-  type: '文章' | '杂谈' | '说说';
+  type: 'post' | 'musing' | 'moment';
   title: string;
   date: string;
   url: string;
@@ -117,9 +117,9 @@ export default function AboutClient({
 
   const getTypeColor = (type: string) => {
     switch(type) {
-      case '文章': return 'text-indigo-600 dark:text-indigo-400';
-      case '杂谈': return 'text-purple-600 dark:text-purple-400';
-      case '说说': return 'text-pink-600 dark:text-pink-400';
+      case 'post': return 'text-indigo-600 dark:text-indigo-400';
+      case 'musing': return 'text-purple-600 dark:text-purple-400';
+      case 'moment': return 'text-pink-600 dark:text-pink-400';
       default: return 'text-slate-500 dark:text-slate-400';
     }
   };
@@ -137,10 +137,10 @@ export default function AboutClient({
           <SmartImage fill sizes="128px" src={siteConfig.avatarUrl} alt="avatar" className="object-cover" />
         </div>
 
-        {/* 🌟 核心修复区：手机端排版优雅适配 */}
+        {/* 🌟 main fix: tidy layout on mobile */}
         <div className="mt-4 md:mt-6 mb-6 md:mb-8 relative flex flex-col md:flex-row md:items-end justify-between gap-5 md:gap-4">
           <div className="text-center md:text-left">
-            <h1 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight mb-1 md:mb-3 transition-colors duration-700">关于我</h1>
+            <h1 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight mb-1 md:mb-3 transition-colors duration-700">About Me</h1>
             <p className="text-sm md:text-lg text-indigo-600 dark:text-indigo-400 font-bold tracking-widest uppercase transition-colors duration-700">Hello World, I'm {siteConfig.authorName}</p>
           </div>
 
@@ -149,13 +149,13 @@ export default function AboutClient({
               onClick={() => handleTabChange('intro')}
               className={`flex-1 md:flex-none px-4 md:px-6 py-2 md:py-2 rounded-lg md:rounded-xl text-xs md:text-sm font-black transition-all duration-300 ${activeTab === 'intro' ? 'bg-indigo-500 text-white shadow-md' : 'text-slate-500 hover:text-indigo-500'}`}
             >
-              自我介绍
+              Introduction
             </button>
             <button
               onClick={() => handleTabChange('activity')}
               className={`flex-1 md:flex-none px-4 md:px-6 py-2 md:py-2 rounded-lg md:rounded-xl text-xs md:text-sm font-black transition-all duration-300 ${activeTab === 'activity' ? 'bg-indigo-500 text-white shadow-md' : 'text-slate-500 hover:text-indigo-500'}`}
             >
-              研究动态
+              Activity
             </button>
           </div>
         </div>
@@ -271,7 +271,7 @@ export default function AboutClient({
                               return (
                                 <div
                                   key={j}
-                                  title={`${dateKey}: ${count} 次更新`}
+                                  title={`${dateKey}: ${count} updates`}
                                   className={`w-[11px] h-[11px] md:w-[13px] md:h-[13px] rounded-[3px] transition-colors duration-300 hover:ring-2 hover:ring-indigo-500/50 ${getColorClass(count)}`}
                                 ></div>
                               );
@@ -297,7 +297,7 @@ export default function AboutClient({
 
               <div className="relative pl-6 md:pl-8 border-l-2 border-indigo-500/20 dark:border-indigo-400/20 space-y-6 md:space-y-8">
                 {activities.map((act, index) => {
-                  const isMoment = act.type === '说说';
+                  const isMoment = act.type === 'moment';
                   const targetUrl = isMoment ? '/moments' : act.url;
 
                   return (
@@ -315,7 +315,7 @@ export default function AboutClient({
                             <div className="flex items-center gap-2">
                               <span className="font-black text-slate-800 dark:text-slate-200 text-sm">{siteConfig.authorName}</span>
                               <span className={`text-xs font-bold ${getTypeColor(act.type)}`}>
-                                {isMoment ? '发布了 说说' : `更新了 ${act.type}`}
+                                {isMoment ? 'published a moment' : `published a ${act.type}`}
                               </span>
                             </div>
 
@@ -330,7 +330,7 @@ export default function AboutClient({
                             <div className="hidden md:block w-px h-8 bg-slate-300 dark:bg-slate-600 mx-2 shrink-0"></div>
                             <div className="flex-1 min-w-0">
                               <div className="text-sm md:text-base font-black text-slate-800 dark:text-white truncate group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
-                                《{act.title}》
+                                “{act.title}”
                               </div>
                             </div>
                           </>
@@ -349,7 +349,7 @@ export default function AboutClient({
                 })}
 
                 {activities.length === 0 && (
-                  <div className="text-slate-500 text-sm font-bold">源石数据库中暂无活动记录...</div>
+                  <div className="text-slate-500 text-sm font-bold">Nothing in the Originium database yet...</div>
                 )}
               </div>
 

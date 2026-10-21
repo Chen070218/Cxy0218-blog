@@ -2,6 +2,8 @@ import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 import { prefixHtml } from "../../../sitePath";
+import { formatDate } from "../../../components/formatDate";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { unified } from "unified";
@@ -53,6 +55,16 @@ async function getChatter(slug: string) {
   };
 }
 
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const item = await getChatter(slug);
+  if (!item) return { title: `Musings | ${siteConfig.title}` };
+  return {
+    title: `${item.title} | ${siteConfig.title}`,
+    description: `${item.title} — a short note by ${siteConfig.authorName}.`,
+  };
+}
+
 export default async function ChatterDetail({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const item = await getChatter(slug);
@@ -62,8 +74,8 @@ export default async function ChatterDetail({ params }: { params: Promise<{ slug
     <div className="min-h-screen relative pb-24">
       <Navbar />
       <PageTransition>
-        <main className="w-[92%] md:w-[90%] max-w-3xl mx-auto mt-24 md:mt-28">
-          <Link href="/chatter" className="text-sm font-bold text-indigo-600 dark:text-indigo-300">← 返回杂谈</Link>
+        <main id="main-content" className="w-[92%] md:w-[90%] max-w-3xl mx-auto mt-24 md:mt-28">
+          <Link href="/chatter" className="text-sm font-bold text-indigo-600 dark:text-indigo-300">← Back to Musings</Link>
           <article className="mt-4 rounded-3xl bg-white/60 dark:bg-slate-800/50 backdrop-blur-xl border border-white/40 dark:border-white/10 shadow-xl overflow-hidden">
             <div className="relative w-full aspect-[16/9] bg-slate-200/50 dark:bg-slate-700/40">
               <SmartImage fill sizes="(max-width: 768px) 100vw, 760px" src={item.cover} alt={item.title} className="object-cover" />
@@ -71,7 +83,7 @@ export default async function ChatterDetail({ params }: { params: Promise<{ slug
             <div className="p-6 md:p-10">
               <h1 className="text-2xl md:text-4xl font-black text-slate-900 dark:text-white">{item.title}</h1>
               <p className="mt-2 text-xs font-bold tracking-widest text-slate-500 dark:text-slate-400">
-                {item.date}
+                {formatDate(item.date, true)}
                 {item.mood ? ` · ${item.mood}` : ""}
               </p>
               <div className="mt-3 flex flex-wrap gap-1.5">

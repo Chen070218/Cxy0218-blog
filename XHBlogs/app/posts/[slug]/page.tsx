@@ -1,5 +1,7 @@
 import SmartImage from '../../../components/SmartImage';
 import { prefixHtml } from '../../../sitePath';
+import { formatDate } from '../../../components/formatDate';
+import type { Metadata } from 'next';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
@@ -7,14 +9,14 @@ import Link from 'next/link';
 
 import { unified } from 'unified';
 import remarkParse from 'remark-parse';
-import remarkGfm from 'remark-gfm'; // 🌟 核心引入：支持删除线和表格等 GFM 语法
+import remarkGfm from 'remark-gfm'; // 🌟 Core import: GFM syntax such as strikethrough and tables
 import remarkRehype from 'remark-rehype';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeStringify from 'rehype-stringify';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 
-// 引入高亮主题
+// Import the highlight theme
 import 'highlight.js/styles/atom-one-dark.css';
 
 import Navbar from '../../../components/Navbar';
@@ -58,24 +60,24 @@ async function getPostData(slug: string) {
   let { data, content } = matter(fileContents);
 
   // ==========================================
-  // 🌟 前台渲染清洗区：终极防吞换行补丁！
+  // 🌟 Frontend rendering cleanup: the ultimate patch against swallowed line breaks!
   // ==========================================
 
-  // 1. 强行修复数字列表缺少空格导致无法渲染为列表的 Bug (1.百度 -> 1. 百度)
+  // 1. Force-fix the bug where an ordered list fails to render because the number is missing a space (1.Baidu -> 1. Baidu)
   content = content.replace(/^(\s*\d+)\.([^ \n])/gm, '$1. $2');
 
-  // 2. 🌟 拯救被 Markdown 引擎吞噬的“连续空行”！
-  // 统一换行符，并清理纯空格的废弃空行
+  // 2. 🌟 Rescue the "consecutive blank lines" swallowed by the Markdown engine!
+  // Normalize line endings and clear blank lines that contain only spaces
   content = content.replace(/\r\n/g, '\n').replace(/^[ \t]+$/gm, '');
 
-  // 将代码块切开保护，只处理正文的连续空行！
+  // Split the code blocks out for protection and only touch consecutive blank lines in the body text!
   const blocks = content.split(/(```[\s\S]*?```)/g);
   content = blocks.map((block, index) => {
-    // 奇数索引是代码块，原样返回，绝对不碰！
+    // Odd indices are code blocks: return them untouched, never touch them!
     if (index % 2 === 1) return block;
 
-    // 偶数索引是正文。把 3 个以上的连续 \n 替换为真实的 <br/> 标签。
-    // （3 个 \n 相当于中间空了 1 行真正的空白）
+    // Even indices are body text. Replace 3 or more consecutive \n with real <br/> tags.
+    // (3 \n is the same as one genuinely blank line in between)
     return block.replace(/\n{3,}/g, (match) => {
       const brCount = match.length - 2;
       return '\n\n' + '<br/>'.repeat(brCount) + '\n\n';
@@ -88,9 +90,9 @@ async function getPostData(slug: string) {
     .use(remarkParse)
     .use(remarkGfm)
     .use(remarkMath)
-    // 🌟 allowDangerousHtml 必须开启，这样上面生成的 <br/> 才能顺利通过变成真正的换行！
+    // 🌟 allowDangerousHtml must be on, so the <br/> generated above can pass straight through and become a real line break!
     .use(remarkRehype, { allowDangerousHtml: true })
-    // 🌟 核心升级：开启代码语言自动侦测，并限制白名单，大幅提高 C++ 和常用语言的猜中率！
+    // 🌟 Core upgrade: turn on automatic code-language detection and restrict it with a whitelist, which greatly improves the hit rate for C++ and common languages!
     // @ts-ignore
     .use(rehypeHighlight, {
       detect: true,
@@ -106,9 +108,19 @@ async function getPostData(slug: string) {
     contentHtml: processedContent.toString(),
     toc: extractToc(content),
     title: data.title,
+    description: data.description || '',
     date: data.date,
     tags: data.tags && Array.isArray(data.tags) ? data.tags : [],
     cover: data.cover || siteConfig.defaultPostCover
+  };
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const post = await getPostData(slug);
+  return {
+    title: `${post.title} | ${siteConfig.title}`,
+    description: post.description || `${post.title} — an article by ${siteConfig.authorName}.`,
   };
 }
 
@@ -121,7 +133,7 @@ function getRecentPosts(currentSlug: string) {
     const s = f.replace(/\.md$/, '');
     const c = fs.readFileSync(path.join(postsDirectory, f), 'utf8');
     const { data } = matter(c);
-    return { slug: s, title: data.title || '无标题', date: data.date };
+    return { slug: s, title: data.title || 'Untitled', date: data.date };
   }).filter(p => p.slug !== currentSlug).slice(0, 3);
 }
 
@@ -134,11 +146,11 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
     <div className="min-h-screen relative pb-20">
       <Navbar />
       <PageTransition>
-        <main className="w-[95%] md:w-[90%] max-w-6xl mx-auto mt-24 md:mt-28 flex flex-col lg:flex-row gap-6 md:gap-8 relative z-10">
+        <main id="main-content" className="w-[95%] md:w-[90%] max-w-6xl mx-auto mt-24 md:mt-28 flex flex-col lg:flex-row gap-6 md:gap-8 relative z-10">
 
           <article className="flex-1 bg-white/60 dark:bg-slate-800/50 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/40 dark:border-white/10 overflow-hidden transition-colors duration-700">
             <div className="w-full aspect-video bg-slate-200 dark:bg-slate-700 relative group">
-              <SmartImage fill sizes="(max-width: 1024px) 100vw, 760px" src={postData.cover} alt="封面" className="object-cover opacity-90 transition-transform duration-1000 group-hover:scale-105" />
+              <SmartImage fill sizes="(max-width: 1024px) 100vw, 760px" src={postData.cover} alt="Cover" className="object-cover opacity-90 transition-transform duration-1000 group-hover:scale-105" />
             </div>
 
             <div className="p-5 md:p-12 relative">
@@ -149,12 +161,12 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
                   {postData.title}
                 </h1>
 
-                {/* ✅ 前端展示：修改此篇的特权按钮已经彻底移除 */}
+                {/* ✅ Frontend display: the privileged button for editing this post has been completely removed */}
 
                 <div className="flex flex-wrap items-center gap-2 md:gap-3">
                   <div className="flex items-center gap-1.5 md:gap-2 text-indigo-700 dark:text-indigo-400 font-bold bg-white/30 dark:bg-slate-900/50 px-3 md:px-4 py-1.5 md:py-2 rounded-full w-max text-xs md:text-sm transition-colors duration-700 shadow-sm border border-white/20 dark:border-white/5">
                     <svg className="w-3 h-3 md:w-4 md:h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    写作时间：{postData.date}
+                    Written: {formatDate(postData.date, true)}
                   </div>
 
                   {postData.tags.map((tag: string) => (
@@ -186,7 +198,7 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
                   
                   .prose del { text-decoration-color: inherit !important; opacity: 0.6; }
                   
-                  /* 🌟 引用块专属果冻极客风样式补丁 */
+                  /* 🌟 Style patch for the jelly geek look exclusive to blockquotes */
                   .prose blockquote {
                     border-left: 4px solid #6366f1 !important;
                     background-color: rgba(99, 102, 241, 0.05) !important;
@@ -281,12 +293,12 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
             <SidebarLyric />
 
             <div className="bg-white/60 dark:bg-slate-800/50 backdrop-blur-xl rounded-3xl p-6 border border-white/40 dark:border-white/10 shadow-xl">
-              <h3 className="font-black text-slate-900 dark:text-white mb-4 border-l-4 border-indigo-500 pl-2 text-sm">再看几篇</h3>
+              <h3 className="font-black text-slate-900 dark:text-white mb-4 border-l-4 border-indigo-500 pl-2 text-sm">More posts</h3>
               <div className="space-y-4">
                 {recentPosts.map(p => (
                   <Link key={p.slug} href={`/posts/${p.slug}`} className="group block">
                     <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-1">{p.title}</h4>
-                    <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1 font-bold uppercase">{p.date}</p>
+                    <p className="text-[10px] text-slate-400 dark:text-slate-500 mt-1 font-bold uppercase">{formatDate(p.date, true)}</p>
                   </Link>
                 ))}
               </div>

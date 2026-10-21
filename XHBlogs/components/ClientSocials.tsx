@@ -1,12 +1,12 @@
 // src/components/ClientSocials.tsx
 "use client";
 
-import { siteConfig } from '../siteConfig'; // 确保路径正确
+import { siteConfig } from '../siteConfig'; // make sure the path is right
 
-// 这里我们整合了 SocialBtn 和 ClientSocials
+// Here we combine SocialBtn and ClientSocials
 function SocialBtn({ type, url, onClick }: { type: string, url?: string, onClick?: () => void }) {
   const labels: Record<string, string> = {
-    github: 'GitHub 主页', gitee: 'Gitee 主页', google: 'Google', email: '复制邮箱', qq: '复制 QQ 号', wechat: '复制微信号',
+    github: 'GitHub profile', gitee: 'Gitee profile', google: 'Google', email: 'Copy email', qq: 'Copy QQ number', wechat: 'Copy WeChat ID',
   };
   const label = labels[type] || type;
   const getIcon = () => {
@@ -40,7 +40,7 @@ function SocialBtn({ type, url, onClick }: { type: string, url?: string, onClick
 export default function ClientSocials() {
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
-    alert(`✨ ${label}已复制到剪贴板: ${text}`);
+    alert(`✨ ${label} copied to clipboard: ${text}`);
   };
 
   return (
@@ -48,9 +48,9 @@ export default function ClientSocials() {
       {siteConfig.social?.github && <SocialBtn type="github" url={siteConfig.social.github} />}
       {siteConfig.social?.gitee && <SocialBtn type="gitee" url={siteConfig.social.gitee} />}
       {siteConfig.social?.google && <SocialBtn type="google" url={siteConfig.social.google} />}
-      <SocialBtn type="email" onClick={() => copyToClipboard(siteConfig.social?.email || '', '邮箱')} />
-      <SocialBtn type="qq" onClick={() => copyToClipboard(siteConfig.social?.qq || '', 'QQ号')} />
-      <SocialBtn type="wechat" onClick={() => copyToClipboard(siteConfig.social?.wechat || '', '微信号')} />
+      <SocialBtn type="email" onClick={() => copyToClipboard(siteConfig.social?.email || '', 'Email')} />
+      <SocialBtn type="qq" onClick={() => copyToClipboard(siteConfig.social?.qq || '', 'QQ number')} />
+      <SocialBtn type="wechat" onClick={() => copyToClipboard(siteConfig.social?.wechat || '', 'WeChat ID')} />
     </div>
   );
 }

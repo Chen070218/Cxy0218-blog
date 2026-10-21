@@ -9,7 +9,7 @@ export default function BackgroundEffects() {
 
   return (
     <>
-      {/* 核心魔法：根据 isDark 切换特效组件 */}
+      {/* The core trick: switch effect components based on isDark */}
       <div className={`transition-opacity duration-1000 ${isDark ? 'opacity-100' : 'opacity-0'}`}>
         <Fireflies />
       </div>
@@ -17,7 +17,7 @@ export default function BackgroundEffects() {
         <Sakura />
       </div>
 
-      {/* 草地一直存在，但它内部会自动改变颜色 */}
+      {/* The grass is always there, but it changes color on its own inside */}
       <WindyGrass />
     </>
   );

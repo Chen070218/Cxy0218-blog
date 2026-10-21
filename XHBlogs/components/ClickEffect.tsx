@@ -5,15 +5,15 @@ import { usePerfProfile } from './usePerfProfile';
 interface Ripple { x: number; y: number; r: number; velocity: number; opacity: number; }
 
 /**
- * 点击涟漪：原来有一个永不停止的 requestAnimationFrame 循环，
- * 即使没有任何涟漪也在每帧清空整屏 canvas。现在改成「有点击才跑，扩散完就停」。
+ * Click ripples: this used to have a requestAnimationFrame loop that never stopped,
+ * clearing the full-screen canvas every frame even when there were no ripples. Now it runs only on click and stops once the ripple has spread out.
  */
 export default function ClickEffect() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { reducedMotion } = usePerfProfile();
 
   useEffect(() => {
-    if (reducedMotion) return; // 系统要求减少动效时，不做点击涟漪
+    if (reducedMotion) return; // no click ripples when the system asks for reduced motion
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -56,7 +56,7 @@ export default function ClickEffect() {
         ctx.fill();
       }
 
-      // 还有涟漪才继续下一帧
+      // keep going only while there are ripples left
       if (ripples.length > 0) rafId = requestAnimationFrame(frame);
       else ctx.clearRect(0, 0, canvas.width, canvas.height);
     };

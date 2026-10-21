@@ -7,8 +7,8 @@ import ChatterBoard from "./ChatterBoard";
 import { siteConfig } from "../../siteConfig";
 
 export const metadata = {
-  title: "杂谈 | " + siteConfig.title,
-  description: "非正式的文章与脑洞记录。",
+  title: "Musings | " + siteConfig.title,
+  description: "Informal posts and notes on whatever crosses my mind.",
 };
 
 function readChatters() {
@@ -39,12 +39,12 @@ export default function ChatterPage() {
     <div className="min-h-screen relative pb-20">
       <Navbar />
       <PageTransition>
-        <main className="w-[92%] md:w-[90%] max-w-6xl mx-auto mt-24 md:mt-28">
+        <main id="main-content" className="w-[92%] md:w-[90%] max-w-6xl mx-auto mt-24 md:mt-28">
           <header className="mb-8 md:mb-10">
             <p className="text-xs font-black tracking-[0.3em] text-indigo-600 dark:text-indigo-300 uppercase">Chatter</p>
-            <h2 className="mt-2 text-3xl md:text-5xl font-black text-slate-900 dark:text-white">杂谈</h2>
+            <h2 className="mt-2 text-3xl md:text-5xl font-black text-slate-900 dark:text-white">Musings</h2>
             <p className="mt-3 text-sm md:text-base text-slate-700 dark:text-slate-300">
-              非正式的文章与脑洞记录，共 {chatters.length} 篇。
+              Informal posts and notes on whatever crosses my mind — {chatters.length} in total.
             </p>
           </header>
           <ChatterBoard chatters={chatters} />

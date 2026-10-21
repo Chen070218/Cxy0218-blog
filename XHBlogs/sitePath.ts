@@ -1,11 +1,11 @@
 // sitePath.ts
-// 站点可能挂在子路径上（例如 GitHub Pages 的项目站点 /Cxy0218-blog/）。
-// next/image 会自动加前缀，但自己写的 <img src="/xxx">、CSS 里的 url(/xxx)、
-// 以及 Markdown 渲染出的 <img src="/xxx"> 都不会，这里统一处理。
+// The site may be served from a subpath (for example a GitHub Pages project site at /Cxy0218-blog/).
+// next/image adds the prefix automatically, but a hand-written <img src="/xxx">, url(/xxx) in CSS,
+// and the <img src="/xxx"> that Markdown renders do not — so this file handles all of them in one place.
 
 export const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || '';
 
-/** 给站内绝对地址加上部署前缀；外部地址、data:、相对地址原样返回 */
+/** Add the deployment prefix to absolute in-site URLs; external URLs, data: and relative URLs are returned as-is */
 export function withBasePath(url?: string | null): string {
   if (!url) return '';
   if (/^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(url)) return url;
@@ -14,7 +14,7 @@ export function withBasePath(url?: string | null): string {
   return `${BASE_PATH}${url}`;
 }
 
-/** 把一段 HTML 里所有站内绝对地址加上前缀（Markdown 渲染结果用） */
+/** Add the prefix to every absolute in-site URL in an HTML fragment (used for rendered Markdown) */
 export function prefixHtml(html: string): string {
   if (!BASE_PATH) return html;
   return html.replace(

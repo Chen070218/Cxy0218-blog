@@ -5,7 +5,7 @@ import { usePerfProfile } from './usePerfProfile';
 
 interface WildBlade { id: number; height: number; width: number; delay: number; duration: number; opacity: number; left: string; isLeftCurve: boolean; }
 
-/** 底部随风摆动的草：原来 150 根全程动画，是页面里最大的一处动画开销，现在按档位缩放 */
+/** Grass swaying at the bottom of the page: it used to animate 150 blades all the time, the single biggest animation cost on the page; now it scales with the performance profile */
 export default function WindyGrass() {
   const { isDark } = useTheme();
   const { scale, visible } = usePerfProfile();

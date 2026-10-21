@@ -3,13 +3,14 @@
 import { ReactNode, useMemo } from "react";
 
 /**
- * 页面进入动画：纯 CSS 实现（原来是 framer-motion 在 JS 里逐帧改整页 style，
- * 页面里又有大量 backdrop-blur 玻璃卡片要跟着重算，快速切页时会叠加成卡顿）。
+ * Page enter animation: pure CSS now (it used to be framer-motion rewriting the whole page's style
+ * every frame in JS, on a page that also has a lot of backdrop-blur glass cards to recompute,
+ * so fast page switches piled up into jank).
  *
- * 另外做了一个「快速连续切页就跳过动画」的处理：
- * 如果你在上一次跳转后 600ms 内又点了一次，说明是在快速翻页，这时直接显示内容、
- * 不播动画——避免多个 0.8s 动画堆在一起抢主线程。
- * 系统开启「减少动态效果」时，CSS 里已统一关掉动画。
+ * There is also a "skip the animation on rapid page switching" path:
+ * if you click again within 600ms of the previous navigation, you are flipping pages quickly, so the
+ * content is shown straight away and no animation plays — that avoids several 0.8s animations piling up
+ * on the main thread. When the system's "reduce motion" setting is on, the CSS already turns animations off.
  */
 let lastNavigationAt = 0;
 

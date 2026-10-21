@@ -3,11 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * 番茄钟（25 分钟专注 / 5 分钟休息）
+ * Pomodoro timer (25 minutes focus / 5 minutes break)
  *
- * 灵感来自参考的桌面宠物「爱弥斯」里的番茄钟功能：专注结束时通过
- * window 事件 'pet-say' 通知桌宠说话，让宠物和工具联动。
- * 今日完成次数存在 localStorage。
+ * Inspired by the Pomodoro feature in the reference desktop pet "Aimisi": when focus ends it notifies
+ * the desktop pet through the window event 'pet-say', linking the pet and the tool.
+ * Today's completed count is stored in localStorage.
  */
 
 const FOCUS_MIN = 25;
@@ -43,16 +43,16 @@ export default function TomatoClock() {
       setLeft((prev) => {
         if (prev > 1) return prev - 1;
 
-        // 一个阶段结束
+        // One phase has ended
         if (phase === "focus") {
           const next = done + 1;
           setDone(next);
           try { localStorage.setItem(COUNT_KEY, JSON.stringify(next)); } catch {}
-          say(`专注结束啦，今天第 ${next} 个番茄完成～去休息 5 分钟吧 (๑•̀ㅂ•́)و✧`);
+          say(`Focus session over — tomato #${next} done today～ go take a 5-minute break (๑•̀ㅂ•́)و✧`);
           setPhase("break");
           return BREAK_MIN * 60;
         }
-        say("休息结束，我们继续好不好？我陪着你 (｡･ω･｡)ﾉ♡");
+        say("Break's over. Shall we keep going? This fox is right here with you (｡･ω･｡)ﾉ♡");
         setPhase("focus");
         return FOCUS_MIN * 60;
       });
@@ -70,10 +70,10 @@ export default function TomatoClock() {
   const btn = "px-3 py-1.5 rounded-full text-xs font-bold border border-white/50 dark:border-white/10 bg-white/70 dark:bg-slate-800/70 text-slate-700 dark:text-slate-200 hover:bg-white/95 transition-colors";
 
   return (
-    <div className="flex flex-col gap-3" aria-label="番茄钟">
+    <div className="flex flex-col gap-3" aria-label="Pomodoro timer">
       <div className="rounded-2xl border border-white/40 dark:border-white/10 bg-white/60 dark:bg-slate-800/50 px-4 py-3 text-center">
         <p className="text-[11px] font-black tracking-widest text-slate-500 dark:text-slate-400">
-          {phase === "focus" ? "专注中" : "休息中"} · 今日完成 {done} 个
+          {phase === "focus" ? "Focusing" : "On a break"} · {done} done today
         </p>
         <p className="mt-1 text-3xl font-black tabular-nums text-slate-900 dark:text-white">{mm}:{ss}</p>
         <div className="mt-2 h-1.5 w-full rounded-full bg-slate-900/10 dark:bg-white/10 overflow-hidden">
@@ -83,7 +83,7 @@ export default function TomatoClock() {
 
       <div className="flex flex-wrap justify-center gap-2">
         <button type="button" className={btn} onClick={() => setRunning((v) => !v)}>
-          {running ? "暂停" : left === total ? "开始专注" : "继续"}
+          {running ? "Pause" : left === total ? "Start focus" : "Resume"}
         </button>
         <button
           type="button"
@@ -94,7 +94,7 @@ export default function TomatoClock() {
             setLeft(FOCUS_MIN * 60);
           }}
         >
-          重置
+          Reset
         </button>
         <button
           type="button"
@@ -105,12 +105,12 @@ export default function TomatoClock() {
             setLeft((next === "focus" ? FOCUS_MIN : BREAK_MIN) * 60);
           }}
         >
-          切到{phase === "focus" ? "休息" : "专注"}
+          Switch to {phase === "focus" ? "break" : "focus"}
         </button>
       </div>
 
       <p className="text-center text-[11px] text-slate-500 dark:text-slate-400">
-        专注 25 分钟、休息 5 分钟。结束时桌宠会来提醒你。
+        25 minutes of focus, 5 minutes of break. The desktop pet will remind you when a phase ends.
       </p>
     </div>
   );

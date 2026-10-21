@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from 'react';
 import { useMusic } from './MusicProvider';
-// 🌟 核心引入：Next.js 路由钩子
+// 🌟 Core import: the Next.js router hook
 import { useRouter } from 'next/navigation';
 
 const formatTime = (time: number) => {
@@ -14,7 +14,7 @@ const formatTime = (time: number) => {
 export default function CloudPlayer() {
   const { playlist, currentSong, isPlaying, progress, currentTime, duration, currentLyric, isLoading, unavailable, togglePlay, nextSong, prevSong, handleSeek } = useMusic();
   const [displayedLyric, setDisplayedLyric] = useState("");
-  // 🌟 初始化路由
+  // 🌟 Initialize the router
   const router = useRouter();
 
   useEffect(() => {
@@ -44,7 +44,7 @@ export default function CloudPlayer() {
     );
   }
 
-  // 纯静态部署没有 /api/music，这时不显示“没有音乐”的空壳卡片
+  // Pure static deployment has no /api/music; do not show an empty “no music” shell card then
   if (unavailable) {
     return null;
   }
@@ -56,12 +56,12 @@ export default function CloudPlayer() {
           <svg className="w-8 h-8 text-slate-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
         </div>
         <span className="text-slate-500 dark:text-slate-400 font-bold tracking-widest text-xs uppercase">No Music Available</span>
-        <span className="text-[10px] text-slate-400 mt-1">请检查播放列表或网络连接</span>
+        <span className="text-[10px] text-slate-400 mt-1">Check the playlist or your network connection</span>
       </div>
     );
   }
 
-  // 🌟 拦截事件防冒泡的专属函数
+  // 🌟 Dedicated functions that intercept events to stop bubbling
   const safeTogglePlay = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -94,7 +94,7 @@ export default function CloudPlayer() {
         .safe-wave { animation: safeWave 1s ease-in-out infinite; transform-origin: bottom; will-change: height; }
       `}</style>
 
-      {/* 🌟 终极逻辑：在外层 Div 直接绑定 onClick 进行页面跳转 */}
+      {/* 🌟 Ultimate logic: bind onClick on the outer Div to navigate */}
       <div
         onClick={() => router.push('/music')}
         className="h-full w-full rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl p-6 flex flex-col justify-between transition-all duration-700 hover:scale-[1.02] relative group overflow-hidden cursor-pointer"
@@ -109,7 +109,7 @@ export default function CloudPlayer() {
               willChange: 'transform'
             }}
           >
-            <img decoding="async" src={currentSong.cover} alt="cover" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+            <img decoding="async" src={currentSong.cover} alt="Album cover" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
             <div className="absolute inset-0 bg-black/10"></div>
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 bg-white/80 backdrop-blur-sm rounded-full border border-gray-300 shadow-inner"></div>
           </div>
@@ -128,7 +128,7 @@ export default function CloudPlayer() {
         </div>
 
         <div className="relative z-10 mt-auto">
-          {/* 🌟 核心拦截：把进度条的点击也拦住 */}
+          {/* 🌟 Core interception: also stop clicks on the progress bar */}
           <div
              className="flex items-center gap-3 text-xs text-slate-600 dark:text-slate-300 font-bold mb-3 transition-colors duration-700"
              onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
@@ -145,7 +145,7 @@ export default function CloudPlayer() {
             <span className="w-10">{formatTime(duration)}</span>
           </div>
 
-          {/* 🌟 核心拦截：使用我们上面写的 safe 函数，阻止事件冒泡 */}
+          {/* 🌟 Core interception: use the safe functions above to stop event bubbling */}
           <div className="flex items-center justify-center gap-6">
             <button onClick={safePrevSong} className="text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors drop-shadow-sm relative z-20">
                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>

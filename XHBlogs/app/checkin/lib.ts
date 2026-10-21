@@ -1,4 +1,4 @@
-// 时间段打卡 · 公共类型与工具
+// Time-block check-in · shared types and helpers
 
 export type Category = { id: string; name: string; color: string; hidden: boolean };
 export type RecordNode = { id: string; at: string; note: string };
@@ -17,11 +17,11 @@ export type Store = { categories: Category[]; records: CheckinRecord[] };
 export const STORAGE_KEY = "xh-checkin-v1";
 
 export const DEFAULT_CATEGORIES: Category[] = [
-  { id: "study", name: "学习", color: "#6366f1", hidden: false },
-  { id: "code", name: "写代码", color: "#0ea5e9", hidden: false },
-  { id: "language", name: "德语 / 英语", color: "#f59e0b", hidden: false },
-  { id: "read", name: "阅读", color: "#10b981", hidden: false },
-  { id: "rest", name: "休息", color: "#94a3b8", hidden: false },
+  { id: "study", name: "Study", color: "#6366f1", hidden: false },
+  { id: "code", name: "Coding", color: "#0ea5e9", hidden: false },
+  { id: "language", name: "German / English", color: "#f59e0b", hidden: false },
+  { id: "read", name: "Reading", color: "#10b981", hidden: false },
+  { id: "rest", name: "Rest", color: "#94a3b8", hidden: false },
 ];
 
 export const COLOR_PRESETS = ["#6366f1", "#0ea5e9", "#10b981", "#f59e0b", "#ef4444", "#ec4899", "#8b5cf6", "#14b8a6", "#94a3b8"];
@@ -34,7 +34,7 @@ export const clock = (iso: string) => {
   return `${pad(d.getHours())}:${pad(d.getMinutes())}`;
 };
 
-/** 一条记录到现在的分钟数（未结束就按当前时间算） */
+/** Minutes from one record up to now (an unfinished record counts up to the current time) */
 export const minutesOf = (r: CheckinRecord) => {
   const end = r.end ? new Date(r.end).getTime() : Date.now();
   return Math.max(0, (end - new Date(r.start).getTime()) / 60000);
@@ -42,8 +42,8 @@ export const minutesOf = (r: CheckinRecord) => {
 
 export const humanDuration = (min: number) => {
   const m = Math.round(min);
-  if (m < 60) return `${m} 分钟`;
-  return `${Math.floor(m / 60)} 小时 ${m % 60} 分`;
+  if (m < 60) return `${m}m`;
+  return `${Math.floor(m / 60)}h ${m % 60}m`;
 };
 
 export const hms = (min: number) => {
@@ -61,7 +61,7 @@ export function isValidStore(value: any): value is Store {
   );
 }
 
-/** 补齐老数据缺的字段，避免升级后崩溃 */
+/** Backfill fields missing from older data so upgrades do not crash */
 export function normalize(store: Store): Store {
   return {
     categories: store.categories.map((c) => ({ ...c, color: c.color || "#6366f1", hidden: !!c.hidden })),
@@ -75,7 +75,7 @@ export function normalize(store: Store): Store {
   };
 }
 
-/** 月历格子的颜色深浅 */
+/** Shade for a day cell on the calendar */
 export function intensityClass(minutes: number) {
   if (minutes <= 0) return "bg-slate-900/5 dark:bg-white/5";
   if (minutes < 30) return "bg-indigo-500/20";

@@ -3,14 +3,14 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// 定义全局可以调用的方法
+// Define the methods that can be called globally
 interface ToastContextType {
   showToast: (text: string, type?: 'success' | 'warning' | 'error' | 'info') => void;
 }
 
 const ToastContext = createContext<ToastContextType | null>(null);
 
-// 1. 导出 Provider 组件（注意这里是 export function，没有 default）
+// 1. Export the Provider component (note: export function here, no default)
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toastMsg, setToastMsg] = useState<{ text: string, type: 'success' | 'warning' | 'error' | 'info' } | null>(null);
 
@@ -44,9 +44,9 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   );
 }
 
-// 2. 导出魔法钩子，让 ProfileCard 可以调用
+// 2. Export the magic hook so ProfileCard can call it
 export const useToast = () => {
   const context = useContext(ToastContext);
-  if (!context) throw new Error("useToast 必须在 ToastProvider 内部使用");
+  if (!context) throw new Error("useToast must be used inside ToastProvider");
   return context;
 };

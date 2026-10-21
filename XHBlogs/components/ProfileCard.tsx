@@ -10,7 +10,7 @@ export default function ProfileCard({ postCount, momentCount, photoCount }: { po
 
   const copyToClipboard = (text: string, label: string) => {
     navigator.clipboard.writeText(text);
-    showToast(`✨ ${label}已复制到剪贴板: ${text}`, 'success');
+    showToast(`✨ ${label} copied to clipboard: ${text}`, 'success');
   };
 
   return (
@@ -24,9 +24,9 @@ export default function ProfileCard({ postCount, momentCount, photoCount }: { po
             <img decoding="async" src={siteConfig.avatarUrl} alt="avatar" className="w-full h-full rounded-lg md:rounded-xl object-cover bg-white" />
           </div>
           <div className="flex-1 min-w-0">
-            {/* 🌟 核心修复点：
-                1. 增加了 pb-1 (padding-bottom) 给字母降部留空间
-                2. 增加了 leading-snug 确保行高不至于太扁
+            {/* 🌟 Key fixes:
+                1. Added pb-1 (padding-bottom) to leave room for descenders
+                2. Added leading-snug so the line height is not too tight
             */}
             <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-1 md:mb-2 pb-1 leading-snug tracking-wider transition-colors duration-700 truncate">
               {siteConfig.authorName}
@@ -40,20 +40,20 @@ export default function ProfileCard({ postCount, momentCount, photoCount }: { po
 
       <div className="flex flex-col md:flex-row items-center md:items-end justify-between mt-6 md:mt-8 gap-5 md:gap-6 relative z-10">
         <div className="flex gap-2 sm:gap-6 w-full md:w-auto justify-between sm:justify-around md:justify-start px-2 sm:px-0">
-          <StatItem count={postCount} label="文章" color="text-indigo-600 dark:text-indigo-400" />
+          <StatItem count={postCount} label="Posts" color="text-indigo-600 dark:text-indigo-400" />
           <div className="w-px h-8 md:h-10 bg-slate-300/50 dark:bg-slate-700 hidden md:block"></div>
-          <StatItem count={momentCount} label="说说" color="text-purple-600 dark:text-purple-400" />
+          <StatItem count={momentCount} label="Moments" color="text-purple-600 dark:text-purple-400" />
           <div className="w-px h-8 md:h-10 bg-slate-300/50 dark:bg-slate-700 hidden md:block"></div>
-          <StatItem count={photoCount} label="照片" color="text-pink-600 dark:text-pink-400" />
+          <StatItem count={photoCount} label="Photos" color="text-pink-600 dark:text-pink-400" />
         </div>
 
         <div className="flex gap-2 md:gap-3 flex-wrap justify-center md:justify-end w-full md:w-auto" onClick={(e) => e.stopPropagation()}>
           {siteConfig.social?.github && <SocialBtn type="github" url={siteConfig.social.github} />}
           {siteConfig.social?.gitee && <SocialBtn type="gitee" url={siteConfig.social.gitee} />}
           {siteConfig.social?.google && <SocialBtn type="google" url={siteConfig.social.google} />}
-          <SocialBtn type="email" onClick={() => copyToClipboard(siteConfig.social?.email || '', '邮箱')} />
-          <SocialBtn type="qq" onClick={() => copyToClipboard(siteConfig.social?.qq || '', 'QQ号')} />
-          <SocialBtn type="wechat" onClick={() => copyToClipboard(siteConfig.social?.wechat || '', '微信号')} />
+          <SocialBtn type="email" onClick={() => copyToClipboard(siteConfig.social?.email || '', 'Email')} />
+          <SocialBtn type="qq" onClick={() => copyToClipboard(siteConfig.social?.qq || '', 'QQ number')} />
+          <SocialBtn type="wechat" onClick={() => copyToClipboard(siteConfig.social?.wechat || '', 'WeChat ID')} />
         </div>
       </div>
     </div>
@@ -71,7 +71,7 @@ function StatItem({ count, label, color }: { count: number, label: string, color
 
 function SocialBtn({ type, url, onClick }: { type: string, url?: string, onClick?: () => void }) {
   const labels: Record<string, string> = {
-    github: 'GitHub 主页', gitee: 'Gitee 主页', google: 'Google', email: '复制邮箱', qq: '复制 QQ 号', wechat: '复制微信号',
+    github: 'GitHub profile', gitee: 'Gitee profile', google: 'Google', email: 'Copy email', qq: 'Copy QQ number', wechat: 'Copy WeChat ID',
   };
   const label = labels[type] || type;
   const getIcon = () => {

@@ -4,7 +4,7 @@ import { usePerfProfile } from './usePerfProfile';
 
 interface Petal { id: number; left: string; size: number; duration: number; delay: number; }
 
-/** 樱花飘落：同样只在合成层跑，数量随性能档位缩放 */
+/** Falling sakura petals: also composited only, count scaled by the performance profile */
 export default function Sakura() {
   const { scale, visible } = usePerfProfile();
   const [petals, setPetals] = useState<Petal[]>([]);

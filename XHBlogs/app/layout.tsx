@@ -1,6 +1,6 @@
 import 'katex/dist/katex.min.css';
 import type { Metadata } from "next";
-// 自托管字体（来自 npm 包 geist），不再走 Google Fonts，构建时无需联网
+// Self-hosted fonts (from the geist npm package), served locally instead of Google Fonts — no network needed at build time
 import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
 import "./globals.css";
@@ -31,15 +31,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="zh-CN" className={`${GeistSans.variable} ${GeistMono.variable} h-full antialiased`} suppressHydrationWarning>
+    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable} h-full antialiased`} suppressHydrationWarning>
       <head>
         <style
           suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: `
-              /* 原来这里把整页内容隐藏，必须等 JS 激活并跑完开机动画才显示：
-                 手机在慢速网络下会长时间白屏（JS 若失败甚至永久白屏）。
-                 现在内容始终可见，开机动画只当作一层覆盖层。 */
+              /* This used to hide the whole page until JS was active and the splash screen had finished:
+                 on a slow network the phone sat on a blank screen for a long time (or forever if JS failed).
+                 Now the content is always visible and the splash screen is just an overlay. */
               html.splash-seen #app-mount-root { opacity: 1; visibility: visible; pointer-events: auto; }
             `
           }}
@@ -58,7 +58,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         />
       </head>
 
-      <body className="w-screen overflow-x-hidden min-h-full flex flex-col relative transition-colors duration-1000 bg-slate-50 dark:bg-slate-950 font-serif">
+      <body className="w-screen overflow-x-hidden min-h-full flex flex-col relative transition-colors duration-1000 bg-slate-50 dark:bg-slate-950 font-sans">
         <ThemeProvider>
 
           <SplashScreen />
@@ -67,7 +67,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <div id="app-mount-root" className="flex-1 flex flex-col transition-opacity duration-1000">
               <div className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden">
                 <SiteBackground />
-                {/* 全屏 backdrop-blur 去掉了：它盖在会动的背景上，等于每帧重新模糊整屏。改用半透明罩 + 背景图自身模糊 */}
+                {/* Full-screen backdrop-blur removed: it sat on top of the moving background, which re-blurred the whole screen every frame. Using a translucent veil plus the background image's own blur instead */}
                 <div className="absolute inset-0 z-[-9] bg-white/72 dark:bg-slate-950/58 transition-colors duration-1000"></div>
 
                 <div
@@ -75,21 +75,21 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                   style={{
                     background: `linear-gradient(-45deg, ${siteConfig.themeColors.join(', ')})`,
                     backgroundSize: '100% 100%',
-                    animation: 'gradientMove 15s ease infinite' // 🌟 全端保留渐变流动
+                    animation: 'gradientMove 15s ease infinite' // 🌟 keep the gradient flowing at every breakpoint
                   }}
                 ></div>
 
-                {/* 👇 🌟 优化：手机端去掉了 mix-blend-overlay，但保留了 blur 模糊光晕，确保视觉不打折 */}
+                {/* 👇 🌟 Optimization: mix-blend-overlay removed on mobile, but the blurred glow stays so the look does not suffer */}
                 <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-white/40 dark:bg-indigo-900/20 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"></div>
                 <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-400/30 dark:bg-purple-900/30 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"></div>
 
-                {/* 隐藏手机端高负载粒子特效 */}
+                {/* Hide the heavy particle effect on mobile */}
                 <div className="hidden md:block absolute inset-0 w-full h-full">
                   <BackgroundEffects />
                 </div>
               </div>
 
-              {/* 隐藏手机端弹幕 */}
+              {/* Hide danmaku on mobile */}
               <div className="hidden md:block">
                 <DanmakuBackground />
               </div>
@@ -110,7 +110,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                 <MobileBackButton />
               </div>
 
-              {/* 隐藏手机端点击粒子 */}
+              {/* Hide click particles on mobile */}
               <div className="hidden md:block">
                 <ClickEffect />
               </div>

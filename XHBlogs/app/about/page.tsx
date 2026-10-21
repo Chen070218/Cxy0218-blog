@@ -1,6 +1,6 @@
 import { siteConfig } from '../../siteConfig';
 
-export const metadata = { title: '关于 | ' + siteConfig.title, description: siteConfig.bio };
+export const metadata = { title: 'About Me | ' + siteConfig.title, description: siteConfig.bio };
 
 // src/app/about/page.tsx
 import fs from 'fs';
@@ -8,14 +8,14 @@ import path from 'path';
 import matter from 'gray-matter';
 import { unified } from 'unified';
 import remarkParse from 'remark-parse';
-import remarkGfm from 'remark-gfm'; // 🌟 引入 GFM 以支持 ~~删除线~~
+import remarkGfm from 'remark-gfm'; // 🌟 import GFM for ~~strikethrough~~
 import remarkMath from 'remark-math';
 import remarkRehype from 'remark-rehype';
 import rehypeHighlight from 'rehype-highlight';
 import rehypeKatex from 'rehype-katex';
 import rehypeStringify from 'rehype-stringify';
 
-// 引入高亮主题
+// Import the syntax highlighting theme
 import 'highlight.js/styles/atom-one-dark.css';
 import 'katex/dist/katex.min.css';
 
@@ -24,7 +24,7 @@ import PageTransition from '../../components/PageTransition';
 import AboutClient from '../../components/AboutClient';
 import { Suspense } from 'react';
 
-function getDirActivities(dirName: string, typeLabel: '文章' | '杂谈' | '说说', linkPrefix: string) {
+function getDirActivities(dirName: string, typeLabel: 'post' | 'musing' | 'moment', linkPrefix: string) {
   const dirPath = path.join(process.cwd(), dirName);
   if (!fs.existsSync(dirPath)) return [];
 
@@ -45,28 +45,28 @@ function getDirActivities(dirName: string, typeLabel: '文章' | '杂谈' | '说
 
 export default async function AboutPage() {
   const fullPath = path.join(process.cwd(), 'app', 'about', 'about.md');
-  let contentHtml = "博主很懒，还没有写自我介绍哦...";
+  let contentHtml = "I'm too lazy to write an introduction here yet...";
   let coverImage = "/photos/8e72bb847bdc.webp";
 
   try {
     const fileContents = fs.readFileSync(fullPath, 'utf8');
-    // 🌟 改为 let，以便进行文本预清洗
+    // 🌟 use let so the text can be pre-cleaned
     let { data, content } = matter(fileContents);
     if (data.cover) coverImage = data.cover;
 
     // ==========================================
-    // 🌟 解析前物理清洗区
+    // 🌟 pre-parse text clean-up
     // ==========================================
-    // 1. 强行给没有语言标记的代码块加上 cpp 标签，防止侦测失败
+    // 1. Force the cpp tag onto code blocks with no language label, so detection does not fail
     content = content.replace(/^```\s*$/gm, '```cpp');
-    // 2. 强行修复数字列表缺少空格导致无法渲染为列表的 Bug (1.百度 -> 1. 百度)
+    // 2. Fix numbered lists that fail to render because the space after the dot is missing (1.Baidu -> 1. Baidu)
     content = content.replace(/^(\s*\d+)\.([^ \n])/gm, '$1. $2');
 
-    // 3. 🌟 拯救被 Markdown 引擎吞噬的“连续空行” (同步前台展示页的阵法)
+    // 3. 🌟 Rescue the "consecutive blank lines" the Markdown engine swallows (same trick as the public post page)
     content = content.replace(/\r\n/g, '\n').replace(/^[ \t]+$/gm, '');
     const blocks = content.split(/(```[\s\S]*?```|~~~[\s\S]*?~~~)/g);
     content = blocks.map((block, index) => {
-      if (index % 2 === 1) return block; // 代码块绝对不碰
+      if (index % 2 === 1) return block; // never touch code blocks
       return block.replace(/\n{3,}/g, (match) => {
         const brCount = match.length - 2;
         return '\n\n' + '<br>'.repeat(brCount) + '\n\n';
@@ -76,10 +76,10 @@ export default async function AboutPage() {
 
     const processedContent = await unified()
       .use(remarkParse)
-      .use(remarkGfm) // 🌟 挂载 GFM 解析
+      .use(remarkGfm) // 🌟 mount the GFM parser
       .use(remarkMath)
       .use(remarkRehype, { allowDangerousHtml: true })
-      // 🌟 核心修复：开启自动语言侦测，并限制语言白名单！
+      // 🌟 key fix: turn on automatic language detection and limit it to a language whitelist
       // @ts-ignore
       .use(rehypeHighlight, {
         detect: true,
@@ -92,11 +92,11 @@ export default async function AboutPage() {
 
     contentHtml = processedContent.toString();
   } catch (e) {
-    console.error("读取 about.md 失败", e);
+    console.error("Failed to read about.md", e);
   }
 
-  const posts = getDirActivities('posts', '文章', 'posts');
-  const moments = getDirActivities('moments', '说说', 'moments');
+  const posts = getDirActivities('posts', 'post', 'posts');
+  const moments = getDirActivities('moments', 'moment', 'moments');
 
   const allActivities = [...posts, ...moments].sort((a, b) => {
     return new Date(b.date).getTime() - new Date(a.date).getTime();
@@ -105,11 +105,10 @@ export default async function AboutPage() {
   return (
     <div className="min-h-screen relative pb-20">
       <Navbar />
-      <h1 className="sr-only">关于我</h1>
       <PageTransition>
-        <main className="w-[95%] md:w-[90%] max-w-4xl mx-auto mt-24 md:mt-28 relative z-10">
+        <main id="main-content" className="w-[95%] md:w-[90%] max-w-4xl mx-auto mt-24 md:mt-28 relative z-10">
 
-          {/* 🌟 注入 About 页面专用的高颜值 Prose 全局样式 */}
+          {/* 🌟 Prose styles used only on the About page */}
           <style dangerouslySetInnerHTML={{ __html: `
             .prose h1 { font-size: 1.8rem !important; font-weight: 900 !important; margin-bottom: 1.2rem !important; margin-top: 2rem !important; line-height: 1.3 !important; color: inherit !important; }
             .prose h2 { font-size: 1.5rem !important; font-weight: 800 !important; margin-bottom: 1rem !important; margin-top: 1.5rem !important; color: inherit !important; }
@@ -128,10 +127,10 @@ export default async function AboutPage() {
             .prose ul ul, .prose ol ul { list-style-type: circle !important; margin-top: 0.25rem !important; margin-bottom: 0.25rem !important; }
             .prose ol ol, .prose ul ol { list-style-type: lower-alpha !important; margin-top: 0.25rem !important; margin-bottom: 0.25rem !important; }
             
-            /* 🌟 删除线强制展现 */
+            /* 🌟 force strikethrough to show */
             .prose s, .prose del { text-decoration-line: line-through !important; opacity: 0.6; }
 
-            /* 🌟 引用块专属果冻极客风样式补丁 */
+            /* 🌟 jelly-geek style patch for blockquotes */
             .prose blockquote {
               border-left: 4px solid #6366f1 !important;
               background-color: rgba(99, 102, 241, 0.05) !important;
@@ -140,13 +139,13 @@ export default async function AboutPage() {
               border-radius: 0 1.25rem 1.25rem 0 !important;
               font-style: italic !important;
               color: #64748b !important;
-              quotes: none !important; /* 强制移除 Tailwind 原生的丑陋大引号 */
+              quotes: none !important; /* force-remove Tailwind's ugly default quotes */
             }
             .prose blockquote p {
               margin: 0 !important; 
               color: inherit !important;
             }
-            /* 🌟 彻底杀掉 Tailwind Typography 生成的前后伪元素引号！ */
+            /* 🌟 kill the pseudo-element quotes Tailwind Typography adds before and after */
             .prose blockquote p::before,
             .prose blockquote p::after {
               display: none !important;
@@ -159,7 +158,7 @@ export default async function AboutPage() {
               color: #94a3b8 !important;
             }
             
-            /* 🌟 果冻极客风代码字体：更圆滑、更饱满！大圆角拉满！ */
+            /* 🌟 jelly-geek code font: rounder and fuller, large radius everywhere */
             .prose pre {
               background-color: #282c34 !important; color: #abb2bf !important;
               padding: 1rem !important; border-radius: 1.25rem !important;
@@ -189,12 +188,12 @@ export default async function AboutPage() {
             }
             .dark .prose p code, .dark .prose li code { background-color: rgba(99, 102, 241, 0.2) !important; color: #818cf8 !important; }
             
-            /* 🌟 确保前台生成的 <br> 占据真实的垂直空间 */
+            /* 🌟 make sure the generated <br> takes up real vertical space */
             .prose br { display: block !important; content: "" !important; margin-top: 0.5em !important; }
 
             .prose img { display: block !important; margin: 1.5rem auto !important; border-radius: 1rem !important; box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important; max-width: 100% !important; height: auto !important; }
 
-            /* 🌟 Atom One Dark 顶级补丁 */
+            /* 🌟 Atom One Dark patch */
             .prose pre code .hljs-comment, .prose pre code .hljs-quote { color: #5c6370 !important; font-style: italic !important; }
             .prose pre code .hljs-doctag, .prose pre code .hljs-keyword, .prose pre code .hljs-formula { color: #c678dd !important; }
             .prose pre code .hljs-keyword.type_, .prose pre code .hljs-type { color: #c678dd !important; } 
@@ -220,8 +219,8 @@ export default async function AboutPage() {
             }
           `}} />
 
-          <Suspense fallback={<div className="h-96 flex items-center justify-center text-slate-500 font-bold animate-pulse">正在载入档案...</div>}>
-            {/* 🌟 组件原封不动，安全可靠 */}
+          <Suspense fallback={<div className="h-96 flex items-center justify-center text-slate-500 font-bold animate-pulse"><h1 className="sr-only">About Me</h1>Loading profile...</div>}>
+            {/* 🌟 component left untouched */}
             <AboutClient
               contentHtml={contentHtml}
               coverImage={coverImage}

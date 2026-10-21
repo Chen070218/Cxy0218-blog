@@ -3,21 +3,21 @@
 import { useEffect, useState } from 'react';
 
 export type PerfProfile = {
-  /** 系统是否要求减少动态效果（无障碍设置） */
+  /** Whether the system asks for reduced motion (accessibility setting) */
   reducedMotion: boolean;
-  /** 设备看起来偏弱（CPU 核心少 / 内存小） */
+  /** The device looks weak (few CPU cores / little memory) */
   lowPower: boolean;
-  /** 页面是否在前台；切到别的标签页时应该暂停特效 */
+  /** Whether the page is in the foreground; effects should pause when another tab is active */
   visible: boolean;
-  /** 装饰性粒子的数量系数：1 = 正常，0.4 = 弱设备，0 = 不跑 */
+  /** Particle-count factor for decorative effects: 1 = normal, 0.4 = weak device, 0 = off */
   scale: number;
 };
 
 /**
- * 统一的性能档位：所有装饰性特效（粒子、弹幕、点击涟漪）都应该读它。
- * - 用户在系统里开了「减少动态效果」→ 完全不跑装饰特效
- * - 设备偏弱（核心数或内存 ≤ 4）→ 粒子数量降到 40%
- * - 标签页切到后台 → 暂停动画，不白烧 CPU
+ * One shared performance profile: every decorative effect (particles, danmaku, click ripples) should read it.
+ * - The user enabled "reduce motion" in the system → no decorative effects at all
+ * - A weak device (4 cores or 4 GB memory, or less) → particle count drops to 40%
+ * - The tab moves to the background → animations pause, no wasted CPU
  */
 export function usePerfProfile(): PerfProfile {
   const [reducedMotion, setReducedMotion] = useState(false);

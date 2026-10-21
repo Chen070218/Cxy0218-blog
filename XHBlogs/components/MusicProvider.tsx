@@ -4,7 +4,7 @@ import { createContext, useContext, useState, useRef, useEffect, ReactNode } fro
 import { siteConfig } from '../siteConfig';
 import { withBasePath } from '../sitePath';
 
-// 【增强版 LRC 歌词解析】
+// [Enhanced LRC lyric parser]
 function parseLrc(lrcText: string) {
   if (!lrcText || lrcText.length > 30000) return [];
 
@@ -16,8 +16,12 @@ function parseLrc(lrcText: string) {
     if (matches.length > 0) {
       let text = line.replace(/\[\d{2,}:\d{2}(?:\.\d{2,3})?\]/g, '').trim();
 
-      // 剔除控制字符
+      // strip control characters
       const cleanText = text.replace(/[\u0000-\u001F\u007F-\u009F\u200B-\u200D\uFEFF]/g, "");
+
+      // The site is English-only: the lyrics provider also returns Chinese credit
+      // lines ("lyrics by", "composed by", instrumental notices). Skip those.
+      if (/[\u3400-\u9fff]/.test(cleanText)) continue;
 
       if (cleanText) {
         for (const match of matches) {
@@ -34,20 +38,20 @@ function parseLrc(lrcText: string) {
   return result.sort((a, b) => a.time - b.time);
 }
 
-// 🌟 1. 扩充 Context 类型，加入 MusicPage 需要的所有属性
+// 🌟 1. Extend the Context type with everything the MusicPage needs
 type PlayMode = 'loop' | 'single' | 'random';
 
 interface MusicContextType {
   playlist: any[];
   currentIndex: number;
-  currentSong: any; // 扩展了 lyrics 属性
+  currentSong: any; // extended with a lyrics property
   isPlaying: boolean;
   progress: number;
   currentTime: number;
   duration: number;
   currentLyric: string;
   isLoading: boolean;
-  /** 音乐接口不可用（例如纯静态托管没有 /api/music）时为 true */
+  /** True when the music API is unavailable (e.g. pure static hosting with no /api/music) */
   unavailable: boolean;
   volume: number;
   isMuted: boolean;
@@ -73,11 +77,11 @@ export function MusicProvider({ children }: { children: ReactNode }) {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [lyrics, setLyrics] = useState<{ time: number; text: string }[]>([]);
-  const [currentLyric, setCurrentLyric] = useState("正在连接高可用神经云端...");
+  const [currentLyric, setCurrentLyric] = useState("Connecting to the high-availability neural cloud...");
   const [isLoading, setIsLoading] = useState(true);
   const [unavailable, setUnavailable] = useState(false);
 
-  // 🌟 2. 新增音量和播放模式状态
+  // 🌟 2. New volume and play-mode state
   const [volume, setVolumeState] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
   const [playMode, setPlayMode] = useState<PlayMode>('loop');
@@ -90,7 +94,7 @@ export function MusicProvider({ children }: { children: ReactNode }) {
       try {
         const res = await fetch(withBasePath(`/api/music?ids=${siteConfig.cloudMusicIds.join(',')}`));
         if (!res.ok) {
-          // 静态托管没有这个接口：静默降级，不要显示成“播放列表出错”的空卡片
+          // Static hosting has no such API: degrade silently instead of showing an empty “playlist error” card
           if (isMounted) { setUnavailable(true); setIsLoading(false); }
           return;
         }
@@ -100,8 +104,8 @@ export function MusicProvider({ children }: { children: ReactNode }) {
           .filter((song: any) => song && song.url && !song.error)
           .map((song: any) => ({
             id: song.id || Math.random().toString(),
-            title: song.name || '未知歌曲',
-            artist: song.artist || song.author || '未知歌手',
+            title: song.name || 'Unknown song',
+            artist: song.artist || song.author || 'Unknown artist',
             cover: song.cover || song.pic || '/covers/notes.jpg',
             src: song.url,
             lrcUrl: null,
@@ -110,11 +114,11 @@ export function MusicProvider({ children }: { children: ReactNode }) {
 
         if (isMounted) {
           if (mergedPlaylist.length > 0) setPlaylist(mergedPlaylist);
-          else setCurrentLyric("云端链路受阻");
+          else { setCurrentLyric("Cloud link blocked"); setUnavailable(true); }
           setIsLoading(false);
         }
       } catch (error) {
-        if (isMounted) { setUnavailable(true); setCurrentLyric("网络初始化失败"); setIsLoading(false); }
+        if (isMounted) { setUnavailable(true); setCurrentLyric("Network initialization failed"); setIsLoading(false); }
       }
     };
 
@@ -129,11 +133,11 @@ export function MusicProvider({ children }: { children: ReactNode }) {
     let isMounted = true;
     const currentSong = playlist[currentIndex];
     setLyrics([]);
-    setCurrentLyric("♪ 正在缓冲 ♪");
+    setCurrentLyric("♪ Buffering ♪");
     if (currentSong.lyrics && currentSong.lyrics.length > 0) {
       if (isMounted) {
         setLyrics(currentSong.lyrics);
-        setCurrentLyric(currentSong.lyrics[0]?.text || "\u266a \u7eaf\u4eab\u97f3\u4e50 \u266a");
+        setCurrentLyric(currentSong.lyrics[0]?.text || "♪ Pure music ♪");
       }
     } else if (currentSong.lrcUrl) {
       fetch(currentSong.lrcUrl)
@@ -149,7 +153,7 @@ export function MusicProvider({ children }: { children: ReactNode }) {
              });
           }
         })
-        .catch(() => { if (isMounted) setCurrentLyric("\u266a \u7eaf\u4eab\u97f3\u4e50 \u266a"); });
+        .catch(() => { if (isMounted) setCurrentLyric("♪ Pure music ♪"); });
     }
 
     if (isPlaying && audioRef.current) {
@@ -159,9 +163,9 @@ export function MusicProvider({ children }: { children: ReactNode }) {
       }
     }
     return () => { isMounted = false; };
-  }, [currentIndex, playlist.length]); // 移除 playlist 依赖防止无限循环，只依赖长度
+  }, [currentIndex, playlist.length]); // drop the playlist dependency to avoid an infinite loop; depend only on the length
 
-  // 🌟 4. 同步音量到 audio 元素
+  // 🌟 4. Sync the volume to the audio element
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.volume = isMuted ? 0 : volume;
@@ -176,7 +180,7 @@ export function MusicProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  // 🌟 5. 重写 nextSong，加入对随机模式的处理
+  // 🌟 5. Rewrite nextSong to handle random mode
   const nextSong = () => {
     if (playMode === 'random') {
       setCurrentIndex(Math.floor(Math.random() * playlist.length));
@@ -193,10 +197,10 @@ export function MusicProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  // 🌟 6. 暴露直接播放指定歌曲的方法
+  // 🌟 6. Expose a way to play a specific song directly
   const playSong = (index: number) => {
     setCurrentIndex(index);
-    if (!isPlaying) setIsPlaying(true); // 保证切歌后自动播放
+    if (!isPlaying) setIsPlaying(true); // make sure it autoplays after switching
   };
 
   const handleTimeUpdate = () => {
@@ -215,7 +219,7 @@ export function MusicProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  // 🌟 7. 处理歌曲结束
+  // 🌟 7. Handle the end of a song
   const handleEnded = () => {
     if (playMode === 'single' && audioRef.current) {
        audioRef.current.currentTime = 0;
@@ -254,9 +258,9 @@ export function MusicProvider({ children }: { children: ReactNode }) {
     <MusicContext.Provider value={{
         unavailable,
         playlist, currentIndex, currentSong, isPlaying, progress, currentTime, duration, currentLyric, isLoading,
-        volume, isMuted, playMode, // 暴露新状态
+        volume, isMuted, playMode, // expose new state
         togglePlay, nextSong, prevSong, handleSeek,
-        playSong, setVolume, toggleMute, togglePlayMode // 暴露新方法
+        playSong, setVolume, toggleMute, togglePlayMode // expose new methods
     }}>
       {children}
       {currentSong && (
@@ -264,7 +268,7 @@ export function MusicProvider({ children }: { children: ReactNode }) {
           ref={audioRef}
           src={currentSong.src}
           onTimeUpdate={handleTimeUpdate}
-          onEnded={handleEnded} // 使用我们重写的结束处理
+          onEnded={handleEnded} // use our rewritten end handler
           onLoadedMetadata={handleTimeUpdate}
         />
       )}

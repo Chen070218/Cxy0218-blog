@@ -11,21 +11,21 @@ import { withBasePath } from '@/sitePath';
 export default function TimelineClient({ posts: initialPosts, tags: initialTags }: { posts: any[], tags: { name: string, count: number }[] }) {
   const [posts, setPosts] = useState(initialPosts);
   const [loadNotice,setLoadNotice]=useState('');
-  async function refreshPosts(){try{const saved=await readContent<LocalPost>('posts');setPosts([...saved,...initialPosts].sort((a,b)=>new Date(b.date).getTime()-new Date(a.date).getTime()));}catch{setLoadNotice('无法读取本地归档，请检查浏览器设置。');}}
+  async function refreshPosts(){try{const saved=await readContent<LocalPost>('posts');setPosts([...saved,...initialPosts].sort((a,b)=>new Date(b.date).getTime()-new Date(a.date).getTime()));}catch{setLoadNotice('Could not read the local archive. Check your browser settings.');}}
   useEffect(()=>{refreshPosts();},[initialPosts]);
   const tags=useMemo(()=>{const counts:Record<string,number>={};posts.forEach(p=>(p.tags||[]).forEach((t:string)=>{counts[t]=(counts[t]||0)+1;}));return Object.entries(counts).map(([name,count])=>({name,count})).sort((a,b)=>b.count-a.count);},[posts]);
   const [selectedTag, setSelectedTag] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  // 🌟 默认视图模式 ('timeline' | 'card')
+  // 🌟 default view mode ('timeline' | 'card')
   const [viewMode, setViewMode] = useState<'timeline' | 'card'>('timeline');
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const gridScrollRef = useRef<HTMLDivElement>(null);
 
-  // 🌟 核心魔法 1：强制移动端为矩阵模式
+  // 🌟 magic 1: force grid mode on mobile
   useEffect(() => {
     const enforceMobileView = () => {
       if (window.innerWidth < 768) {
@@ -33,9 +33,9 @@ export default function TimelineClient({ posts: initialPosts, tags: initialTags 
       }
     };
 
-    // 初始化检测
+    // initial check
     enforceMobileView();
-    // 监听窗口大小变化
+    // listen for window resizes
     window.addEventListener('resize', enforceMobileView);
     return () => window.removeEventListener('resize', enforceMobileView);
   }, []);
@@ -85,9 +85,9 @@ export default function TimelineClient({ posts: initialPosts, tags: initialTags 
     <div className="w-full max-w-5xl mx-auto mt-28 px-4 sm:px-10 relative z-10">
 
       <div className="text-center mb-12 relative z-20">
-        <h1 className="text-5xl font-black text-slate-900 dark:text-white tracking-tighter mb-4">归档与探索</h1>
+        <h1 className="text-5xl font-black text-slate-900 dark:text-white tracking-tighter mb-4">Timeline</h1>
         <p className="text-slate-500 dark:text-slate-400 font-medium flex items-center justify-center gap-2 italic">
-          <Sparkles size={16} className="text-indigo-500" /> 总计 {posts.length} 篇研究记录
+          <Sparkles size={16} className="text-indigo-500" /> {posts.length} posts in the archive
         </p>
       </div>
 
@@ -97,7 +97,7 @@ export default function TimelineClient({ posts: initialPosts, tags: initialTags 
         <div className="relative w-full max-w-lg group" ref={searchContainerRef}>
           <input
             type="text"
-            placeholder="搜标题、标签…"
+            placeholder="Search titles, tags…"
             value={searchQuery}
             onChange={(e) => {
               setSearchQuery(e.target.value);
@@ -142,7 +142,7 @@ export default function TimelineClient({ posts: initialPosts, tags: initialTags 
                   </div>
                 ) : (
                   <div className="px-6 py-8 text-center text-slate-500 dark:text-slate-400 text-sm font-medium">
-                    赛博空间里找不到这个印记 🌌
+                    No trace of that in cyberspace 🌌
                   </div>
                 )}
               </motion.div>
@@ -153,7 +153,7 @@ export default function TimelineClient({ posts: initialPosts, tags: initialTags 
         <div className="w-full flex flex-col md:flex-row justify-between items-center gap-6 bg-white/30 dark:bg-slate-800/30 backdrop-blur-md p-4 rounded-3xl border border-white/20 dark:border-white/5">
           <div className="flex flex-wrap justify-center md:justify-start gap-2 flex-1">
             <button onClick={() => setSelectedTag('All')} className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-300 ${selectedTag === 'All' ? 'bg-indigo-500 text-white shadow-md' : 'bg-white/50 dark:bg-slate-700/50 text-slate-600 dark:text-slate-400 hover:bg-white'}`}>
-              全部档案
+              All posts
             </button>
             {tags.map(tag => (
               <button key={tag.name} onClick={() => setSelectedTag(tag.name)} className={`px-4 py-2 rounded-xl text-xs font-bold transition-all duration-300 ${selectedTag === tag.name ? 'bg-indigo-500 text-white shadow-md' : 'bg-white/50 dark:bg-slate-700/50 text-slate-600 dark:text-slate-400 hover:bg-white'}`}>
@@ -162,15 +162,15 @@ export default function TimelineClient({ posts: initialPosts, tags: initialTags 
             ))}
           </div>
 
-          {/* 🌟 核心魔法 2：隐藏手机端的视图切换按钮 (hidden md:flex) */}
+          {/* 🌟 magic 2: hide the mobile view toggle (hidden md:flex) */}
           <div className="hidden md:flex bg-white/50 dark:bg-slate-900/50 p-1 rounded-2xl shadow-inner shrink-0">
             <button onClick={() => setViewMode('timeline')} className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-sm transition-all duration-300 ${viewMode === 'timeline' ? 'bg-white dark:bg-slate-700 text-indigo-500 shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}>
               <ListTree size={16} />
-              <span>中枢链路</span>
+              <span>Timeline</span>
             </button>
             <button onClick={() => setViewMode('card')} className={`flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-sm transition-all duration-300 ${viewMode === 'card' ? 'bg-white dark:bg-slate-700 text-indigo-500 shadow-sm' : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'}`}>
               <LayoutGrid size={16} />
-              <span>矩阵网格</span>
+              <span>Grid</span>
             </button>
           </div>
         </div>
@@ -179,7 +179,7 @@ export default function TimelineClient({ posts: initialPosts, tags: initialTags 
 
       <AnimatePresence mode="wait">
 
-        {/* ================= 模式 1：网格卡片流 (手机端强制此模式) ================= */}
+        {/* ================= Mode 1: grid of cards (forced on mobile) ================= */}
         {viewMode === 'card' && (
           <motion.div
             key="card-view"
@@ -201,27 +201,27 @@ export default function TimelineClient({ posts: initialPosts, tags: initialTags 
               onScroll={handleGridScroll}
               className="h-[75vh] overflow-y-auto cyber-scrollbar pr-2 sm:pr-5 pb-10 fade-edges"
             >
-              {/* 🌟 核心魔法 3：强制手机端 grid-cols-2 双列显示，减小 gap */}
+              {/* 🌟 magic 3: force a two-column grid on mobile and shrink the gap */}
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 pt-4 pb-10">
                 {timelinePosts.map((post, idx) => (
                   <motion.div key={post.slug} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.3, delay: idx * 0.05 }}>
                     <div className="bg-white/60 dark:bg-slate-800/70 backdrop-blur-xl border border-white/50 dark:border-slate-700/50 rounded-2xl md:rounded-3xl overflow-hidden shadow-lg flex flex-col h-full group relative hover:-translate-y-1 transition-transform duration-300">
 
                       <Link href={post.href || `/posts/${post.slug}`} className="block flex-1 flex flex-col cursor-pointer">
-                        {/* 🌟 图片高度自适应：手机变矮，电脑变高 */}
+                        {/* 🌟 adaptive image height: shorter on mobile, taller on desktop */}
                         <div className="relative h-28 sm:h-36 md:h-40 overflow-hidden">
                           <img loading="lazy" decoding="async" src={withBasePath(post.cover)} alt={post.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                          {/* 🌟 日期标签微缩 */}
+                          {/* 🌟 compact date label */}
                           <span className="absolute bottom-2 left-2 md:bottom-3 md:left-4 text-white/90 text-[9px] md:text-xs font-mono font-bold bg-black/40 backdrop-blur-sm px-1.5 py-0.5 md:px-2 md:py-1 rounded flex items-center gap-1">
                             <Calendar size={10} className="md:w-3 md:h-3"/> {post.date.split(' ')[0]}
                           </span>
                         </div>
 
-                        {/* 🌟 文本边距和字号全方位缩放 */}
+                        {/* 🌟 scale padding and font size at every breakpoint */}
                         <div className="p-3 md:p-5 flex-1 flex flex-col">
                           <h3 className="text-xs sm:text-sm md:text-lg font-bold text-slate-800 dark:text-slate-100 mb-1 md:mb-2 line-clamp-2 transition-colors group-hover:text-indigo-500">{post.title}</h3>
-                          <p className="text-[10px] sm:text-xs md:text-sm text-slate-500 dark:text-slate-400 mb-2 md:mb-4 line-clamp-2 flex-1 leading-snug">{post.description || "暂时没有描述喵..."}</p>
+                          <p className="text-[10px] sm:text-xs md:text-sm text-slate-500 dark:text-slate-400 mb-2 md:mb-4 line-clamp-2 flex-1 leading-snug">{post.description || "No description yet..."}</p>
                           <div className="flex flex-wrap gap-1 sm:gap-2 mt-auto">
                             {post.tags.map((tag: string) => (
                               <span key={tag} className="text-[8px] md:text-[10px] font-bold text-indigo-500 bg-indigo-50 dark:bg-indigo-500/10 px-1.5 py-0.5 md:px-2 md:py-1 rounded">#{tag}</span>
@@ -236,7 +236,7 @@ export default function TimelineClient({ posts: initialPosts, tags: initialTags 
               </div>
             </div>
 
-            {/* 火箭按钮 */}
+            {/* Rocket button */}
             <AnimatePresence>
               {showScrollTop && (
                 <motion.button
@@ -245,7 +245,7 @@ export default function TimelineClient({ posts: initialPosts, tags: initialTags 
                   exit={{ opacity: 0, scale: 0.5, y: 10 }}
                   onClick={scrollToTop}
                   className="absolute bottom-4 -right-3 w-9 h-9 flex items-center justify-center bg-gradient-to-t from-purple-500 to-indigo-500 text-white rounded-full shadow-lg shadow-purple-500/40 hover:shadow-purple-500/60 hover:-translate-y-1 transition-all z-50 group pointer-events-auto"
-                  title="回到顶部"
+                  title="Back to top"
                 >
                   <ArrowUp size={18} className="group-hover:-translate-y-1 transition-transform" />
                 </motion.button>
@@ -255,7 +255,7 @@ export default function TimelineClient({ posts: initialPosts, tags: initialTags 
           </motion.div>
         )}
 
-        {/* ================= 模式 2：传统时间线 (前台纯净版) ================= */}
+        {/* ================= Mode 2: classic timeline (clean public view) ================= */}
         {viewMode === 'timeline' && (
           <motion.div
             key="timeline-view"
@@ -280,7 +280,7 @@ export default function TimelineClient({ posts: initialPosts, tags: initialTags 
 
               {timelinePosts.length === 0 && (
                  <div className="text-center py-20 text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest text-sm">
-                    这个频段没有接收到任何信号 📡
+                    No signal on this frequency 📡
                  </div>
               )}
             </div>

@@ -19,20 +19,11 @@ import { ToastProvider } from '../components/ToastProvider';
 import LatestPostsCarousel from '../components/LatestPostsCarousel';
 
 import DanmakuBackground from '../components/DanmakuBackground';
+import { formatDate } from '../components/formatDate';
 
 function formatUpdateTime(dateString: string) {
-  if (!dateString || dateString === '1970-01-01') return '刚刚更新';
-  try {
-    const d = new Date(dateString);
-    if (isNaN(d.getTime())) return dateString;
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    const hours = String(d.getHours()).padStart(2, '0');
-    const mins = String(d.getMinutes()).padStart(2, '0');
-    if (hours === '00' && mins === '00') return `${year}.${month}.${day}`;
-    return `${year}.${month}.${day} ${hours}:${mins}`;
-  } catch { return dateString; }
+  if (!dateString || dateString === '1970-01-01') return 'Just updated';
+  return formatDate(dateString, true);
 }
 
 export default function Home() {
@@ -62,51 +53,51 @@ export default function Home() {
       });
     }
   } catch (e) {}
-  const top5Posts = allPosts.length > 0 ? allPosts.slice(0, 5) : [{ slug: 'none', title: '暂无文章', description: '快去写第一篇吧！', cover: siteConfig.defaultPostCover, date: '', formattedDate: '' }];
+  const top5Posts = allPosts.length > 0 ? allPosts.slice(0, 5) : [{ slug: 'none', title: 'No posts yet', description: 'Go write the first one!', cover: siteConfig.defaultPostCover, date: '', formattedDate: '' }];
 
   const momentsDirectory = path.join(process.cwd(), 'moments');
   const momentCount = fs.existsSync(momentsDirectory) ? fs.readdirSync(momentsDirectory).filter(f => f.endsWith('.md')).length : 0;
   const realPhotoCount = albums.reduce((total, album) => total + album.photos.length, 0);
-  const latestAlbum = albums.length > 0 ? albums[0] : { id: '', title: '照片墙', description: '查看摄影', cover: siteConfig.photoWallImage, date: '' };
+  const latestAlbum = albums.length > 0 ? albums[0] : { id: '', title: 'Photo Wall', description: 'Browse the photo wall', cover: siteConfig.photoWallImage, date: '' };
 
   return (
     <ToastProvider>
       <div className="min-h-screen relative pb-10">
         <Navbar />
         <PageTransition>
-          {/* 🌟 调整整体容器的内边距，适应手机端更小的屏幕 */}
+          {/* 🌟 Adjust the container padding for smaller phone screens */}
           <div className="w-full max-w-6xl mx-auto mt-24 sm:mt-28 px-4 sm:px-6 lg:px-10 relative z-10">
             <SearchBar posts={allPosts} />
 
-            <main className="flex flex-col gap-6 w-full mt-6">
+            <main id="main-content" className="flex flex-col gap-6 w-full mt-6">
 
-              {/* 第一行：个人信息 + 播放器 */}
+              {/* Row one: profile + player */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full">
-                {/* 手机上占满1列，电脑上占7列 */}
+                {/* One column on phones, seven columns on desktop */}
                 <div className="col-span-1 lg:col-span-7 flex flex-col">
                     <ProfileCard postCount={allPosts.length} momentCount={momentCount} photoCount={realPhotoCount}/>
                 </div>
-                {/* 手机上占满1列，电脑上占5列 */}
+                {/* One column on phones, five columns on desktop */}
                 <div className="col-span-1 lg:col-span-5 flex flex-col">
                     <CloudPlayer/>
                 </div>
               </div>
 
-              {/* 歌词栏 */}
+              {/* Lyric bar */}
               <div className="w-full mt-[-10px]"><LyricBar/></div>
 
-              {/* 第二行：文章轮播 + 照片墙 + 说说 + 主题切换 */}
+              {/* Row two: latest posts carousel + photo wall + moments + theme toggle */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full">
 
-                {/* 左侧：文章轮播 (电脑端占4列，手机端排最上面) */}
+                {/* Left: posts carousel (4 columns on desktop, first on phones) */}
                 <div className="col-span-1 lg:col-span-4 flex flex-col min-h-[300px]">
                   <LatestPostsCarousel posts={top5Posts} />
                 </div>
 
-                {/* 右侧：组合面板 (电脑端占8列) */}
+                {/* Right: combined panel (8 columns on desktop) */}
                 <div className="col-span-1 lg:col-span-8 flex flex-col gap-6">
 
-                  {/* 照片墙大海报 */}
+                  {/* Big photo wall poster */}
                   <Link href="/photowall" className="w-full rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl overflow-hidden transition-all duration-700 hover:scale-[1.02] relative group min-h-[200px] sm:min-h-[220px] flex-shrink-0">
                     <SmartImage fill sizes="(max-width: 768px) 100vw, 800px" src={latestAlbum.cover} alt={latestAlbum.title} className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-90" />
                     <div className="absolute inset-0 bg-black/30 dark:bg-black/50 group-hover:bg-black/10 transition-colors duration-500"></div>
@@ -116,14 +107,14 @@ export default function Home() {
                     </div>
                   </Link>
 
-                  {/* 底层网格：说说轮播 + 主题切换器 */}
-                  {/* 手机上单列，平板上分3列比例分布 */}
+                  {/* Bottom grid: moments carousel + theme switcher */}
+                  {/* Single column on phones, three-column ratio on tablets */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full flex-1">
                     <div className="sm:col-span-2 flex flex-col min-h-[200px]">
                       <Link href="/resources" className="relative overflow-hidden flex flex-col justify-end flex-1 min-h-[200px] rounded-3xl border border-white/40 shadow-xl p-6 text-white group">
                         <SmartImage fill sizes="(max-width: 640px) 100vw, 640px" src="/covers/notes.jpg" alt="" className="object-cover transition-transform duration-700 group-hover:scale-105" />
                         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 to-slate-900/15" />
-                        <div className="relative"><p className="text-xs tracking-widest mb-2">学习资料</p><h3 className="text-2xl font-bold">讲义和常用网站 ↗</h3><p className="text-sm mt-2 text-white/85">课程讲义、查资料的网站、常用工具</p></div>
+                        <div className="relative"><p className="text-xs tracking-widest mb-2">Resources</p><h3 className="text-2xl font-bold">Lecture notes and useful sites ↗</h3><p className="text-sm mt-2 text-white/85">Course notes, reference sites, handy tools</p></div>
                       </Link>
                     </div>
                     <div className="sm:col-span-1 flex flex-col min-h-[120px]">
@@ -134,7 +125,7 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* 底部数据面板 */}
+              {/* Bottom data panel */}
               <div className="w-full mt-4"><SiteDashboard/></div>
             </main>
           </div>

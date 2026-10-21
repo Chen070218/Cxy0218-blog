@@ -7,15 +7,15 @@ import MomentList from './MomentList';
 import { siteConfig } from '../../siteConfig';
 
 export const metadata = {
-  title: "说说 | " + siteConfig.title,
-  description: "生活动态与瞬间记录",
+  title: "Moments | " + siteConfig.title,
+  description: "Life updates and captured moments",
 };
 
 export default function MomentsPage() {
   let allMoments: any[] = [];
 
   try {
-    // 🌟 终极防漏绝招：同时扫描两个可能的文件夹，把所有的说说都抓出来！
+    // 🌟 Ultimate no-miss trick: scan both possible folders so every moment gets picked up!
     const possibleDirs = [
       path.join(process.cwd(), 'posts', 'moments'),
       path.join(process.cwd(), 'moments')
@@ -39,22 +39,24 @@ export default function MomentsPage() {
       }
     });
 
-    // 去重，防止你在两个文件夹放了同名文件
+    // Deduplicate, in case the same file name ended up in both folders
     allMoments = Array.from(new Map(allMoments.map(item => [item.id, item])).values());
 
   } catch (e) {
-    console.error("读取说说数据失败:", e);
+    console.error("Failed to read moments data:", e);
   }
 
   return (
     <div className="min-h-screen relative pb-10 flex flex-col">
       <Navbar />
       <PageTransition className="flex-1 flex flex-col">
-        <MomentList
-          moments={allMoments}
-          authorName={siteConfig.authorName}
-          avatarUrl={siteConfig.avatarUrl}
-        />
+        <main id="main-content">
+          <MomentList
+            moments={allMoments}
+            authorName={siteConfig.authorName}
+            avatarUrl={siteConfig.avatarUrl}
+          />
+        </main>
       </PageTransition>
     </div>
   );

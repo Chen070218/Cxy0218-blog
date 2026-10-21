@@ -1,46 +1,46 @@
 ---
-title: "排序算法作业：写完之后才想明白怎么选"
+title: "Sorting algorithms: choosing one, after writing them all"
 cover: "/screenshots/09-resources.webp"
 date: "2026-10-14 19:30:00"
-tags: ["算法", "数据结构", "复杂度"]
+tags: ["Algorithms", "Data structures", "Complexity"]
 mood: ''
-description: "冒泡、插入、归并、快排、堆排序都写了一遍，踩了几个坑，最后整理成一张对照表。"
+description: "I implemented bubble, insertion, merge, quicksort and heapsort, hit a few traps, and ended up with a comparison table."
 ---
 
-算法与数据结构的作业要求把几种常见排序都实现一遍，再比较运行时间。写的时候觉得都差不多，跑完数据才发现差别挺大。
+The assignment for Algorithms and Data Structures was to implement several common sorts and then compare their running times. While writing them they all felt about the same; once the numbers came in, the differences were not small at all.
 
-## 冒泡和插入
+## Bubble and insertion
 
-冒泡最好写，两层循环，相邻两个比大小交换。但它的交换次数太多，一万个数的时候已经明显能感觉到慢。
+Bubble sort is the easiest to write: two nested loops, compare a pair of neighbors, swap them if they are out of order. The trouble is the number of swaps — with ten thousand numbers you can already feel how slow it is.
 
-插入排序写起来也不难，思路是每次把一个元素插到前面已经排好的部分里。我原本以为它和冒泡一样慢，实测在小规模、或者数据本来就接近有序的时候，它比冒泡快不少——因为它只在必要的时候才移动元素。
+Insertion sort is not hard either: each time you take one element and insert it into the already-sorted part in front. I had assumed it was as slow as bubble sort, but it measured noticeably faster on small inputs, or on data that is already close to sorted — because it only moves elements when it has to.
 
-## 快排让我卡了一晚上
+## Quicksort cost me a night
 
-快排本身好写，选一个基准，把小的放左边、大的放右边，然后递归。问题出在测试数据上：我用随机数测的时候很快，换成已经排好序的数组，程序直接卡住。
+Quicksort itself is easy: pick a pivot, put the smaller elements on the left and the larger ones on the right, then recurse. The problem was the test data. With random numbers it was fast; switch to an already sorted array and the program hung.
 
-后来想明白了：拿第一个元素当基准，遇到已经有序的数据，每次划分都只能分出一个元素，递归深度变成 n，退化成了 O(n²)。改成随机选基准之后才正常。
+Eventually I worked it out. Taking the first element as the pivot means that on sorted input every partition peels off just one element, the recursion depth becomes n, and it degrades to O(n²). Picking the pivot at random fixed it.
 
-## 归并和堆
+## Merge and heap
 
-归并排序的思路是分成两半、各自排好再合并，最坏情况也是 O(n log n)，而且稳定。代价是要额外开一个和原数组一样大的空间。
+Merge sort splits the array into two halves, sorts each half, then merges them. Its worst case is O(n log n) as well, and it is stable. The price is an extra buffer the same size as the original array.
 
-堆排序不需要额外空间，最坏情况也是 O(n log n)，但常数比快排大，而且不稳定。我实测同样十万个数，堆排序比快排慢一点。
+Heapsort needs no extra space and its worst case is also O(n log n), but the constant factor is larger than quicksort's, and it is not stable. On the same hundred thousand numbers, heapsort measured slightly slower than quicksort.
 
-## 整理成表
+## Into a table
 
-作业要求交对比结果，我干脆把复杂度也一起整理了：
+The assignment asked for a comparison, so I put the complexities in the same table:
 
-| 算法 | 平均 | 最坏 | 额外空间 | 稳定 |
+| Algorithm | Average | Worst | Extra space | Stable |
 | --- | --- | --- | --- | --- |
-| 冒泡排序 | O(n²) | O(n²) | O(1) | 稳定 |
-| 插入排序 | O(n²) | O(n²) | O(1) | 稳定 |
-| 归并排序 | O(n log n) | O(n log n) | O(n) | 稳定 |
-| 快速排序 | O(n log n) | O(n²) | O(log n) | 不稳定 |
-| 堆排序 | O(n log n) | O(n log n) | O(1) | 不稳定 |
+| Bubble sort | O(n²) | O(n²) | O(1) | Stable |
+| Insertion sort | O(n²) | O(n²) | O(1) | Stable |
+| Merge sort | O(n log n) | O(n log n) | O(n) | Stable |
+| Quicksort | O(n log n) | O(n²) | O(log n) | Not stable |
+| Heapsort | O(n log n) | O(n log n) | O(1) | Not stable |
 
-## 现在我会怎么选
+## How I would choose now
 
-数据量很小、或者本来就基本有序，直接用插入排序，代码短、常数小；要求稳定（比如先按分数排、再按班级排这种多次排序）就用归并；一般情况快排最省事，但基准一定要随机，不要拿第一个；如果内存卡得很紧、又不想在极端数据上翻车，堆排序更稳。
+For tiny inputs, or data that is already nearly sorted, go straight to insertion sort: short code, small constant. If stability matters (sorting several times, by score and then by class, for example), use merge sort. In the general case quicksort is the least hassle, but the pivot has to be random — never take the first element. If memory is really tight and you do not want to fall over on adversarial input, heapsort is the safer bet.
 
-还有一个发现：老师提过一句，标准库里的排序其实不是单一算法，规模小的时候会退化成插入排序。所以平时写代码直接调库就行，这些自己实现的，更多是为了弄明白里面在干什么。
+One more thing I found out: the lecturer mentioned that the sort in the standard library is not a single algorithm — below a certain size it falls back to insertion sort. So in everyday code you just call the library; implementing these myself was mostly about understanding what happens inside.

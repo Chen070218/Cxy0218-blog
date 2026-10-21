@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
 const NET_EASE_HEADERS = {
   'User-Agent':
@@ -53,11 +53,11 @@ export async function GET(request: NextRequest) {
             const lrcData = await lrcRes.json()
             lrcText = lrcData.lrc?.lyric || ''
           } catch {
-            /* 歌词可选，失败不影响主流程 */
+            /* lyrics are optional; a failure here does not block the main flow */
           }
         }
 
-        const artistName = song.artists?.[0]?.name || '未知歌手'
+        const artistName = song.artists?.[0]?.name || 'Unknown artist'
 
         return {
           id: songId,
@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
           lrc: lrcText,
         }
       } catch (error) {
-        console.error(`[api/music] 获取歌曲 ${songId} 失败:`, error)
+        console.error(`[api/music] Failed to fetch song ${songId}:`, error)
         return { id: songId, error: String(error) }
       }
     }),

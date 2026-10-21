@@ -4,17 +4,17 @@ import { createContext, useContext, useEffect, useState } from 'react';
 const ThemeContext = createContext({ isDark: true, toggleTheme: () => {} });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  // 默认设为 true，这样在读取到配置前，如果是夜间模式就不会闪烁
+  // Default to true so that night mode does not flash before the saved settings are read
   const [isDark, setIsDark] = useState(true);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // 标记组件已挂载，避免 hydration 报错
+    // Mark the component as mounted to avoid hydration errors
     setMounted(true);
 
-    // 从 localStorage 读取真实状态
+    // Read the real state from localStorage
     const savedTheme = localStorage.getItem('blog-theme');
-    // 如果没有记录，默认给深色模式（流萤飞舞）
+    // If nothing is stored, default to dark mode (fireflies in deep space)
     const isDarkMode = savedTheme !== 'light';
     setIsDark(isDarkMode);
 
@@ -26,7 +26,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  // 极其重要：监听 isDark 状态，只要它变了，立刻强制更新 html 标签，防止路由切换丢失
+  // Very important: watch isDark and force-update the html tag the moment it changes, so a route switch does not lose it
   useEffect(() => {
     if (!mounted) return;
     const root = document.documentElement;
@@ -43,7 +43,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('blog-theme', newDark ? 'dark' : 'light');
   };
 
-  // 在客户端挂载完成前，为了防止闪屏，先隐藏内容
+  // Hide the content until the client has mounted, to avoid a flash of the wrong theme
   if (!mounted) {
     return <div className="invisible">{children}</div>;
   }

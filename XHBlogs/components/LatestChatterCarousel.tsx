@@ -28,9 +28,9 @@ export default function LatestChatterCarousel({ chatters }: { chatters: any[] })
   };
 
   return (
-    // 🌟 注意这里：去掉了 md:col-span-8，变成一个纯粹填满父容器的组件
+    // 🌟 Note: md:col-span-8 removed here — this is now a pure component that fills its parent
     <div className="w-full h-full rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl overflow-hidden relative group min-h-[220px] flex flex-col">
-      <Link href={currentChatter.slug === 'none' ? '/chatter' : `/chatter/${currentChatter.slug}`} className="absolute inset-0 z-20" aria-label={`查看杂谈: ${currentChatter.title}`} />
+      <Link href={currentChatter.slug === 'none' ? '/chatter' : `/chatter/${currentChatter.slug}`} className="absolute inset-0 z-20" aria-label={`Read musing: ${currentChatter.title}`} />
 
       <AnimatePresence mode="wait">
         <motion.div
@@ -74,7 +74,7 @@ export default function LatestChatterCarousel({ chatters }: { chatters: any[] })
               key={i}
               onClick={(e) => { e.stopPropagation(); setCurrentIndex(i); }}
               className={`h-1.5 rounded-full transition-all duration-500 shadow-sm ${i === currentIndex ? 'w-6 bg-indigo-400' : 'w-2 bg-white/40 hover:bg-white/80'}`}
-              aria-label={`跳转`}
+              aria-label="Go to this musing"
             />
           ))}
         </div>

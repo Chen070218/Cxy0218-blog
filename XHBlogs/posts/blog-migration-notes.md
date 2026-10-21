@@ -1,46 +1,46 @@
 ---
-title: "换台电脑接着写：把站点从 C 盘挪到 D 盘"
+title: "Another computer, same blog: moving the site from C: to D:"
 cover: "/screenshots/05-posts.webp"
 date: "2026-10-14 21:30:00"
-tags: ["Next.js", "环境", "踩坑"]
+tags: ["Next.js", "Environment", "Troubleshooting"]
 mood: ''
-description: "没有 Node 的新机器怎么把它跑起来，中间卡了三个地方。"
+description: "How I got it running on a machine without Node — and the three places it got stuck."
 ---
 
-这个站点一开始在另一台电脑上写，C 盘快满了，就整个挪到这台机器的 D 盘。挪过去之后打不开——那台机器上没装过 Node。
+I started writing this site on another computer. The C: drive was nearly full, so I moved the whole thing to the D: drive on this machine. After the move it wouldn't start — that machine had never had Node installed.
 
-## 没 Node 就不装 Node
+## No Node, so don't install Node
 
-启动脚本第一句是 `where node`，找不到就直接退出了。本来打算装一个，后来想想上课机房、别人电脑上也未必有，干脆下了官方的便携版（win-x64 的 zip），解压到项目目录里，脚本里优先用它：
+The first line of the startup script is `where node`; if that fails, the script just exits. I was going to install Node, then thought about the lab machines and other people's computers, which probably don't have it either, so I downloaded the official portable version (the win-x64 zip), unzipped it into the project directory, and made the script prefer it:
 
 ```bat
 if exist "%~dp0node\node.exe" set "PATH=%~dp0node;%PATH%"
 ```
 
-这样不需要管理员权限，换机器的时候把文件夹整个拷过去就能跑，不用了删目录就行。后来给老师的离线包也是这么做的。
+That way it doesn't need admin rights, and switching machines just means copying the whole folder over; when you're done you delete the directory. The offline package I later gave my lecturer was built the same way.
 
-## 依赖装到一半断了
+## The dependency install broke off halfway
 
-`npm ci` 要下几百个包，中间网络抖一下（报的是 `ECONNRESET`）就得从头再来。后来把缓存目录也放进项目里：
+`npm ci` has to download several hundred packages, and one network hiccup in the middle (it reported `ECONNRESET`) meant starting over from scratch. So I put the cache directory inside the project too:
 
 ```bat
 npm ci --cache .\npm-cache
 ```
 
-断了重跑会直接命中已经下过的包，不用删 `node_modules`，npm 自己会处理。
+If it breaks off, re-running it hits the packages already downloaded; no need to delete `node_modules`, npm handles that itself.
 
-## 起来了又自己退出
+## It started, then quit by itself
 
-最奇怪的一个：终端里明明打印了 `Ready`，过一会儿进程就没了。翻报错是 `EXDEV: cross-device link not permitted`，出在 Next 写遥测配置那一步。加上这一行就好了：
+This was the strangest one: the terminal clearly printed `Ready`, and then a moment later the process was gone. Digging through the error, it was `EXDEV: cross-device link not permitted`, coming from the step where Next writes its telemetry config. Adding this one line fixed it:
 
 ```bat
 set "NEXT_TELEMETRY_DISABLED=1"
 ```
 
-## 顺手修的几处
+## A few things I fixed along the way
 
-环境跑起来之后，又回头处理了几个一眼能看出来的问题：整页内容被 CSS 藏着等 JS（手机上就是白屏），改成内容直接显示；图片原来都是原图直出，压成 WebP 之后小了一大截；页面切换动画原来是 JS 逐帧改，点快了会叠在一起，改成 CSS。
+Once the environment was running, I went back to a few problems that were obvious at a glance: the whole page's content was hidden by CSS waiting for JS (a blank screen on a phone), which I changed to show the content directly; images used to be served at full size, and converting them to WebP cut them down a lot; the page transition animation used to change things frame by frame in JS and would pile up if you clicked quickly, so I moved it to CSS.
 
-![整理之后的文章列表](/screenshots/05-posts.webp)
+![The posts list after the cleanup](/screenshots/05-posts.webp)
 
-搬一次家最大的收获不是修好了什么，而是发现启动脚本里"假设机器上有 Node"这一条就能让人卡半天。后面凡是依赖外部环境的，我都尽量在脚本里先兜住。
+The biggest takeaway from the move wasn't any of the fixes: it was realizing that a single assumption in the startup script — "the machine has Node" — can block someone for half a day. Since then, anything that depends on the outside environment I try to catch in the script first.

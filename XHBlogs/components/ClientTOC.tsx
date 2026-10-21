@@ -7,35 +7,35 @@ type TocItem = {
   id: string;
 };
 
-// 🌟 核心增幅：终极 Markdown 净化器！
-// 专门用来扒掉诸如 [链接名字](https://...) 的外壳，只留下 "链接名字"
+// 🌟 core upgrade: the ultimate Markdown cleaner!
+// Used to peel off shells like [link name](https://...) and keep only "link name"
 const cleanMarkdownHeading = (rawText: string) => {
   if (!rawText) return '';
   return rawText
-    // 1. 提取超链接中的文本内容：[我的标题](https://...) -> 我的标题
+    // 1. extract the text inside a link: [My heading](https://...) -> My heading
     .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-    // 2. 去除 Markdown 图片：![图片](URL) -> 图片
+    // 2. strip Markdown images: ![alt text](URL) -> alt text
     .replace(/!\[([^\]]*)\]\([^)]+\)/g, '$1')
-    // 3. 兜底防御：去除可能混入的 HTML 标签
+    // 3. last line of defense: strip HTML tags that may have slipped in
     .replace(/<\/?[^>]+(>|$)/g, '')
-    // 4. 去除加粗、斜体、删除线、行内代码符号等
+    // 4. remove bold, italic, strikethrough and inline-code markers
     .replace(/[*_~`#]/g, '')
     .trim();
 };
 
-// 🌟 底层 ID 净化器
+// 🌟 ID cleaner
 const getSafeId = (rawText: string) => {
-  // 先把超链接外壳扒掉，得到纯文本
+  // first peel off the link shell to get plain text
   const cleanText = cleanMarkdownHeading(rawText);
-  // 再杀掉所有标点、空格，只保留汉字、字母和数字生成绝对安全的 ID
+  // then drop all punctuation and spaces, keeping only Chinese characters, letters and digits to generate a safe ID
   return 'toc-' + cleanText
     .replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, '')
     .toLowerCase();
 };
 
-// 🌟 侧边栏视觉净化器
+// 🌟 sidebar display cleaner
 const getDisplayText = (rawText: string) => {
-  // 直接调用终极净化器，展示纯洁无瑕的标题名！
+  // just call the cleaner and show a spotless heading
   return cleanMarkdownHeading(rawText);
 };
 
@@ -48,10 +48,10 @@ export default function ClientTOC({ toc }: { toc: TocItem[] }) {
 
     const headings = Array.from(contentDiv.querySelectorAll('h1, h2, h3'));
 
-    // 🌟 强制统一正文 ID
+    // 🌟 force the body headings to share the same IDs
     headings.forEach((heading) => {
-      // heading.textContent 拿到的是渲染后的纯文字（已经没有超链接语法了）
-      // 再过一遍 getSafeId，确保正文和侧边栏的 ID 100% 对齐！
+      // heading.textContent gives the rendered plain text (link syntax is already gone)
+      // run it through getSafeId again so the body and sidebar IDs match 100%
       heading.id = getSafeId(heading.textContent || '');
     });
 
@@ -83,7 +83,7 @@ export default function ClientTOC({ toc }: { toc: TocItem[] }) {
   }, [toc]);
 
   const scrollToHeading = (e: React.MouseEvent, id: string) => {
-    // 🌟 防止任何超链接的意外默认行为
+    // 🌟 block any unexpected default link behavior
     e.preventDefault();
 
     const targetElement = document.getElementById(id);
@@ -132,10 +132,10 @@ export default function ClientTOC({ toc }: { toc: TocItem[] }) {
         <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-slate-200 dark:bg-slate-700/50 rounded-full"></div>
 
         {toc.map((item, index) => {
-          // 视觉上：扒掉超链接，完美展示 "3.万度"
+          // visually: peel off the link and show just "My heading"
           const displayText = getDisplayText(item.text);
 
-          // 底层跳转：生成纯净版的 ID "toc-3万度"，绝对不会找错目标！
+          // underlying jump: generate the clean ID "toc-myheading" so it never targets the wrong heading
           const safeId = getSafeId(item.text);
           const isActive = activeId === safeId;
 

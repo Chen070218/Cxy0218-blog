@@ -1,46 +1,46 @@
 ---
-title: "操作系统上机之后，我常打的那几条命令"
+title: "After the OS lab: the commands I actually type"
 cover: "/screenshots/06-post.webp"
 date: "2026-10-14 20:30:00"
-tags: ["Linux", "操作系统", "命令行"]
+tags: ["Linux", "Operating Systems", "Command line"]
 mood: ''
-description: "上课上机要交作业，命令记不住就只能现查。这是我用得最多的几条，以及几个被自己坑过的地方。"
+description: "Lab sessions mean commands I cannot remember, so I look them up. These are the ones I use most, and a few I got burned by."
 ---
 
-操作系统的实验都在 Linux 上做，图形界面基本用不上，一开始每做一步都要搜一次。用了几周，常打的就那么几条，记下来免得下次又去找。
+The Operating Systems labs are all on Linux, where the graphical interface is mostly no help, so at first I had to search for every single step. A few weeks in, the same handful of commands keep coming up. I am writing them down so I do not have to go looking for them again next time.
 
-## 看目录
+## Listing directories
 
-`ls -la` 是我打得最多的一个。加 `-a` 才能看到 `.bashrc` 这类隐藏文件，加 `-l` 能一次看到权限、大小和修改时间。刚开始不带参数，找不到配置文件，还以为是没装。
+`ls -la` is the one I type most. Without `-a` you never see hidden files like `.bashrc`, and `-l` gives you permissions, size and modification time in one go. Early on I ran it with no flags, could not find the config file, and assumed it was not installed.
 
-`cd -` 回到上一个目录，在源码和日志目录之间来回切的时候比打 `cd ../../..` 舒服。
+`cd -` jumps back to the previous directory. When I am switching back and forth between the source tree and the log directory, it is far nicer than typing `cd ../../..`.
 
-## 找东西
+## Finding things
 
 ```bash
 find . -name "*.log"
 grep -rn "error" .
 ```
 
-`grep` 我一开始忘了 `-r`，只在一个文件里搜，结果一直搜不到。`-n` 显示行号，配合编辑器跳过去很方便。
+The first time I used `grep` I forgot `-r`, so it only searched one file and kept finding nothing. `-n` prints line numbers, which makes it easy to jump to the spot in the editor.
 
-长文件用 `less` 打开，按 `/` 输入关键字搜索，`q` 退出。用 `cat` 看几百行的日志会把终端刷满，滚上去都费劲。
+For long files I open `less`, type `/` to search, and press `q` to quit. Using `cat` on a few hundred lines of log fills the terminal up, and scrolling back is a pain.
 
-## 进程
+## Processes
 
 ```bash
 ps aux | grep node
 kill 12345
 ```
 
-端口被占用的时候，先用它找到进程号，再 `kill`。一般先正常结束，实在不动弹再用 `kill -9`。有一次懒，直接上 `-9`，把还没写完的文件丢了，之后就老实了。
+When a port is taken, I use this to find the process id first and then `kill` it. Usually I ask it to terminate normally and only reach for `kill -9` when it will not budge. Once I was lazy and went straight to `-9`, lost a file I had not finished writing, and have behaved myself since.
 
-`top` 看 CPU 和内存，哪个进程吃满了一眼就能看出来。比任务管理器好用一点，因为能直接看到命令行参数。
+`top` shows CPU and memory, so whichever process is eating everything is obvious at a glance. It is a bit more useful than Task Manager because it shows the command-line arguments directly.
 
-## 权限
+## Permissions
 
-脚本写好之后执行提示 permission denied，`chmod +x run.sh` 一下就行。`rm -r` 我用错过一次，删掉了一个目录，那次没有备份，只能重写——所以现在删东西之前会先用 `ls` 看一眼到底要删什么。
+When a freshly written script refuses to run with `permission denied`, `chmod +x run.sh` takes care of it. I misused `rm -r` once and wiped a directory; there was no backup that time, so I had to rewrite everything — which is why I now run `ls` first to see exactly what I am about to delete.
 
-## 为什么我更喜欢命令行
+## Why I prefer the command line
 
-倒不是说快多少，主要是能拼起来：`grep` 筛出来、`sort` 排一下、`uniq -c` 数一数，一行就把日志里想知道的东西弄清楚了。图形界面里就得一个个点，点完还没法保存成一行能复用的命令。
+Not that it is much faster; the main thing is that commands compose: filter with `grep`, order with `sort`, count with `uniq -c` — one line and I know what I wanted from the log. In a GUI you click away at one item after another, and when you are done you cannot save it as a one-line command you can reuse.

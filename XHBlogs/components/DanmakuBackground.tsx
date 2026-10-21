@@ -6,7 +6,7 @@ import { usePerfProfile } from './usePerfProfile';
 
 interface DanmakuItem { id: number; text: string; top: number; duration: number; delay: number; }
 
-/** 背景弹幕：只跑 transform 动画（原来动的是 right，每帧都会触发重排） */
+/** Background danmaku: transform-only animation (it used to animate right, which forced a reflow every frame) */
 export default function DanmakuBackground() {
   const { scale, visible } = usePerfProfile();
   const [danmakus, setDanmakus] = useState<DanmakuItem[]>([]);

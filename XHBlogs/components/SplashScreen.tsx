@@ -10,7 +10,7 @@ export default function SplashScreen() {
 
   useEffect(() => {
     setIsMounted(true);
-    // 带 ?nosplash=1 时直接跳过开机动画（截图/演示用，对普通访客没有影响）
+    // With ?nosplash=1 the splash screen is skipped (for screenshots/demos; normal visitors are unaffected)
     const skipSplash = typeof window !== "undefined" && new URLSearchParams(window.location.search).has("nosplash");
     const hasSeenSplash = skipSplash || sessionStorage.getItem('hasSeenSplash') === 'true';
 
@@ -21,7 +21,7 @@ export default function SplashScreen() {
       }, 1200);
       return () => clearTimeout(timer);
     } else {
-      // 容错处理：确保直接访问时类名存在
+      // Fallback: make sure the class name is there on a direct visit
       document.documentElement.classList.add('splash-seen');
     }
   }, []);
@@ -30,7 +30,7 @@ export default function SplashScreen() {
     setShow(false);
     sessionStorage.setItem('hasSeenSplash', 'true');
 
-    // 【核心解封】：动画快结束时，给 html 加上类名，CSS 会自动把内容显示出来
+    // [Key unlock]: near the end of the animation, add the class to <html> and the CSS reveals the content automatically
     setTimeout(() => {
       document.documentElement.classList.add('splash-seen');
     }, 500);
@@ -48,7 +48,7 @@ export default function SplashScreen() {
           className="fixed inset-0 z-[100000] flex flex-col items-center justify-center bg-white dark:bg-slate-950"
         >
           <div className="relative z-10 flex flex-col items-center">
-            {/* 头像光环 */}
+            {/* Avatar halo */}
             <div className="relative w-24 h-24 mb-8">
               <motion.div
                 animate={{ rotate: 360 }}
@@ -60,9 +60,9 @@ export default function SplashScreen() {
               </div>
             </div>
 
-            <h1 className="text-2xl font-black text-slate-800 dark:text-white mb-2 tracking-[0.2em] uppercase">
+            <p className="text-2xl font-black text-slate-800 dark:text-white mb-2 tracking-[0.2em] uppercase">
               {siteConfig.authorName}
-            </h1>
+            </p>
             <p className="text-[10px] font-black text-slate-400 tracking-[0.5em] mb-12">INITIALIZING SYSTEM</p>
 
             <div className="w-40 h-[1.5px] bg-slate-200 dark:bg-slate-800 relative">

@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 
-// 安全解析 LRC 歌词
+// Safely parse LRC lyrics
 function parseLrc(lrcText: string) {
   if (!lrcText || lrcText.length > 20000) return [];
   const lines = lrcText.split('\n');
@@ -11,6 +11,8 @@ function parseLrc(lrcText: string) {
     const matches = [...line.matchAll(/\[(\d{2,}):(\d{2})(?:\.(\d{2,3}))?\]/g)];
     if (matches.length > 0) {
       const text = line.replace(/\[\d{2,}:\d{2}(?:\.\d{2,3})?\]/g, '').trim();
+      // Skip Chinese credit lines; this site only plays English-language songs.
+      if (/[㐀-鿿]/.test(text)) continue;
       if (text) {
         for (const match of matches) {
           const min = parseInt(match[1]);
@@ -41,7 +43,7 @@ export default function CloudPlayer({ songIds }: { songIds: string[] }) {
   const [duration, setDuration] = useState(0);
   const [lyrics, setLyrics] = useState<{ time: number; text: string }[]>([]);
 
-  const [currentLyric, setCurrentLyric] = useState("正在连接高可用神经云端...");
+  const [currentLyric, setCurrentLyric] = useState("Connecting to the high-availability neural cloud...");
   const [displayedLyric, setDisplayedLyric] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
@@ -53,7 +55,7 @@ export default function CloudPlayer({ songIds }: { songIds: string[] }) {
       try {
         const fetchPromises = songIds.map(id =>
           fetch(`https://api.injahow.cn/meting/?server=netease&type=song&id=${id}`)
-            .then(res => { if (!res.ok) throw new Error("API 异常"); return res.json(); })
+            .then(res => { if (!res.ok) throw new Error("API error"); return res.json(); })
             .catch(err => null)
         );
         const results = await Promise.all(fetchPromises);
@@ -63,8 +65,8 @@ export default function CloudPlayer({ songIds }: { songIds: string[] }) {
             const song = res[0];
             return {
               id: song.id,
-              title: song.name || '未知歌曲',
-              artist: song.artist || '未知歌手',
+              title: song.name || 'Unknown song',
+              artist: song.artist || 'Unknown artist',
               cover: song.cover || 'https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=300',
               src: song.url,
               lrcUrl: song.lrc
@@ -76,20 +78,20 @@ export default function CloudPlayer({ songIds }: { songIds: string[] }) {
           if (mergedPlaylist.length > 0) {
             setPlaylist(mergedPlaylist);
           } else {
-            setCurrentLyric("音乐流被拦截，可能是版权限制");
+            setCurrentLyric("Music stream blocked, possibly by copyright restrictions");
           }
           setIsLoading(false);
         }
       } catch (error) {
         if (isMounted) {
-          setCurrentLyric("云端连接失败，请检查网络");
+          setCurrentLyric("Cloud connection failed. Check your network.");
           setIsLoading(false);
         }
       }
     };
 
     if (songIds && songIds.length > 0) fetchMusicData();
-    else { setIsLoading(false); setCurrentLyric("请配置 cloudMusicIds"); }
+    else { setIsLoading(false); setCurrentLyric("Configure cloudMusicIds first"); }
     return () => { isMounted = false; };
   }, [songIds]);
 
@@ -97,21 +99,21 @@ export default function CloudPlayer({ songIds }: { songIds: string[] }) {
     if (playlist.length === 0) return;
     let isMounted = true;
     const currentSong = playlist[currentIndex];
-    setCurrentLyric("正在解析歌词...");
+    setCurrentLyric("Parsing lyrics...");
     setLyrics([]);
 
     if (currentSong.lrcUrl) {
       fetch(currentSong.lrcUrl)
-        .then(res => { if (!res.ok) throw new Error("失败"); return res.text(); })
+        .then(res => { if (!res.ok) throw new Error("failed"); return res.text(); })
         .then(text => {
           if (isMounted) {
             setLyrics(parseLrc(text));
-            setCurrentLyric("♪ 歌词加载完毕 ♪");
+            setCurrentLyric("♪ Lyrics loaded ♪");
           }
         })
-        .catch(() => { if (isMounted) setCurrentLyric("♪ 纯享音乐 ♪"); });
+        .catch(() => { if (isMounted) setCurrentLyric("♪ Pure music ♪"); });
     } else {
-      setCurrentLyric("♪ 纯音乐，请欣赏 ♪");
+      setCurrentLyric("♪ Instrumental — enjoy ♪");
     }
 
     if (isPlaying && audioRef.current) {
@@ -174,7 +176,7 @@ export default function CloudPlayer({ songIds }: { songIds: string[] }) {
     return (
       <div className="md:col-span-5 rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl p-6 flex flex-col items-center justify-center transition-colors duration-700 h-[220px]">
         <div className="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-        {/* 【修改点】：文字加入 dark:text-white */}
+        {/* [Change]: add dark:text-white to the text */}
         <span className="text-slate-800 dark:text-white font-bold tracking-widest animate-pulse text-sm">CONNECTING...</span>
       </div>
     );
@@ -183,7 +185,7 @@ export default function CloudPlayer({ songIds }: { songIds: string[] }) {
   if (playlist.length === 0) {
     return (
       <div className="md:col-span-5 rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl p-6 flex flex-col items-center justify-center h-[220px] transition-colors duration-700">
-        <span className="text-slate-600 dark:text-slate-300 font-bold mb-2">云端音乐加载失败</span>
+        <span className="text-slate-600 dark:text-slate-300 font-bold mb-2">Cloud music failed to load</span>
       </div>
     );
   }
@@ -201,14 +203,14 @@ export default function CloudPlayer({ songIds }: { songIds: string[] }) {
         .animate-cursor { animation: cursorBlink 0.8s step-end infinite; }
       `}</style>
 
-      {/* 音乐播放器卡片主体：加入 dark 模式背景适配 */}
+      {/* Player card body: dark-mode background support */}
       <div className="md:col-span-5 rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl p-6 flex flex-col justify-between transition-all duration-700 hover:scale-[1.02] relative group overflow-hidden min-h-[220px]">
         <audio ref={audioRef} src={currentSong.src} onTimeUpdate={handleTimeUpdate} onEnded={nextSong} onLoadedMetadata={handleTimeUpdate} />
         <div className={`absolute -top-20 -right-20 w-48 h-48 bg-indigo-500/20 blur-[50px] rounded-full transition-opacity duration-1000 ${isPlaying ? 'opacity-100' : 'opacity-30'}`}></div>
 
         <div className="flex items-center gap-5 relative z-10 mb-6 mt-2">
           <div className={`w-20 h-20 rounded-full border-2 border-white/50 shadow-lg flex-shrink-0 overflow-hidden relative ${isPlaying ? 'animate-[spin_6s_linear_infinite]' : ''}`}>
-            <img decoding="async" src={currentSong.cover} alt="cover" className="w-full h-full object-cover" />
+            <img decoding="async" src={currentSong.cover} alt="Album cover" className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-black/10"></div>
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 bg-white/80 backdrop-blur-sm rounded-full border border-gray-300 shadow-inner"></div>
           </div>
@@ -217,7 +219,7 @@ export default function CloudPlayer({ songIds }: { songIds: string[] }) {
               <span className="text-[10px] font-black text-indigo-500 dark:text-indigo-400 tracking-widest uppercase bg-white/50 dark:bg-slate-900/50 px-2 py-0.5 rounded-sm shadow-sm transition-colors duration-700">Cloud Music</span>
               <span className="text-xs font-bold text-slate-600 dark:text-slate-300 bg-white/40 dark:bg-slate-700/50 px-2 rounded-full transition-colors duration-700">{currentIndex + 1} / {playlist.length}</span>
             </div>
-            {/* 【修改点】：歌曲标题和歌手加上暗色模式字体 */}
+            {/* [Change]: dark-mode text color for the song title and artist */}
             <h3 className="text-xl font-bold text-slate-900 dark:text-white truncate drop-shadow-sm transition-colors duration-700">{currentSong.title}</h3>
             <p className="text-sm text-slate-700 dark:text-slate-300 font-medium truncate drop-shadow-sm transition-colors duration-700">{currentSong.artist}</p>
           </div>
@@ -244,7 +246,7 @@ export default function CloudPlayer({ songIds }: { songIds: string[] }) {
         </div>
       </div>
 
-      {/* 底部独立歌词长条：夜晚可以稍微更黑一点以凸显发光字体 */}
+      {/* Standalone lyric bar at the bottom: a little darker at night so the glowing text stands out */}
       <div className="md:col-span-12 order-last mt-4 rounded-3xl bg-slate-900/80 dark:bg-slate-950/90 backdrop-blur-xl border border-white/10 shadow-2xl p-5 flex items-center justify-between transition-all duration-700 hover:shadow-indigo-500/20 group min-h-[80px]">
         <div className="flex items-end justify-center gap-[4px] h-8 w-16">
           {isPlaying ? (

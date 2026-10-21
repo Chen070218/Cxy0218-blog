@@ -5,19 +5,19 @@ import { siteConfig } from "../siteConfig";
 import { usePerfProfile } from "./usePerfProfile";
 
 /**
- * 站点背景：三层叠出来的主题背景
+ * Site background: a theme background built from three stacked layers
  *
- *  1) 氛围层：几张主题图轮播，轻微柔化 + 适度压暗（保持能看清画面） —— 并叠一层明暗罩保证正文可读
- *  2) 立绘层：右侧一张清晰立绘，用遮罩淡出到背景；窄屏隐藏，避免挡住正文
- *  3) 暗角层：四周压暗，让中间内容更聚焦，也让文字更好读
+ *  1) Ambience layer: a few theme images cross-fading, slightly softened and dimmed (bright enough to see the picture) — plus a light/dark wash so body text stays legible
+ *  2) Portrait layer: one crisp portrait on the right, faded into the background with a mask; hidden on narrow screens so it does not cover the text
+ *  3) Vignette layer: darkened edges, keeping the center focused and the text easier to read
  *
- * 性能：切换只用 opacity 过渡（合成层）；切到后台暂停轮播；系统要求减少动效时不轮播。
+ * Performance: switching uses an opacity transition only (composited layer); the carousel pauses in a background tab; it does not rotate when the system asks for reduced motion.
  */
 export default function SiteBackground() {
   const config = siteConfig as typeof siteConfig & { portraitImage?: string; portraitAlt?: string };
   const images: string[] = config.bgImages || [];
   const portrait = config.portraitImage;
-  const portraitAlt = config.portraitAlt || "角色立绘";
+  const portraitAlt = config.portraitAlt || "Character portrait";
 
   const { reducedMotion, visible } = usePerfProfile();
   const [index, setIndex] = useState(0);
@@ -32,7 +32,7 @@ export default function SiteBackground() {
 
   return (
     <div className="absolute inset-0 overflow-hidden bg-slate-950">
-      {/* 1) 氛围层 */}
+      {/* 1) Ambience layer */}
       {current && (
         <div
           key={current}
@@ -46,7 +46,7 @@ export default function SiteBackground() {
         />
       )}
 
-      {/* 2) 立绘层 */}
+      {/* 2) Portrait layer */}
       {portrait && (
         <div className="hidden md:block absolute right-[-1%] top-0 bottom-0 w-[44%] max-w-[680px]">
           <img
@@ -63,7 +63,7 @@ export default function SiteBackground() {
         </div>
       )}
 
-      {/* 3) 暗角层 */}
+      {/* 3) Vignette layer */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(2,6,23,0.05)_30%,rgba(2,6,23,0.72)_100%)]" />
 
       <style dangerouslySetInnerHTML={{ __html: `@keyframes site-bg-fade { from { opacity: 0; } to { opacity: 1; } }` }} />

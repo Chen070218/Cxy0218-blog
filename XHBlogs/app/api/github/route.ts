@@ -1,1 +1,1 @@
-export async function POST() { return Response.json({ error: '此接口已停用' }, { status: 410 }); }
+export async function POST() { return Response.json({ error: 'This endpoint has been retired' }, { status: 410 }); }

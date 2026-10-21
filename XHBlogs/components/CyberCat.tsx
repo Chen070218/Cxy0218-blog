@@ -8,14 +8,14 @@ import { withBasePath } from '../sitePath';
 type ChatMessage = { role: 'user' | 'assistant'; content: string };
 type Provider = 'deepseek' | 'gemini';
 
-// 桌宠的 AI 后端：默认 DeepSeek，可在气泡面板里切换
+// Desktop pet AI backend: DeepSeek by default, switchable in the bubble panel
 const PROVIDERS: { id: Provider; label: string }[] = [
   { id: 'deepseek', label: 'DeepSeek' },
   { id: 'gemini', label: 'Gemini' },
 ];
 
-// 快捷提问：点一下就发，不用自己打字
-const QUICK_ASKS = ['今晚该做什么？', '夸夸我', '讲个关于月亮的故事', '帮我打打气'];
+// Quick questions: one tap sends them, no typing needed
+const QUICK_ASKS = ['What should I do tonight?', 'Praise me', 'Tell me a story about the moon', 'Cheer me on'];
 
 export default function CyberCat() {
   const [petState, setPetState] = useState<PetState>('idle');
@@ -29,7 +29,7 @@ export default function CyberCat() {
 
   const chatTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // --- 💬 说话功能 ---
+  // --- 💬 Speech ---
   const speak = (text: string, duration = 6000) => {
     setSpeech(text);
     if (chatTimeoutRef.current) clearTimeout(chatTimeoutRef.current);
@@ -38,16 +38,16 @@ export default function CyberCat() {
     }, duration);
   };
 
-  // --- 🖱️ 交互事件：摸猫猫 ---
+  // --- 🖱️ Interaction: pet the fox ---
   const handlePetCat = () => {
     if (petState === 'happy') return;
     setPetState('happy');
-    speak('唔……准你摸一小会儿。( ˘ ³˘)♥', 2200);
+    speak('Mmm... you may pet me for a little while. ( ˘ ³˘)♥', 2200);
     setTimeout(() => setPetState('idle'), 2200);
   };
 
-  // --- 🔌 统一的对话入口：聊天、喂食、快捷提问都走这里 ---
-  const sendMessage = async (message: string, thinkingText = '月色流转，且等本座一算～') => {
+  // --- 🔌 Single chat entry point: chat, feeding and quick questions all go through here ---
+  const sendMessage = async (message: string, thinkingText = 'The moonlight turns; give this fox a moment～') => {
     const text = message.trim();
     if (!text || isThinking) return;
 
@@ -59,26 +59,26 @@ export default function CyberCat() {
       const res = await fetch(withBasePath('/api/chat'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        // history 带上前面几轮，心月狐才记得住刚才聊了什么
+        // carry the last few turns in history so Xinyuehu remembers what we were just talking about
         body: JSON.stringify({ message: text, history, provider }),
       });
 
       const data: any = await res.json().catch(() => ({}));
 
       if (!res.ok) {
-        const detail = data?.error ? `唔……${data.error}` : '唔……本座的星辉被打断了';
+        const detail = data?.error ? `Mmm... ${data.error}` : 'Mmm... this fox’s starlight was interrupted';
         speak(detail, 7000);
         return;
       }
 
-      const reply: string = data?.reply || '哼，本座今日不想说话。';
+      const reply: string = data?.reply || 'Hmph. This fox does not feel like talking today.';
       speak(reply, Math.min(15000, 4000 + reply.length * 150));
       setModelTag(data?.model ? `${data.provider} · ${data.model}` : null);
       setHistory((prev) => [...prev, { role: 'user', content: text }, { role: 'assistant', content: reply }].slice(-8));
       setPetState('happy');
       setTimeout(() => setPetState('idle'), 2600);
     } catch (error) {
-      speak('星轨断了……你的网络出问题了吧？', 4200);
+      speak('The star track broke... your network is acting up, isn’t it?', 4200);
       setPetState('angry');
       setTimeout(() => setPetState('idle'), 2200);
     } finally {
@@ -86,15 +86,15 @@ export default function CyberCat() {
     }
   };
 
-  // --- 🐟 交互事件：喂小鱼干 ---
+  // --- 🐟 Interaction: feed a dried fish ---
   const handleFeed = async (e: React.MouseEvent) => {
-    e.stopPropagation(); // 阻止触发摸猫或拖拽
+    e.stopPropagation(); // stop this from triggering petting or dragging
     if (isThinking) return;
-    setShowInput(false); // 喂食时关掉输入框
-    await sendMessage('我给心月狐呈上一条小鱼干，请发表感想。', '小鱼干……本座就勉为其难地收下了 (๑•̀ㅂ•́)و✧');
+    setShowInput(false); // close the input box while feeding
+    await sendMessage('I present a dried fish to Xinyuehu. Please comment.', 'A dried fish... this fox shall accept it, reluctantly (๑•̀ㅂ•́)و✧');
   };
 
-  // --- 💬 交互事件：发送聊天 ---
+  // --- 💬 Interaction: send chat ---
   const handleChatSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const userMessage = inputValue.trim();
@@ -104,7 +104,7 @@ export default function CyberCat() {
     await sendMessage(userMessage);
   };
 
-  // --- ⚡ 交互事件：快捷提问 ---
+  // --- ⚡ Interaction: quick question ---
   const handleQuickAsk = async (question: string) => {
     if (isThinking) return;
     setShowInput(false);
@@ -112,7 +112,7 @@ export default function CyberCat() {
     await sendMessage(question);
   };
 
-  // --- 🐾 自主行为：没人互动时自己在 待机 / 走动 / 好奇 / 趴着 / 睡觉 之间切换 ---
+  // --- 🐾 Idle behavior: with nobody interacting, move between idle / walk / curious / lie / sleep on its own ---
   useEffect(() => {
     if (isThinking || showInput || speech) return;
     const timer = setTimeout(() => {
@@ -124,7 +124,7 @@ export default function CyberCat() {
     return () => clearTimeout(timer);
   }, [petState, isThinking, showInput, speech]);
 
-  // --- 📣 其它工具（番茄钟等）可以让桌宠说话 ---
+  // --- 📣 Other tools (Pomodoro timer etc.) can make the pet speak ---
   useEffect(() => {
     const onSay = (event: Event) => {
       const detail = (event as CustomEvent).detail || {};
@@ -140,38 +140,38 @@ export default function CyberCat() {
     return () => window.removeEventListener("pet-say", onSay);
   }, []);
 
-  // --- 👋 每天第一次打开时打个招呼 ---
+  // --- 👋 Say hello on the first visit each day ---
   useEffect(() => {
     try {
       const key = "xh-pet-greeted";
       const today = new Date().toDateString();
       if (localStorage.getItem(key) !== today) {
         localStorage.setItem(key, today);
-        setTimeout(() => speak("你来啦～今天也一起加油吧 (๑•̀ㅂ•́)و✧", 7000), 1600);
+        setTimeout(() => speak("You’re here～ let’s do our best again today (๑•̀ㅂ•́)و✧", 7000), 1600);
       }
     } catch {}
   }, []);
 
-  // --- 🕰️ 久坐提醒：长时间没人互动就关心一句 ---
+  // --- 🕰️ Stand-up reminder: say something caring after a long stretch with no interaction ---
   useEffect(() => {
     const timer = setTimeout(() => {
-      speak("已经坐很久啦，站起来舒展一下吧 (｡•́︿•̀｡)", 7000);
+      speak("You’ve been sitting for a long time. Stand up and stretch (｡•́︿•̀｡)", 7000);
     }, 12 * 60 * 1000);
     return () => clearTimeout(timer);
   }, [speech]);
-  // --- ⏳ 随机挂机语录 ---
+  // --- ⏳ Random idle lines ---
   useEffect(() => {
     const randomBarks = [
-      "今夜月色不错，不做点什么吗？",
-      "困了就去睡，本座守着。( ˘ ³˘)♥",
-      "代码写完了吗，人类。写不动就歇会儿～",
-      "小鱼干，本座要小鱼干 (｡•́︿•̀｡)",
-      "……别走神，看着本座。",
-      "坐久了记得起来动动，不然脖子会疼哦。",
-      "喝口水吧，本座可不希望你头疼。",
-      "你专注的样子……唔，还算顺眼 (๑•̀ㅂ•́)و✧",
-      "有点安静呢。本座在听，你慢慢说。",
-      "偷偷讲，偶尔也觉得夜里太长了……不过有你在。",
+      "The moon looks good tonight. Shall we do something?",
+      "If you’re sleepy, go to bed. This fox will keep watch. ( ˘ ³˘)♥",
+      "Is the code done, human? If you can’t write another line, take a break～",
+      "Dried fish. This fox wants dried fish (｡•́︿•̀｡)",
+      "...Don’t get distracted. Look at this fox.",
+      "Remember to get up and move after sitting a while, or your neck will hurt.",
+      "Drink some water. This fox does not want you getting a headache.",
+      "The way you focus... hmm, it’s tolerable (๑•̀ㅂ•́)و✧",
+      "It’s a bit quiet. This fox is listening, take your time.",
+      "I’ll admit it quietly: sometimes the night feels too long... but you’re here.",
     ];
     const randomTalkInterval = setInterval(() => {
       if (!speech && !showInput && !isThinking && Math.random() > 0.8) {
@@ -193,7 +193,7 @@ export default function CyberCat() {
     >
       <style dangerouslySetInnerHTML={{ __html: `@keyframes pet-drift { 0%,100% { transform: translateX(0); } 50% { transform: translateX(-150px); } }` }} />
 
-      {/* 💬 聊天气泡 */}
+      {/* 💬 Chat bubble */}
       <div className="relative w-full flex justify-center mb-6">
         <AnimatePresence>
           {speech && (
@@ -214,39 +214,39 @@ export default function CyberCat() {
         </AnimatePresence>
       </div>
 
-      {/* 🦊 心月狐本体 & 交互按钮区 */}
+      {/* 🦊 The fox herself & the interaction buttons */}
       <div className="relative">
 
-        {/* 🌟 核心修改区：去掉了 opacity-0 和 group-hover，让按钮常驻显示 */}
+        {/* 🌟 Core change: dropped opacity-0 and group-hover so the buttons stay visible */}
         <div className="absolute -left-12 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-20">
 
-            {/* 💬 聊天按钮 */}
+            {/* 💬 Chat button */}
             <button
               onClick={(e) => {
                  e.stopPropagation();
                  setShowInput(!showInput);
               }}
-              // 稍微加了一点半透明背景，让常驻按钮在深色背景下也好看
+              // A slightly translucent background so the always-on buttons look good on dark backgrounds too
               className="bg-white/90 dark:bg-slate-700/90 p-2.5 rounded-full shadow-md hover:scale-110 active:scale-95 transition-transform border border-gray-100 dark:border-slate-600 text-blue-500 hover:text-blue-600 flex items-center justify-center backdrop-blur-sm"
-              title="聊天"
+              title="Chat"
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
                 <path fillRule="evenodd" d="M4.804 21.644A6.707 6.707 0 006 21.75a6.721 6.721 0 003.583-1.029c.774.182 1.584.279 2.417.279 5.322 0 9.75-3.97 9.75-9 0-5.03-4.428-9-9.75-9s-9.75 3.97-9.75 9c0 2.409 1.025 4.587 2.674 6.192.232.226.277.428.254.543a3.73 3.73 0 01-.814 1.686.75.75 0 00.44 1.223zM8.25 10.875a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25zM10.875 12a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0zm4.875-1.125a1.125 1.125 0 100 2.25 1.125 1.125 0 000-2.25z" clipRule="evenodd" />
               </svg>
             </button>
 
-            {/* 🐟 喂食按钮 */}
+            {/* 🐟 Feeding button */}
             <button
               onClick={handleFeed}
               disabled={isThinking}
               className={`bg-white/90 dark:bg-slate-700/90 p-2.5 rounded-full shadow-md hover:scale-110 active:scale-95 transition-transform border border-gray-100 dark:border-slate-600 flex items-center justify-center backdrop-blur-sm ${isThinking ? 'opacity-50 cursor-not-allowed' : ''}`}
-              title="喂小鱼干"
+              title="Feed a dried fish"
             >
               <span className="text-xl leading-none">🐟</span>
             </button>
         </div>
 
-        {/* 心月狐本体 */}
+        {/* The fox herself */}
         <div
           className="w-[120px] h-[120px] relative cursor-pointer"
           style={{ animation: petState === 'walk' ? 'pet-drift 16s ease-in-out infinite' : undefined }}
@@ -256,7 +256,7 @@ export default function CyberCat() {
         </div>
       </div>
 
-      {/* ⌨️ 互动输入框 */}
+      {/* ⌨️ Interaction input box */}
       <AnimatePresence>
         {showInput && (
           <motion.form
@@ -272,7 +272,7 @@ export default function CyberCat() {
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
-                placeholder="和心月狐说点什么…（聊聊今天？）"
+                placeholder="Say something to Xinyuehu... (talk about your day?)"
                 className="bg-transparent border-none outline-none text-sm px-3 py-1 w-full dark:text-white placeholder-gray-400"
                 disabled={isThinking}
                 autoFocus
@@ -290,7 +290,7 @@ export default function CyberCat() {
               </button>
             </div>
 
-            {/* ⚡ 快捷提问 */}
+            {/* ⚡ Quick questions */}
             <div className="flex flex-wrap gap-1 mt-2 px-1">
               {QUICK_ASKS.map((q) => (
                 <button
@@ -309,10 +309,10 @@ export default function CyberCat() {
               ))}
             </div>
 
-            {/* 🔌 后端切换 + 清空记忆 */}
+            {/* 🔌 Backend switch + clear memory */}
             <div className="flex items-center justify-between mt-2 px-1 pb-0.5">
               <div className="flex items-center gap-1">
-                <span className="text-[11px] text-slate-400 dark:text-slate-500">脑子：</span>
+                <span className="text-[11px] text-slate-400 dark:text-slate-500">Brain:</span>
                 {PROVIDERS.map((p) => (
                   <button
                     key={p.id}
@@ -333,12 +333,12 @@ export default function CyberCat() {
                 onClick={() => {
                   setHistory([]);
                   setModelTag(null);
-                  speak('刚才的事，本座已经忘了～', 3000);
+                  speak('This fox has already forgotten what just happened～', 3000);
                 }}
                 className="text-[11px] text-slate-400 hover:text-rose-500 dark:text-slate-500"
-                title="清空多轮对话记忆"
+                title="Clear the multi-turn conversation memory"
               >
-                清空记忆{history.length > 0 ? `（${history.length}）` : ''}
+                Clear memory{history.length > 0 ? ` (${history.length})` : ''}
               </button>
             </div>
           </motion.form>

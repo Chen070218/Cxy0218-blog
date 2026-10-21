@@ -4,14 +4,14 @@ import React, { useEffect, useState } from "react";
 import MoonFoxSvg from "./MoonFoxSvg";
 import { withBasePath } from "@/sitePath";
 
-/** 心月狐桌宠的九种状态（对应设定稿里的 Q 版姿势） */
+/** The nine states of the Xinyuehu desktop pet (the chibi poses from the design sheet) */
 export type PetState = "idle" | "walk" | "happy" | "angry" | "sleep" | "curious" | "lie" | "think" | "interact";
 
 /**
- * 形象来源：用户提供的《鸣潮》心月狐设定稿里的 8 个 Q 版姿势（待机/走动/开心/生气/睡觉/好奇/趴着/互动），
- * 已裁切并抠成透明 PNG 放在 public/pet/。
- * 思考态复用「好奇」姿势。
- * 如果精灵图加载失败，自动回落到手绘 SVG 版（components/MoonFoxSvg.tsx），保证桌宠不会消失。
+ * Art source: the 8 chibi poses from the Wuthering Waves Xinyuehu design sheet the user provided
+ * (idle/walk/happy/angry/sleep/curious/lie/interact), cropped and cut out as transparent PNGs in public/pet/.
+ * The thinking state reuses the "curious" pose.
+ * If a sprite fails to load, this falls back to the hand-drawn SVG version (components/MoonFoxSvg.tsx), so the pet never disappears.
  */
 const SPRITE_FILES: Record<PetState, string> = {
   idle: "/pet/idle.png",
@@ -25,7 +25,7 @@ const SPRITE_FILES: Record<PetState, string> = {
   interact: "/pet/interact.png",
 };
 
-// 站点挂在子路径时（GitHub Pages）这些静态图也要带前缀
+// When the site is hosted under a subpath (GitHub Pages), these static images need the prefix too
 const SPRITES = Object.fromEntries(
   Object.entries(SPRITE_FILES).map(([key, file]) => [key, withBasePath(file)]),
 ) as Record<PetState, string>;
@@ -36,7 +36,7 @@ export default function MoonFox({ state = "idle" }: { state?: PetState }) {
   const [failed, setFailed] = useState(false);
   const src = SPRITES[state] || SPRITES.idle;
 
-  // 预加载全部姿势：状态切换时不会闪一下白
+  // Preload every pose so switching states does not flash white
   useEffect(() => {
     if (typeof window === "undefined") return;
     ALL_SPRITES.forEach((href) => {
@@ -51,7 +51,7 @@ export default function MoonFox({ state = "idle" }: { state?: PetState }) {
     <span className={`mfx-img mfx-img--${state} block w-full h-full relative`}>
       <img
         src={src}
-        alt="心月狐桌宠"
+        alt="Xinyuehu, the desktop fox"
         draggable={false}
         decoding="async"
         onError={() => setFailed(true)}

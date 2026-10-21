@@ -1,20 +1,32 @@
 ---
-title: 为什么是心月狐
+title: Why Xinyuehu?
 date: '2026-09-28 22:40:00'
 tags:
-- 鸣潮
-- 桌宠
-mood: 专注
+- Wuthering Waves
+- Desktop pet
+mood: Focused
 cover: /screenshots/01-home.webp
-description: 挑形象的时候纠结了很久，最后选了她。
+description: I went back and forth on the character for a long time. This is the one I picked.
 ---
 
-做站点的时候就想在右下角放点活的东西，不要那种点一下就弹广告的客服图标。
+When I was building the site I wanted something alive in the bottom-right corner, not one of
+those support-chat icons that pops up an ad the moment you click it.
 
-形象挑了很久。试过几张通用的二次元图，都不太对：站点的底色是深色偏冷的，月亮、星辉、夜里的感觉，随便放个角色进去像贴纸。翻《鸣潮》的设定稿翻到心月狐，银白色、带月亮和星星的元素，放上去就顺了。
+I spent a long time on the character. I tried a few generic anime images and none of them felt
+right: the site's base color is dark and on the cool side — moon, starlight, a night-time feel —
+and dropping just any character in made it look like a sticker. Then I flipped through the
+Wuthering Waves design sheets and found Xinyuehu: silver-white, with moon and star elements. Put
+her in and it just fit.
 
-她的性格也是我定的：说话有点端着，自称"本座"，嘴上不太客气，但到点会提醒我起来活动、番茄钟结束会催我休息。设定写成这样是有原因的——如果她只是个甜甜的助手，每天弹一样的"加油哦"，第三天我就会把它关掉。
+Her personality is something I set too: she talks a little aloof, calls herself "this fox", is not
+exactly polite, but when the time comes she reminds me to get up and move, and when the Pomodoro
+ends she nags me to rest. There's a reason her character is written this way — if she were just a
+sweet assistant popping up the same "you can do it!" every day, I'd have turned her off by the
+third day.
 
-技术上的东西写在文章里了。这里只记一句：抠图那两天挺折磨的，白头发和白底几乎分不开，来来回回改了几版才不糊边。
+The technical side is in the post. Here I'll just note one thing: the two days of cutting out the
+sprite were rough — white hair and a white background were almost impossible to tell apart, and it
+took several rounds of redoing before the edges stopped looking smudged.
 
-现在她还在右下角打盹。走路的频率有点快，看着像在赶作业，下次再调。
+Right now she's still dozing in the bottom-right corner. Her walk cycle is a bit fast — she looks
+like she's rushing to finish homework. I'll tune that next time.

@@ -3,9 +3,10 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { withBasePath } from "@/sitePath";
+import { formatDate } from "@/components/formatDate";
 
 export default function TimelineNode({ post, index }: { post: any, index: number }) {
-  // 判断是放在左边还是右边（偶数左，奇数右）
+  // decide which side the card goes on (even left, odd right)
   const isLeft = index % 2 === 0;
 
   return (
@@ -16,17 +17,17 @@ export default function TimelineNode({ post, index }: { post: any, index: number
       transition={{ duration: 0.6, ease: "easeOut" }}
       className={`mb-12 flex justify-between items-center w-full ${isLeft ? 'md:flex-row-reverse' : 'flex-row'}`}
     >
-      {/* 留出对面的一半空白 */}
+      {/* leave the opposite half empty */}
       <div className="order-1 w-5/12 hidden md:block"></div>
 
-      {/* 中间的圆形节点 */}
+      {/* the round node in the middle */}
       <div className="z-20 flex items-center justify-center order-1 bg-white dark:bg-slate-900 shadow-xl w-6 h-6 rounded-full border-4 border-indigo-400 ring-4 ring-indigo-200/50 dark:ring-indigo-900/30 transition-colors duration-1000"></div>
 
-      {/* 卡片实体 */}
+      {/* the card itself */}
       <Link href={post.href || `/posts/${post.slug}`} className="order-1 w-full md:w-5/12 group">
         <div className="bg-white/50 dark:bg-slate-800/50 backdrop-blur-lg rounded-3xl shadow-lg border border-white/60 dark:border-white/10 transition-all duration-500 hover:scale-[1.03] hover:bg-white/70 dark:hover:bg-slate-800/70 hover:shadow-2xl overflow-hidden flex flex-col">
 
-          {/* 上半部分：封面图 */}
+          {/* Top half: cover image */}
           <div className="w-full h-40 sm:h-48 overflow-hidden relative bg-slate-200 dark:bg-slate-700">
             <img loading="lazy" decoding="async"
               src={withBasePath(post.cover)}
@@ -36,12 +37,12 @@ export default function TimelineNode({ post, index }: { post: any, index: number
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none"></div>
           </div>
 
-          {/* 下半部分：文本信息 */}
+          {/* Bottom half: text */}
           <div className="p-6">
             <div className="flex items-center justify-between mb-3">
               <div className="text-indigo-600 dark:text-indigo-400 font-bold text-[11px] flex items-center gap-1 uppercase tracking-wider">
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                {post.date}
+                {formatDate(post.date, true)}
               </div>
             </div>
 
@@ -49,7 +50,7 @@ export default function TimelineNode({ post, index }: { post: any, index: number
               {post.title}
             </h3>
 
-            {/* 【核心新增】：文章标签展示 */}
+            {/* [new] post tags */}
             {post.tags && post.tags.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-4">
                 {post.tags.map((tag: string) => (

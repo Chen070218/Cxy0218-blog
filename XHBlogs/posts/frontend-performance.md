@@ -1,56 +1,56 @@
 ---
-title: "站点卡了两次，我查了两遍"
+title: "The site stuttered twice, so I traced it twice"
 date: "2026-10-16 14:00:00"
-tags: ["性能", "图片", "CSS"]
-mood: "解压"
+tags: ["Performance", "Images", "CSS"]
+mood: "Relieved"
 cover: "/screenshots/04-photowall.webp"
-description: "手机打开要等、切页面发涩、图片一张张往下蹦，最后是怎么一项项查出来的。"
+description: "Slow first paint on my phone, janky page transitions, images popping in one by one — and how I tracked each problem down."
 ---
 
-这个站点第一次上线之后，我自己用手机打开，体验很差：先白屏几秒，然后图片一张一张往下蹦，点导航切页面的时候还会顿一下。当时以为是自己网络不好，换了 WiFi 和流量都一样，那就得查了。
+After the site first went live, I opened it on my own phone and the experience was bad: a blank screen for a few seconds, then images popping in one by one, and a stutter when I tapped the nav to switch pages. I assumed my network was bad, but switching between WiFi and mobile data made no difference, so I had to look into it.
 
-![照片墙现在打开顺畅多了](/screenshots/04-photowall.webp)
+![The photo wall opens smoothly now](/screenshots/04-photowall.webp)
 
-## 白屏是最要命的那条
+## The blank screen was the worst of it
 
-打开页面什么都没有，过几秒才一起出来。查 CSS 才发现问题：整页内容被设成 `opacity: 0; visibility: hidden`，要等 JS 加载完、开机动画播完才显示。只要 JS 慢一点或者出错，用户看到的就是一片白。
+Open the page and there's nothing; a few seconds later everything appears at once. I went through the CSS and found the problem: the whole page was set to `opacity: 0; visibility: hidden`, and only became visible after the JS loaded and the splash screen finished playing. If the JS was even a little slow, or threw an error, the user got nothing but white.
 
-改法是内容一直在，开机动画只做一层盖在上面的遮罩，播完就淡出；动画时长也从 2.2 秒压到 1.2 秒。这个改动最直接，改完之后首屏几乎是立刻出来的。
+The fix was to keep the content in place and make the splash screen only a mask on top of it that fades out when it finishes; I also cut the animation from 2.2 seconds to 1.2. That was the most direct change, and afterwards the first paint appeared almost instantly.
 
-## 图片：图床不给缩图，就自己压
+## Images: if the image host won't resize them, compress them yourself
 
-相册里的照片都是直接引图床原图，单张 900KB 左右，最大的 945KB。我试过在网址后面加阿里 OSS、七牛、又拍云那种缩图参数，返回的还是原图，说明人家没开图片处理。
+The photos in the album all linked straight to the full-size images on the image host, around 900KB each, the largest 945KB. I tried appending the resizing parameters used by Alibaba OSS, Qiniu and Upyun to the URL, but the original image still came back, which meant image processing wasn't enabled on their side.
 
-后来干脆把二十张图下载下来，统一缩到宽度 1600 以内转成 WebP，放进项目的 `public/photos/` 里，数据里改成引用站内路径。压缩前一共 13.9MB，压缩后 2.9MB，单张大多在一百多 KB。
+In the end I just downloaded the twenty images, resized them all to a width of at most 1600 and converted them to WebP, put them in the project's `public/photos/`, and changed the data to point at the in-site paths. Before compression they were 13.9MB in total, afterwards 2.9MB, with most single images a bit over 100KB.
 
-顺带一个坑：换成静态导出以后，Next 自带的图片优化是不生效的（没有服务端），所以必须提前把图压好，不能指望运行时帮你转。
+One related trap: after switching to static export, Next's built-in image optimization stops working (there's no server), so the images have to be compressed ahead of time; you can't count on it converting them at runtime.
 
-## 动画太多，而且有几处写法不对
+## Too many animations, and a few of them written wrong
 
-我数了一下常驻的循环动画：草 150 根、萤火虫 50 只、樱花 40 片，加上弹幕十几条，差不多两百五十个元素一直在动。手机上撑不住很正常。
+I counted the looping animations that run all the time: 150 blades of grass, 50 fireflies, 40 cherry blossom petals, plus a dozen or so danmaku lines — roughly 250 elements constantly moving. No wonder a phone can't keep up.
 
-数量先砍到四分之一（草 40、萤火虫 18、樱花 20）。然后处理几个写法问题：
+First I cut the numbers to a quarter (40 blades of grass, 18 fireflies, 20 petals). Then I dealt with a few implementation issues:
 
-萤火虫原来在动画里改 `box-shadow`，等于每一帧都要重绘一大片，改成静态光晕、只动透明度和位移。弹幕原来动的是 `right` 属性，会触发布局计算，改成 `transform: translate3d()`，交给合成层去跑。
+The fireflies used to animate `box-shadow`, which meant repainting a large area on every frame; I switched them to a static glow and now animate only opacity and position. The danmaku used to animate the `right` property, which triggers layout calculations; I changed it to `transform: translate3d()` so the compositor handles it.
 
-还有一个点击涟漪：canvas 上挂了一个永不停止的 `requestAnimationFrame`，就算没有涟漪也在每帧清屏。改成点击时才启动、涟漪画完就停。
+There was also a click ripple: the canvas had a `requestAnimationFrame` loop that never stopped, clearing the screen every frame even when there were no ripples. I changed it to start on click and stop once the ripple has been drawn.
 
 ```ts
 const frame = () => {
   rafId = null;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  /* 画涟漪 */
+  /* draw the ripples */
   if (ripples.length > 0) rafId = requestAnimationFrame(frame);
 };
 ```
 
-另外标签页切到后台时，所有特效都停掉，不然后台还在烧 CPU、掉电。
+I also stop all the effects when the tab goes to the background, otherwise it's still burning CPU and battery back there.
 
-## 切页面那一顿
+## That stutter when switching pages
 
-切页动画原来是用 framer-motion 在 JS 里逐帧改整页的透明度和位移。页面上又有不少毛玻璃卡片，淡入的时候模糊层要跟着一帧帧重算，点得快的时候几个动画还会叠在一起。
+The page transition used to use framer-motion to change the whole page's opacity and position frame by frame in JS. The page also has a lot of frosted-glass cards, so the blur layer had to be recalculated frame by frame during the fade-in, and if you clicked quickly several animations would pile up on top of each other.
 
-改成纯 CSS 动画，并且加了一个判断：600 毫秒内连续切页就跳过动画，直接显示。
+I changed it to a pure CSS animation and added a check: if you switch pages again within 600 milliseconds, skip the animation and show the page directly.
 
 ```tsx
 const now = Date.now();
@@ -58,12 +58,12 @@ const isRapid = now - lastNavigationAt < 600;
 lastNavigationAt = now;
 ```
 
-## 字体
+## Fonts
 
-三个字体原来都从 Google 取，构建时要联网，中文衬线字体还要拉好几 MB，本地构建经常卡在这一步失败。后来改成自托管，中文用的是思源宋体的可变版本，按 unicode-range 切了很多小片，浏览器只会下载页面上真正用到的那些字。
+All three fonts used to come from Google, which meant the build needed a network connection, and the Chinese serif font alone was several MB, so local builds often got stuck and failed at that step. I moved them to self-hosting; the Chinese one is the variable version of Source Han Serif, split into many small slices by unicode-range, so the browser only downloads the characters actually used on the page.
 
-## 现在的状态
+## Where it stands now
 
-手机上第一次打开基本是瞬间出内容，切页面不会再顿，图片也不会一张一张蹦。照片墙整页从十几 MB 降到三 MB 出头。
+On a phone, the first open now shows content almost instantly, switching pages no longer stutters, and images no longer pop in one by one. The photo wall page went from over ten MB to just over three MB.
 
-还没解决的：创意工坊那个 3D 页面首次进入还是要等一秒多，因为 three.js 和模型都不小；我想过给它加一个更明显的加载提示，但暂时没动。
+Still unsolved: the 3D page in the Creative Workshop still takes over a second on first load, because three.js and the models are both fairly big. I considered adding a more obvious loading indicator, but I haven't touched it for now.

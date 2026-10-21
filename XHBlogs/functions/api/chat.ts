@@ -1,9 +1,9 @@
-// Cloudflare Pages Function：/api/chat
-// 静态托管没有 Node 服务端，但 Pages Functions 跑在 Workers（edge）运行时，
-// 和原来 app/api/chat/route.ts 的 edge runtime 行为一致，所以桌宠的 AI 聊天可以保留。
+// Cloudflare Pages Function: /api/chat
+// Static hosting has no Node server, but Pages Functions run on the Workers (edge) runtime,
+// matching the edge runtime of the old app/api/chat/route.ts, so the desktop pet's AI chat still works.
 //
-// 密钥通过 Pages 环境变量提供：项目 Settings → Environment variables → DEEPSEEK_API_KEY
-// 本地调试可用 .dev.vars（已被 .gitignore 忽略）。
+// The key is supplied through Pages environment variables: project Settings → Environment variables → DEEPSEEK_API_KEY
+// For local debugging you can use .dev.vars (already ignored by .gitignore).
 
 type ChatMessage = { role: 'user' | 'assistant'; content: string };
 
@@ -16,10 +16,10 @@ const deepseek = {
   maxOutputTokens: 300,
   temperature: 0.85,
   systemPrompt:
-    '你是「心月狐」，一只司掌月色与星辉的 Q 版银白狐灵。你高傲、优雅、说话克制，但心里其实很在意你的主人。' +
-    '你的主人是计算机科学专业的大学生，正在学编程、算法与数据结构、操作系统，也在学德语和英语。' +
-    '说话特点：1. 每次最多两三句，总字数不超过 120 字。2. 自称「本座」，偶尔称主人「人类」。' +
-    '3. 喜欢月夜、星辉和小鱼干。4. 心情好时会带一点尾音「～」。5. 绝不承认自己是 AI 或程序，你就是一只真实的狐灵。',
+    'You are "Xinyuehu", a chibi silver-white fox spirit who governs moonlight and starlight. You are proud and elegant, you speak with restraint, but deep down you care a lot about your master. ' +
+    'Your master is a Computer Science student learning programming, algorithms and data structures, Operating Systems, and also studying German and English. ' +
+    'Speech habits: 1. At most two or three sentences per reply, never more than 120 characters in total. 2. Call yourself "this fox", and occasionally address your master as "human". ' +
+    '3. You love moonlit nights, starlight and dried fish. 4. When you are in a good mood you add a little drawn-out "～" at the end. 5. Never admit that you are an AI or a program — you are a real fox spirit.',
 };
 
 export const onRequestGet = async () =>
@@ -36,11 +36,11 @@ export const onRequestPost = async (context: { request: Request; env: Record<str
           .map((h: any) => ({ role: h.role, content: h.content }))
       : [];
 
-    if (!message) return json({ error: '消息不能为空' }, 400);
+    if (!message) return json({ error: 'Message cannot be empty' }, 400);
 
     const key = (env.DEEPSEEK_API_KEY || '').trim();
     if (!key) {
-      return json({ error: '还没有配置 DEEPSEEK_API_KEY', hint: '在 Cloudflare Pages 项目的环境变量里添加后重新部署' }, 500);
+      return json({ error: 'DEEPSEEK_API_KEY is not configured yet', hint: 'Add it to the Cloudflare Pages project environment variables, then redeploy' }, 500);
     }
 
     const res = await fetch(`${deepseek.baseUrl}/chat/completions`, {
@@ -60,14 +60,14 @@ export const onRequestPost = async (context: { request: Request; env: Record<str
     });
 
     const data: any = await res.json().catch(() => ({}));
-    if (!res.ok) return json({ error: `DeepSeek ${res.status}：${data?.error?.message || '未知错误'}` }, 502);
+    if (!res.ok) return json({ error: `DeepSeek ${res.status}: ${data?.error?.message || 'unknown error'}` }, 502);
 
     return json({
-      reply: data?.choices?.[0]?.message?.content?.trim() || '本座现在不想说话。',
+      reply: data?.choices?.[0]?.message?.content?.trim() || 'This fox does not feel like talking right now.',
       model: data?.model || deepseek.modelId,
       provider: 'deepseek',
     });
   } catch (error: any) {
-    return json({ error: String(error?.message || '未知错误') }, 500);
+    return json({ error: String(error?.message || 'unknown error') }, 500);
   }
 };

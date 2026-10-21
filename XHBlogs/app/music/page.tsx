@@ -1,15 +1,15 @@
 import { siteConfig } from "@/siteConfig";
 import MusicClient from "./MusicClient";
 
-// 🌟 这里是服务端渲染，完美支持 metadata
+// 🌟 Server-rendered here, so metadata works properly
 export const metadata = {
-  title: "音乐馆 | " + siteConfig.title,
+  title: "Music | " + siteConfig.title,
 };
 
 export default function MusicPage() {
   return (
     <>
-      <h1 className="sr-only">音乐馆</h1>
+      <h1 className="sr-only">Music</h1>
       <MusicClient />
     </>
   );

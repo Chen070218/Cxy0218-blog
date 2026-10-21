@@ -7,14 +7,14 @@ export default function WeatherEffect() {
   const [particles, setParticles] = useState<{ id: number; left: string; duration: string; delay: string; opacity: number; size: number }[]>([]);
 
   useEffect(() => {
-    // 随机生成 30 个漂浮的星尘粒子
+    // generate 30 floating stardust particles at random
     const newParticles = Array.from({ length: 30 }).map((_, i) => ({
       id: i,
       left: `${Math.random() * 100}%`,
-      duration: `${Math.random() * 15 + 10}s`, // 下落时间在 10-25 秒之间
-      delay: `${Math.random() * -20}s`, // 负数延迟，保证一进页面屏幕上就已经有粒子了
+      duration: `${Math.random() * 15 + 10}s`, // fall time between 10 and 25 seconds
+      delay: `${Math.random() * -20}s`, // negative delay so particles are already on screen as soon as the page opens
       opacity: Math.random() * 0.5 + 0.1,
-      size: Math.random() * 3 + 2, // 粒子大小 2px 到 5px
+      size: Math.random() * 3 + 2, // particle size 2px to 5px
     }));
     setParticles(newParticles);
   }, []);
@@ -35,7 +35,7 @@ export default function WeatherEffect() {
           animation: float-down linear infinite;
           filter: blur(1px);
         }
-        /* 暗黑模式下的发光特效 */
+        /* glow effect in dark mode */
         .dark .cyber-particle {
            background: rgba(165, 180, 252, 0.8);
            box-shadow: 0 0 10px 2px rgba(99, 102, 241, 0.3);

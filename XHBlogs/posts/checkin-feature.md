@@ -1,26 +1,26 @@
 ---
-title: "打卡页面：记录一段时间到底花在哪儿了"
+title: "The check-in page: finding out where the hours really went"
 date: "2026-10-16 10:00:00"
-tags: ["Next.js", "前端", "时间管理"]
-mood: "专注"
+tags: ["Next.js", "Frontend", "Time management"]
+mood: "Focused"
 cover: "/screenshots/02-checkin.webp"
-description: "做打卡页时改过好几遍的几个地方：数据结构、计时器、月历配色，还有导出备份。"
+description: "Things I reworked several times while building it: the data model, the timer, the calendar colors, and export/backup."
 ---
 
-这学期我一直有个疑问：一天到底学了多久。番茄钟只能记一段一段，也记不住那段时间具体在干什么。所以给站点加了个打卡页：点开始，做完点结束，写两句做了啥，顺手打个分。
+All semester I had one question: how long do I actually study in a day. The Pomodoro timer only records one block at a time, and it does not remember what I was doing in that block. So I added a check-in page to the site: hit Start, hit Stop when the work is done, write a couple of lines about what you did, and give it a rating while you are at it.
 
-![打卡页现在的样子](/screenshots/02-checkin.webp)
+![The check-in page as it looks now](/screenshots/02-checkin.webp)
 
-## 数据结构改了两次
+## The data model changed twice
 
-最开始我想得挺复杂，打算给"正在打卡"单独存一个状态，再单独存开始时间和当前记录 id。写到一半发现多余了——记录的 `end` 是不是 `null`，本身就能说明它还在不在进行中。
+At first I overcomplicated it: I planned a separate state for "currently checking in", plus a separate start time and current record id. Halfway through I realized that was redundant — whether a record's `end` is `null` already tells you if it is still running.
 
 ```ts
 export type CheckinRecord = {
   id: string;
   categoryId: string;
   start: string;
-  end: string | null;   // null 就是还在打卡
+  end: string | null;   // null means the check-in is still running
   content: string;
   rating: number;
   blocked: boolean;
@@ -28,32 +28,32 @@ export type CheckinRecord = {
 };
 ```
 
-这样刷新页面状态也不会丢，也不会出现"状态说在打卡、记录里却没有 end"这种对不上的情况。
+This way the state survives a refresh, and you never get the mismatch where the status says you are checking in but the record has no `end`.
 
-## 计时器踩了个坑
+## One trap in the timer
 
-秒表是每秒刷一次界面。这行代码我第一版写错了：不管有没有在打卡都开着 `setInterval`，切到别的页面它还在后台跑，控制台一直刷新。
+The stopwatch re-renders once per second. My first version got this wrong: it opened a `setInterval` whether or not a check-in was running, so the timer kept going in the background after I switched to another page, and the console kept refreshing.
 
 ```ts
 useEffect(() => {
   if (!running) return;
   const id = setInterval(() => setTick(v => v + 1), 1000);
-  return () => clearInterval(id);   // 少了这句就会一直跑
+  return () => clearInterval(id);   // without this line it runs forever
 }, [running]);
 ```
 
-结束打卡的时候其实只改一个字段，把 `end` 补上。这段花了多久，读的时候现算就行，没必要单独存一个时长——存了反而可能跟起止时间对不上。
+Ending a check-in really only changes one field: fill in `end`. How long the session took is computed on read, so there is no need to store a duration — storing one could end up disagreeing with the start and end times.
 
-## 月历热力图
+## The calendar heatmap
 
-月历那部分我一开始用的是固定几档颜色，跑了两周发现看不出差别：周末学得多、工作日少，颜色都挤在一两档里。后来改成按当天分钟数分五档（0、30、60、120 以上），才比较能看出节奏。
+The calendar started with a fixed set of color bands, and after two weeks of use it showed nothing: I study more at weekends and less on weekdays, so every day landed in one or two bands. I switched to five bands based on the day's minutes (0, 30, 60, 120+), and only then could I see the rhythm.
 
-每个格子都带了 `aria-label`，里面写着当天的总时长。光靠颜色深浅对读屏软件来说等于没有信息。
+Every cell carries an `aria-label` with the day's total duration. Shade alone means nothing to a screen reader.
 
-连续打卡那里也有个小改动：如果今天还没开始，就从昨天往前数。原来直接从今天数，早上打开页面全是"断签 0 天"，看着挺打击人的。
+The streak count needed a small change too: if today has not started yet, count back from yesterday. It used to count straight from today, so opening the page in the morning showed "0-day streak" everywhere, which was pretty disheartening.
 
-## 备份
+## Backup
 
-数据只存在浏览器 localStorage 里，换个设备就没了，所以导出和导入不是可选项。导入做的是合并而不是覆盖，以免手滑把当天的记录冲掉。
+The data only lives in the browser's localStorage, so it disappears on another device — which makes export and import non-optional. Import merges instead of overwriting, so one slip of the hand does not wipe today's records.
 
-现在这个页面基本每天都会开。最大的用处不是数字好看，而是能看出时间到底去哪儿了。下一步想把番茄钟的时间也自动记进来，省得两边各记一份。
+I open this page almost every day now. The biggest use is not the numbers looking good; it is seeing where the time actually goes. Next I want the Pomodoro timer to feed its minutes in automatically, so I do not have to keep two separate logs.

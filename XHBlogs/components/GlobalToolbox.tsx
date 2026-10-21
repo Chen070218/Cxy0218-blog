@@ -3,29 +3,29 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// 【引入你的独立工具模块】
+// [Your standalone tool modules are imported here]
 import CalculatorTool from './toolbox/CalculatorTool';
 import TomatoClock from './toolbox/TomatoClock';
 
-// 【核心架构：插件注册表】
-// 以后加新工具，只需要往这个数组里添加对象即可，完全解耦！
+// [Core architecture: plugin registry]
+// To add a tool later, just push another object into this array — fully decoupled!
 const TOOL_REGISTRY = [
-  { id: 'calc', name: '计算器', icon: '🧮', component: <CalculatorTool /> },
-  { id: 'tomato', name: '番茄钟', icon: '🍅', component: <TomatoClock /> },
-  // { id: 'tomato', name: '番茄钟', icon: '🍅', component: <TomatoClock /> },
+  { id: 'calc', name: 'Calculator', icon: '🧮', component: <CalculatorTool /> },
+  { id: 'tomato', name: 'Pomodoro', icon: '🍅', component: <TomatoClock /> },
+  // { id: 'tomato', name: 'Pomodoro', icon: '🍅', component: <TomatoClock /> },
 ];
 
 export default function GlobalToolbox() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeToolId, setActiveToolId] = useState<string | null>(null);
 
-  // 获取当前激活的工具对象
+  // The currently active tool object
   const activeTool = TOOL_REGISTRY.find(t => t.id === activeToolId);
 
   return (
     <div className="fixed bottom-6 left-6 z-[9999] flex flex-col items-start gap-3">
 
-      {/* 展开的面板区域 */}
+      {/* Expanded panel area */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -35,7 +35,7 @@ export default function GlobalToolbox() {
             transition={{ duration: 0.3, type: "spring", stiffness: 300, damping: 25 }}
             className="mb-2 bg-white/70 dark:bg-slate-800/80 backdrop-blur-2xl border border-white/50 dark:border-white/10 shadow-2xl rounded-3xl p-5 w-80 max-w-[calc(100vw-48px)] max-h-[calc(100dvh-110px)] overflow-y-auto flex flex-col gap-4 overflow-hidden"
           >
-            {/* 动态渲染：工具箱导航栏 */}
+            {/* Dynamically rendered: toolbox nav bar */}
             <div className="flex flex-wrap gap-2 border-b border-slate-300/50 dark:border-slate-700/50 pb-3">
               {TOOL_REGISTRY.map(tool => (
                 <button
@@ -48,22 +48,22 @@ export default function GlobalToolbox() {
               ))}
             </div>
 
-            {/* 动态渲染：激活的工具组件 */}
+            {/* Dynamically rendered: the active tool component */}
             <AnimatePresence mode="wait">
               {activeTool ? (
-                // 直接渲染注册表里绑定的独立组件
+                // Render the standalone component bound in the registry directly
                 <div key={activeTool.id}>
                   {activeTool.component}
                 </div>
               ) : (
-                // 空状态提醒
+                // Empty-state hint
                 <motion.div
                   key="empty"
                   initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                   className="h-48 flex flex-col items-center justify-center text-slate-400 text-xs font-serif text-center px-4"
                 >
                   <svg className="w-8 h-8 mb-2 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 00-1-1H4a1 1 0 01-1-1V4a1 1 0 011-1h3a1 1 0 001-1v-1z" /></svg>
-                  点击上方模块<br/>激活工具
+                  Tap a module above<br/>to activate a tool
                 </motion.div>
               )}
             </AnimatePresence>
@@ -71,14 +71,14 @@ export default function GlobalToolbox() {
         )}
       </AnimatePresence>
 
-      {/* 悬浮主开关按钮 */}
-      <button aria-label={isOpen ? "收起计算器" : "打开计算器"} aria-expanded={isOpen}
+      {/* Floating main toggle button */}
+      <button aria-label={isOpen ? "Collapse calculator" : "Open calculator"} aria-expanded={isOpen}
         onClick={() => { setIsOpen(!isOpen); if (!isOpen && !activeToolId) setActiveToolId(TOOL_REGISTRY[0].id); }}
         className={`px-4 h-12 gap-2 rounded-full flex items-center justify-center shadow-xl backdrop-blur-xl border border-white/40 dark:border-white/10 transition-all duration-500 hover:scale-110 active:scale-95 z-50
           ${isOpen ? 'bg-indigo-500 text-white' : 'bg-white/70 dark:bg-slate-800/80 text-slate-700 dark:text-white'}
         `}
       >
-        <span aria-hidden="true">{isOpen ? '✕' : '🧮'}</span><span>{isOpen ? '收起' : '计算器'}</span>
+        <span aria-hidden="true">{isOpen ? '✕' : '🧮'}</span><span>{isOpen ? 'Close' : 'Calculator'}</span>
       </button>
 
     </div>

@@ -31,12 +31,12 @@ export default function SidebarLyric() {
       <h3 className="font-black text-slate-900 dark:text-white mb-4 border-l-4 border-indigo-500 pl-2 text-sm">NOW PLAYING</h3>
 
       <div className="flex items-center gap-4 mb-4">
-        {/* 旋转封面 */}
+        {/* Spinning cover */}
         <div
           className="w-12 h-12 rounded-full overflow-hidden border-2 border-white/20 shadow-md animate-[spin_6s_linear_infinite]"
           style={{ animationPlayState: isPlaying ? 'running' : 'paused' }}
         >
-          <img decoding="async" src={currentSong.cover} className="w-full h-full object-cover" alt="cover" />
+          <img decoding="async" src={currentSong.cover} className="w-full h-full object-cover" alt="Album cover" />
         </div>
 
         <div className="flex-1 overflow-hidden">
@@ -45,7 +45,7 @@ export default function SidebarLyric() {
         </div>
       </div>
 
-      {/* 歌词打字机 */}
+      {/* Lyric typewriter */}
       <div className="bg-slate-100/50 dark:bg-slate-900/50 p-3 rounded-xl min-h-[60px] flex items-center justify-center text-center shadow-inner">
         <p className="text-xs font-bold text-indigo-600 dark:text-indigo-400">
           {displayedLyric}

@@ -1,5 +1,5 @@
 ---
-title: 关于我
+title: About Me
 date: '2026-09-20'
 tags: []
 mood: ''
@@ -7,14 +7,14 @@ cover: /photos/8e72bb847bdc.webp
 description: ''
 ---
 
-我叫陈向阳，海南比勒费尔德应用科学大学计算机科学专业 2025 级本科生。
+I'm Chen Xiangyang, a 2025-intake undergraduate in Computer Science at Hainan Bielefeld University of Applied Sciences.
 
-这学期在上的专业课是编程 I / II、算法与数据结构、操作系统、数学 I / II、人工智能基础，还有职业技术导论、项目工作导论、科研工作导论三门讲方法和规范的课。语言课是德语和英语，德语从零开始，现在能读简单的课文，听力还差得远。
+My major courses this semester are Programming I / II, Algorithms and Data Structures, Operating Systems, Mathematics I / II and Foundations of Artificial Intelligence, plus three courses on method and standards: Introduction to Professional Practice, Introduction to Project Work and Introduction to Research Work. My language courses are German and English. I started German from zero, can now read simple texts, and my listening is still a long way behind.
 
-这个站点是 Web 课的期末作品，也是我自己平时在用的东西：文章用来记学习和踩过的坑，打卡页记每天的时间花在哪儿，照片墙放随手存的图，课程表按这学期的课排的，打卡页和番茄钟基本每天都会开。
+This site is the final project for my web course, and also something I use myself: posts record what I study and the traps I fall into, the check-in page tracks where each day's hours go, the photo wall holds images I saved on a whim, the timetable follows this semester's classes, and I open the check-in page and the Pomodoro timer almost every day.
 
-技术上是用 Next.js 写的，没有数据库，需要存的东西都在浏览器本地，所以换设备要自己导出导入。代码在 GitHub 上，提交是一周一周攒的。
+Technically it's written in Next.js with no database — anything that needs storing lives in browser local storage, so moving to another device means exporting and importing by hand. The code is on GitHub, committed week by week.
 
-右下角那只银白色的狐狸叫心月狐，形象来自《鸣潮》。她会在你什么都不做的时候自己走两步、打盹，坐太久会提醒你站起来，番茄钟结束会叫你休息。跟她说话接的是 DeepSeek 的接口，密钥只放在服务端，页面上看不到。
+The silver-white fox in the bottom right corner is Xinyuehu, the Moon Fox, based on a character from Wuthering Waves. When you're doing nothing she walks a few steps and dozes off; if you sit too long she reminds you to stand up; when the Pomodoro timer ends she tells you to rest. Talking to her goes through the DeepSeek API — the key stays on the server side, so it never appears on the page.
 
-站内用的角色图和游戏截图版权归原作者和厂商所有，这里只是个人学习作品，没有商业用途。
+The character art and game screenshots on this site belong to their original artists and publishers. This is a personal study project with no commercial use.

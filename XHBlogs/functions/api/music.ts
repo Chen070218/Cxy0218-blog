@@ -1,6 +1,6 @@
-// Cloudflare Pages Function：/api/music
-// 静态托管没有 Next.js 服务端，这里用 Workers（edge）运行时重写一遍原来的 app/api/music/route.ts。
-// 作用：代理网易云音乐的歌曲详情与歌词接口，避免浏览器直连被跨域拦住。
+// Cloudflare Pages Function: /api/music
+// Static hosting has no Next.js server, so this rewrites the old app/api/music/route.ts on the Workers (edge) runtime.
+// It proxies the NetEase Cloud Music song detail and lyric APIs so the browser does not hit CORS when calling them directly.
 
 const NET_EASE_HEADERS = {
   'User-Agent':
@@ -49,7 +49,7 @@ async function loadSong(songId: string): Promise<SongResult> {
       lrcText = lrcData?.lrc?.lyric || '';
     }
 
-    const artistName = song?.artists?.[0]?.name || '未知歌手';
+    const artistName = song?.artists?.[0]?.name || 'Unknown artist';
     return {
       id: songId,
       name: song.name,

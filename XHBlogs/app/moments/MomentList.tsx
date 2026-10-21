@@ -1,6 +1,7 @@
 "use client";
 import SmartImage from '../../components/SmartImage';
 import { withBasePath } from '../../sitePath';
+import { formatDate } from '../../components/formatDate';
 
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
@@ -10,10 +11,16 @@ function timeAgo(dateStr: string) {
   const date = new Date(dateStr);
   const now = new Date();
   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-  if (diffInSeconds < 60) return '刚刚';
-  if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} 分钟前`;
-  if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} 小时前`;
-  return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
+  if (diffInSeconds < 60) return 'just now';
+  if (diffInSeconds < 3600) {
+    const minutes = Math.floor(diffInSeconds / 60);
+    return `${minutes} minute${minutes === 1 ? '' : 's'} ago`;
+  }
+  if (diffInSeconds < 86400) {
+    const hours = Math.floor(diffInSeconds / 3600);
+    return `${hours} hour${hours === 1 ? '' : 's'} ago`;
+  }
+  return formatDate(dateStr);
 }
 
 export default function MomentList({ moments, authorName, avatarUrl }: any) {
@@ -118,7 +125,7 @@ export default function MomentList({ moments, authorName, avatarUrl }: any) {
         <div className="min-w-0 flex-1 pr-2">
           {moment.location && (
             <span className="inline-flex items-center gap-1 md:gap-1.5 text-[9px] md:text-[11px] font-bold px-2 md:px-3 py-1 md:py-1.5 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 max-w-full truncate border border-indigo-500/10">
-              {/* 🌟 就是这里！shrink-0 已经乖乖放进 className 里面了 */}
+              {/* 🌟 Right here! shrink-0 now sits properly inside className */}
               <MapPin size={10} className="md:w-3 md:h-3 shrink-0" />
               <span className="truncate">{moment.location}</span>
             </span>
@@ -135,24 +142,24 @@ export default function MomentList({ moments, authorName, avatarUrl }: any) {
     <div className="w-[95%] md:w-[90%] max-w-6xl mx-auto py-6 md:py-10 mt-24 md:mt-28 relative z-10 flex-1 flex flex-col min-h-[85vh]">
 
       <div className="mb-8 md:mb-14 text-center relative">
-        <motion.h1 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-2 md:mb-4 tracking-tighter">生活动态</motion.h1>
+        <motion.h1 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-2 md:mb-4 tracking-tighter">Moments</motion.h1>
         <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400 font-medium italic opacity-80 flex items-center justify-center gap-1.5 md:gap-2">
-          <Sparkles size={12} className="md:w-3.5 md:h-3.5 text-indigo-500" /> “ 在代码之外捕捉瞬间的温度 ”
+          <Sparkles size={12} className="md:w-3.5 md:h-3.5 text-indigo-500" /> “ Catching the warmth of moments outside of code ”
         </p>
       </div>
 
       <div className="mb-10 md:mb-16 flex flex-col items-center gap-5 md:gap-8">
         <div className="relative w-full max-w-lg group px-2 md:px-0">
           <Search className="w-5 h-5 md:w-6 md:h-6 absolute left-6 md:left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors z-20 pointer-events-none" />
-          <input type="text" placeholder="搜寻被遗忘的记忆..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-white/40 dark:bg-slate-800/40 backdrop-blur-xl border border-white/40 dark:border-white/5 rounded-xl md:rounded-2xl px-5 md:px-6 py-3 md:py-4 pl-12 md:pl-14 text-sm md:text-base text-slate-800 dark:text-white shadow-lg md:shadow-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all font-medium relative z-10" />
+          <input type="text" placeholder="Search for forgotten memories..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-white/40 dark:bg-slate-800/40 backdrop-blur-xl border border-white/40 dark:border-white/5 rounded-xl md:rounded-2xl px-5 md:px-6 py-3 md:py-4 pl-12 md:pl-14 text-sm md:text-base text-slate-800 dark:text-white shadow-lg md:shadow-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all font-medium relative z-10" />
         </div>
 
         <div className="flex bg-white/50 dark:bg-slate-800/50 p-1 md:p-1.5 rounded-xl md:rounded-2xl border border-white/50 dark:border-white/10 shadow-sm relative z-10">
           <button onClick={() => setSortOrder('desc')} className={`flex items-center gap-1.5 md:gap-2 px-4 md:px-6 py-1.5 md:py-2 rounded-lg md:rounded-xl text-[10px] md:text-xs font-black transition-all duration-300 ${sortOrder === 'desc' ? 'bg-indigo-500 text-white shadow-md md:shadow-lg scale-105' : 'text-slate-500 hover:text-indigo-500'}`}>
-            <ArrowDownAZ size={12} className="md:w-3.5 md:h-3.5"/> 最新
+            <ArrowDownAZ size={12} className="md:w-3.5 md:h-3.5"/> Latest
           </button>
           <button onClick={() => setSortOrder('asc')} className={`flex items-center gap-1.5 md:gap-2 px-4 md:px-6 py-1.5 md:py-2 rounded-lg md:rounded-xl text-[10px] md:text-xs font-black transition-all duration-300 ${sortOrder === 'asc' ? 'bg-indigo-500 text-white shadow-md md:shadow-lg scale-105' : 'text-slate-500 hover:text-indigo-500'}`}>
-            <ArrowUpZA size={12} className="md:w-3.5 md:h-3.5"/> 最早
+            <ArrowUpZA size={12} className="md:w-3.5 md:h-3.5"/> Earliest
           </button>
         </div>
       </div>
@@ -178,8 +185,8 @@ export default function MomentList({ moments, authorName, avatarUrl }: any) {
                 <div className="absolute inset-0 bg-indigo-500/20 blur-2xl rounded-full animate-pulse"></div>
                 <Ghost size={32} className="md:w-12 md:h-12 text-indigo-500 relative z-10" strokeWidth={1.5} />
               </div>
-              <h2 className="text-xl md:text-3xl font-black text-slate-900 dark:text-white mb-2 md:mb-4 tracking-tight">{searchQuery ? "没找到相关记忆" : "朋友圈空空如也"}</h2>
-              <p className="text-slate-500 dark:text-slate-400 font-medium text-sm md:text-lg leading-relaxed px-2 md:px-4">{searchQuery ? `尝试精简你的搜索词，或者换个心情再次出发。` : `还没有记录下任何生活碎片呢。`}</p>
+              <h2 className="text-xl md:text-3xl font-black text-slate-900 dark:text-white mb-2 md:mb-4 tracking-tight">{searchQuery ? "No matching moments" : "The feed is empty"}</h2>
+              <p className="text-slate-500 dark:text-slate-400 font-medium text-sm md:text-lg leading-relaxed px-2 md:px-4">{searchQuery ? `Try a shorter search term, or come back in a different mood.` : `Not a single moment has been recorded yet.`}</p>
             </motion.div>
           </div>
         )}

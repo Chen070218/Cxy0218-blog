@@ -66,15 +66,15 @@ export default function CalculatorTool() {
       exit={{ opacity: 0, x: 20 }}
       className="flex flex-col gap-3"
     >
-      {/* 【显示屏扩容】：高度提升到 h-20，增加内边距 p-4 */}
+      {/* [Display sizing]: height raised to h-20, padding increased to p-4 */}
       <div className="bg-slate-100 dark:bg-slate-900 rounded-2xl p-4 flex flex-col items-end justify-center h-24 shadow-inner border border-slate-200 dark:border-slate-700">
-        {/* 公式字号放大到 text-sm */}
+        {/* Equation text size increased to text-sm */}
         <span className="text-sm text-slate-400 dark:text-slate-500 tracking-wider h-5 mb-1">{equation}</span>
-        {/* 主数字字号放大到 text-4xl */}
+        {/* Main number text size increased to text-4xl */}
         <span className="text-4xl font-black text-slate-800 dark:text-white truncate w-full text-right">{display}</span>
       </div>
 
-      {/* 键盘 */}
+      {/* Keypad */}
       <div className="grid grid-cols-4 gap-2 mt-1">
         {calcButtons.map((btn) => (
           <button

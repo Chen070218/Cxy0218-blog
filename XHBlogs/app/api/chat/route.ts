@@ -1,8 +1,8 @@
 // app/api/chat/route.ts
-// 桌宠「煤球」的对话接口：默认走 DeepSeek，也可以切到 Gemini。
-// 密钥不写在代码里，一律读环境变量：
-//   本地 → XHBlogs/.env.local（已被 .gitignore 忽略）
-//   线上 Vercel → Project → Settings → Environment Variables
+// Desktop pet chat endpoint: DeepSeek by default, Gemini as an alternative.
+// Keys are never written into the code; always read from environment variables:
+//   local → XHBlogs/.env.local (ignored by .gitignore)
+//   online on Vercel → Project → Settings → Environment Variables
 import { siteConfig } from '../../../siteConfig';
 
 export const runtime = 'edge';
@@ -12,7 +12,7 @@ type ChatMessage = { role: 'user' | 'assistant'; content: string };
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
 
-// 决定这次请求用哪个后端：请求体里的 provider 优先，其次看环境变量里配了哪个密钥
+// Choose the backend for this request: the provider in the request body wins, otherwise whichever key is configured
 function pickProvider(requested?: string): 'deepseek' | 'gemini' {
   const hasDeepSeek = !!process.env.DEEPSEEK_API_KEY;
   const hasGemini = !!(process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY || process.env.OPENAI_API_KEY);
@@ -46,10 +46,10 @@ async function askDeepSeek(message: string, history: ChatMessage[]) {
   });
 
   const data: any = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(`DeepSeek ${res.status}：${data?.error?.message || '未知错误'}`);
+  if (!res.ok) throw new Error(`DeepSeek ${res.status}: ${data?.error?.message || 'unknown error'}`);
 
   return {
-    reply: data?.choices?.[0]?.message?.content?.trim() || '本喵现在不想理你喵...',
+    reply: data?.choices?.[0]?.message?.content?.trim() || 'This fox does not feel like talking to you right now...',
     model: data?.model || cfg.modelId,
     provider: 'deepseek' as const,
   };
@@ -77,10 +77,10 @@ async function askGemini(message: string, history: ChatMessage[]) {
   );
 
   const data: any = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(`Gemini ${res.status}：${data?.error?.message || '未知错误'}`);
+  if (!res.ok) throw new Error(`Gemini ${res.status}: ${data?.error?.message || 'unknown error'}`);
 
   return {
-    reply: data?.candidates?.[0]?.content?.parts?.[0]?.text || '本喵现在不想理你喵...',
+    reply: data?.candidates?.[0]?.content?.parts?.[0]?.text || 'This fox does not feel like talking to you right now...',
     model: cfg.modelId,
     provider: 'gemini' as const,
   };
@@ -96,24 +96,24 @@ export async function POST(req: Request) {
           .map((h: any) => ({ role: h.role, content: h.content }))
       : [];
 
-    if (!message) return json({ error: '消息不能为空' }, 400);
+    if (!message) return json({ error: 'Message cannot be empty' }, 400);
 
     const provider = pickProvider(typeof body?.provider === 'string' ? body.provider : undefined);
     const result = provider === 'gemini' ? await askGemini(message, history) : await askDeepSeek(message, history);
     return json(result, 200);
   } catch (error: any) {
-    const msg = String(error?.message || '未知错误');
+    const msg = String(error?.message || 'unknown error');
     if (msg.startsWith('NO_KEY_')) {
       const name = msg.endsWith('GEMINI') ? 'GEMINI_API_KEY' : 'DEEPSEEK_API_KEY';
       return json(
         {
-          error: `还没有配置 ${name}`,
-          hint: '本地放到 XHBlogs/.env.local，线上放到 Vercel 的环境变量里，然后重启服务',
+          error: `${name} is not configured yet`,
+          hint: 'Put it in XHBlogs/.env.local locally, or in the Vercel environment variables online, then restart the server',
         },
         500
       );
     }
-    console.error('桌宠对话失败：', msg);
+    console.error('Desktop pet chat failed:', msg);
     return json({ error: msg }, 500);
   }
 }

@@ -12,7 +12,7 @@ import { withBasePath } from '../../sitePath';
 export default function PhotoWallClient() {
   const [albums,setAlbums]=useState(initialAlbums);
   const [loadNotice,setLoadNotice]=useState('');
-  async function refreshAlbums(){try{const saved=await readContent<Album>('albums'); const merged=[...saved,...initialAlbums.filter(a=>!saved.some(b=>b.id===a.id))];setAlbums(merged);setCurrentAlbum(current=>current?merged.find(a=>a.id===current.id)||null:null);}catch{setLoadNotice('无法读取本地相册，请检查浏览器设置。');}}
+  async function refreshAlbums(){try{const saved=await readContent<Album>('albums'); const merged=[...saved,...initialAlbums.filter(a=>!saved.some(b=>b.id===a.id))];setAlbums(merged);setCurrentAlbum(current=>current?merged.find(a=>a.id===current.id)||null:null);}catch{setLoadNotice('Could not read local albums. Check your browser settings.');}}
   useEffect(()=>{refreshAlbums();},[]);
   const [currentAlbum, setCurrentAlbum] = useState<Album | null>(null);
   const [selectedImage, setSelectedImage] = useState<{url: string, caption?: string} | null>(null);
@@ -51,6 +51,7 @@ export default function PhotoWallClient() {
     <div className="min-h-screen relative pb-32">
       <Navbar />
 
+      <main id="main-content">
       <PageTransition>
         <div className="w-full max-w-7xl mx-auto mt-28 px-4 sm:px-10 relative z-10">
 
@@ -59,8 +60,8 @@ export default function PhotoWallClient() {
             <div className="animate-fade-in-up">
               <div className="flex flex-col md:flex-row justify-between items-center mb-16 gap-6">
                 <div>
-                  <h1 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-widest mb-2 transition-colors duration-700">照片墙</h1>
-                  <p className="text-slate-600 dark:text-slate-400 font-medium tracking-wider transition-colors duration-700">随手存的图，按相册放着；点开可以放大</p>
+                  <h1 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-widest mb-2 transition-colors duration-700">Photo Wall</h1>
+                  <p className="text-slate-600 dark:text-slate-400 font-medium tracking-wider transition-colors duration-700">Pictures I saved on a whim, kept in albums; click one to enlarge it</p>
                 </div>
 
                 <div className="relative w-full md:w-80 group">
@@ -69,7 +70,7 @@ export default function PhotoWallClient() {
                   </svg>
                   <input
                     type="text"
-                    placeholder="搜索相册名或照片描述..."
+                    placeholder="Search album names or photo captions..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="w-full h-12 pl-12 pr-4 bg-white/40 dark:bg-slate-800/40 backdrop-blur-md border border-white/50 dark:border-white/10 rounded-full text-sm text-slate-800 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 shadow-sm transition-all duration-700"
@@ -83,7 +84,7 @@ export default function PhotoWallClient() {
                   <div className="mb-16">
                     <h3 className="text-xl font-bold text-slate-800 dark:text-slate-200 mb-6 flex items-center gap-2">
                       <span className="w-2 h-6 bg-indigo-500 rounded-full"></span>
-                      匹配的单张照片 ({matchedPhotos.length})
+                      Matching photos ({matchedPhotos.length})
                     </h3>
                     <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-6 space-y-6">
                       {matchedPhotos.map((photo, index) => (
@@ -106,7 +107,7 @@ export default function PhotoWallClient() {
                 {activeQuery && matchedAlbums.length > 0 && (
                   <h3 className="text-xl font-bold text-slate-800 dark:text-slate-200 mb-6 flex items-center gap-2">
                     <span className="w-2 h-6 bg-purple-500 rounded-full"></span>
-                    相关相册 ({matchedAlbums.length})
+                    Related albums ({matchedAlbums.length})
                   </h3>
                 )}
 
@@ -127,7 +128,7 @@ export default function PhotoWallClient() {
                         <div className="absolute inset-0 bg-white dark:bg-slate-200 rounded-[4px] shadow-2xl border-[6px] border-white dark:border-slate-200 overflow-hidden z-20 transform group-hover:-translate-y-2 group-hover:scale-105 transition-all duration-500 relative">
                           <SmartImage fill sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw" src={album.cover} alt={album.title} className="object-cover transition-transform duration-700 group-hover:scale-105" />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-5">
-                            <span className="text-white font-bold text-lg drop-shadow-md translate-y-2 group-hover:translate-y-0 transition-transform duration-500">{album.photos.length} 张照片</span>
+                            <span className="text-white font-bold text-lg drop-shadow-md translate-y-2 group-hover:translate-y-0 transition-transform duration-500">{album.photos.length} photos</span>
                             <span className="text-indigo-300 font-medium text-xs mt-1 drop-shadow-md translate-y-2 group-hover:translate-y-0 transition-transform duration-500 delay-75">Click to Open</span>
                           </div>
                         </div>
@@ -146,7 +147,7 @@ export default function PhotoWallClient() {
 
                 {activeQuery && matchedAlbums.length === 0 && matchedPhotos.length === 0 && (
                   <div className="text-center py-20 text-slate-500 font-medium">
-                    在索拉里斯的任何角落都没找到相关的记忆...
+                    Found no matching memories anywhere in Solaris...
                   </div>
                 )}
               </div>
@@ -165,7 +166,7 @@ export default function PhotoWallClient() {
                       <span className="bg-white/40 dark:bg-slate-800/50 backdrop-blur-md p-1.5 rounded-lg border border-white/50 dark:border-white/10 shadow-sm group-hover:shadow-md transition-all">
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
                       </span>
-                      返回画廊
+                      Back to gallery
                     </button>
                     <span className="w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-slate-700"></span>
                     <span className="text-xs font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">{currentAlbum.date}</span>
@@ -175,7 +176,7 @@ export default function PhotoWallClient() {
                 </div>
 
                 <div className="text-sm font-bold text-slate-500 dark:text-slate-400 bg-white/40 dark:bg-slate-800/40 backdrop-blur-md px-5 py-2.5 rounded-2xl border border-white/50 dark:border-white/10 shadow-sm">
-                  共 <span className="text-indigo-500 dark:text-indigo-400 text-lg">{currentAlbum.photos.length}</span> 瞬间
+                  Total <span className="text-indigo-500 dark:text-indigo-400 text-lg">{currentAlbum.photos.length}</span> moments
                 </div>
               </div>
 
@@ -187,7 +188,7 @@ export default function PhotoWallClient() {
                     className="break-inside-avoid relative group rounded-2xl overflow-hidden cursor-zoom-in shadow-lg bg-white/20 dark:bg-slate-800/20 border border-white/30 dark:border-white/10 transition-transform duration-500 hover:scale-[1.02] hover:shadow-2xl hover:shadow-indigo-500/20 animate-fade-in-up"
                     style={{ animationDelay: `${index * 50}ms` }}
                   >
-                    <SmartImage width={1200} height={900} sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" src={photo.url} alt={photo.caption || '照片'} className="w-full h-auto object-cover transform transition-transform duration-700 group-hover:scale-105" />
+                    <SmartImage width={1200} height={900} sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" src={photo.url} alt={photo.caption || 'Photo'} className="w-full h-auto object-cover transform transition-transform duration-700 group-hover:scale-105" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-5">
                       {photo.caption && (
                         <p className="text-white font-medium text-sm drop-shadow-md translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
@@ -203,6 +204,7 @@ export default function PhotoWallClient() {
 
         </div>
       </PageTransition>
+      </main>
 
       {selectedImage && (
         <div
@@ -215,7 +217,7 @@ export default function PhotoWallClient() {
 
           <img loading="lazy" decoding="async"
             src={withBasePath(selectedImage.url)}
-            alt={selectedImage.caption || '全屏照片'}
+            alt={selectedImage.caption || 'Photo, full screen'}
             className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           />

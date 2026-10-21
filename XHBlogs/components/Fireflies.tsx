@@ -14,7 +14,7 @@ interface Firefly {
   floatPath: string;
 }
 
-/** 萤火虫：夜里出现的装饰粒子（数量按性能档位缩放，只在合成层跑动画） */
+/** Fireflies: the decorative particles that come out at night (count scales with the performance profile, animation runs on the composited layer only) */
 export default function Fireflies() {
   const { scale, visible } = usePerfProfile();
   const [flies, setFlies] = useState<Firefly[]>([]);
@@ -40,7 +40,7 @@ export default function Fireflies() {
   return (
     <div className="fixed inset-0 w-full h-full pointer-events-none z-10 overflow-hidden mix-blend-screen">
       <style>{`
-        /* 只动 opacity / transform：这两样不触发重绘，交给 GPU 合成 */
+        /* Only opacity / transform animate: neither triggers a repaint, so the GPU composites them */
         @keyframes fireflyBreathe {
           0%, 100% { opacity: 0; transform: scale(0.4); }
           50% { opacity: 1; transform: scale(1.15); }
@@ -69,7 +69,7 @@ export default function Fireflies() {
               width: `${fly.size}px`,
               height: `${fly.size}px`,
               backgroundColor: 'rgba(200, 255, 200, 0.9)',
-              // 静态光晕：原来放在动画里改 box-shadow，每帧都要重绘
+              // static glow: box-shadow used to be animated here, which repainted every frame
               boxShadow: '0 0 8px 2px rgba(120, 255, 160, 0.55)',
               animation: `fireflyBreathe ${fly.breatheDuration}s ease-in-out infinite`,
               animationDelay: `${fly.breatheDelay}s`,

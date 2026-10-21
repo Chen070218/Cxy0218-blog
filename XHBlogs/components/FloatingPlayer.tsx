@@ -14,19 +14,19 @@ export default function FloatingPlayer() {
     setIsMounted(true);
   }, []);
 
-  // 这里只拦截还没有初始化的情况，不拦截首页
+  // Only bail out while it is not initialized yet; do not block the home page
   if (!isMounted || isLoading || !currentSong) return null;
 
-  // 【核心修复】：判断是否在首页。在首页时我们让它隐身，但不销毁它！
+  // [Core fix]: check whether we are on the home page. There it goes invisible, but is not destroyed!
   const isHidden = pathname === '/';
 
   return (
     <div className="fixed bottom-6 right-6 z-[9999]" style={{ pointerEvents: 'none' }}>
       <motion.div
         drag
-        dragMomentum={false} // 取消惯性
+        dragMomentum={false} // disable inertia
         style={{ touchAction: 'none' }}
-        // 【核心魔法】：使用 framer-motion 平滑控制它的隐身与显现，并且动态控制点击穿透
+        // [Core trick]: use framer-motion to smoothly control its hiding and showing, and toggle click-through dynamically
         animate={{
           opacity: isHidden ? 0 : 1,
           scale: isHidden ? 0.8 : 1,
@@ -37,23 +37,23 @@ export default function FloatingPlayer() {
         className="flex items-center gap-3 bg-white/70 dark:bg-slate-800/80 backdrop-blur-xl border border-white/40 dark:border-white/10 shadow-2xl p-2 pr-4 rounded-full transition-colors duration-700 cursor-grab active:cursor-grabbing"
       >
 
-        {/* 旋转的光碟封面 */}
+        {/* Spinning disc cover */}
         <div
           className="w-10 h-10 rounded-full border border-white/50 shadow-sm flex-shrink-0 overflow-hidden relative animate-[spin_6s_linear_infinite] pointer-events-none"
           style={{ animationPlayState: isPlaying ? 'running' : 'paused' }}
         >
-          <img decoding="async" src={currentSong.cover} alt="cover" className="w-full h-full object-cover" />
+          <img decoding="async" src={currentSong.cover} alt="Album cover" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-black/10"></div>
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-white/80 backdrop-blur-sm rounded-full shadow-inner"></div>
         </div>
 
-        {/* 歌曲信息与滚动歌词 */}
+        {/* Song info and scrolling lyrics */}
         <div className="flex flex-col w-32 max-w-[120px] overflow-hidden pointer-events-none">
           <span className="text-sm font-bold text-slate-900 dark:text-white truncate transition-colors duration-700">{currentSong.title}</span>
           <span className="text-[10px] text-slate-500 dark:text-slate-400 truncate transition-colors duration-700">{currentLyric}</span>
         </div>
 
-        {/* 控制按钮 */}
+        {/* Control buttons */}
         <div className="flex items-center gap-2 ml-1">
           <button
             onClick={(e) => { e.stopPropagation(); togglePlay(); }}

@@ -7,10 +7,11 @@ import Navbar from "../../components/Navbar";
 import PageTransition from "../../components/PageTransition";
 import SmartImage from "../../components/SmartImage";
 import { siteConfig } from "../../siteConfig";
+import { formatDate } from "../../components/formatDate";
 
 export const metadata: Metadata = {
-  title: "文章 | " + siteConfig.title,
-  description: "全部文章，按时间倒序排列。",
+  title: "Posts | " + siteConfig.title,
+  description: "All posts, in reverse chronological order.",
 };
 
 type PostItem = {
@@ -31,7 +32,7 @@ function readPosts(): PostItem[] {
     .filter((file) => file.endsWith(".md"))
     .map((file) => {
       const { data, content } = matter(fs.readFileSync(path.join(dir, file), "utf8"));
-      const words = content.replace(/\s/g, "").length;
+      const words = content.trim().split(/\s+/).length;
       return {
         slug: file.replace(/\.md$/, ""),
         title: String(data.title || file),
@@ -39,7 +40,7 @@ function readPosts(): PostItem[] {
         description: String(data.description || ""),
         tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
         cover: String(data.cover || siteConfig.defaultPostCover),
-        minutes: Math.max(1, Math.round(words / 400)),
+        minutes: Math.max(1, Math.round(words / 220)),
       };
     })
     .sort((a, b) => b.date.localeCompare(a.date));
@@ -52,12 +53,12 @@ export default function PostsIndexPage() {
     <div className="min-h-screen relative pb-20">
       <Navbar />
       <PageTransition>
-        <main className="w-[92%] md:w-[90%] max-w-5xl mx-auto mt-24 md:mt-28">
+        <main id="main-content" className="w-[92%] md:w-[90%] max-w-5xl mx-auto mt-24 md:mt-28">
           <header className="mb-8 md:mb-12">
             <p className="text-xs font-black tracking-[0.3em] text-indigo-600 dark:text-indigo-300 uppercase">All Posts</p>
-            <h1 className="mt-2 text-3xl md:text-5xl font-black text-slate-900 dark:text-white">文章</h1>
+            <h1 className="mt-2 text-3xl md:text-5xl font-black text-slate-900 dark:text-white">Posts</h1>
             <p className="mt-3 text-sm md:text-base text-slate-700 dark:text-slate-300">
-              共 {posts.length} 篇，按时间倒序。文章用 Markdown 写在仓库的 posts/ 目录里。
+              {posts.length} posts, newest first. They are written in Markdown in the repo's posts/ directory.
             </p>
           </header>
 
@@ -73,9 +74,9 @@ export default function PostsIndexPage() {
                 </div>
                 <div className="p-5 md:p-6 flex flex-col justify-center min-w-0">
                   <div className="flex flex-wrap items-center gap-2 text-[11px] font-bold text-slate-500 dark:text-slate-400">
-                    <time dateTime={post.date}>{post.date}</time>
+                    <time dateTime={post.date}>{formatDate(post.date, true)}</time>
                     <span aria-hidden>·</span>
-                    <span>约 {post.minutes} 分钟</span>
+                    <span>about {post.minutes} min read</span>
                   </div>
                   <h2 className="mt-2 text-xl font-black text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors">
                     {post.title}
@@ -95,7 +96,7 @@ export default function PostsIndexPage() {
             ))}
 
             {posts.length === 0 && (
-              <p className="text-slate-600 dark:text-slate-300">posts/ 目录里还没有文章。</p>
+              <p className="text-slate-600 dark:text-slate-300">There are no posts in the posts/ directory yet.</p>
             )}
           </div>
         </main>

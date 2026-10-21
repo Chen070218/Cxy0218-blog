@@ -5,11 +5,11 @@ import CreativeWorkshopClient from "./CreativeWorkshopClient";
 import { siteConfig } from "../../siteConfig";
 
 export const metadata = {
-  title: "创意工坊 | " + siteConfig.title,
-  description: "3D 模型、炼金工坊与创意展示。",
+  title: "Creative Workshop | " + siteConfig.title,
+  description: "3D models, an alchemy lab and a few creative experiments.",
 };
 
-/** 读取一个内容目录（posts / chatters / moments），整理成工坊需要的形状 */
+/** Read a content directory (posts / chatters / moments) into the shape the workshop needs */
 function readCollection(dirName: string) {
   const dir = path.join(process.cwd(), dirName);
   if (!fs.existsSync(dir)) return [];

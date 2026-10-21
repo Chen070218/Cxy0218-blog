@@ -2,10 +2,10 @@
 
 import React from "react";
 
-/** 心月狐桌宠的八种状态（对应设定稿里的待机/走动/开心/生气/睡觉/好奇/趴着，另加思考态） */
+/** The eight states of the Xinyuehu desktop pet (idle/walk/happy/angry/sleep/curious/lie from the design sheet, plus a thinking state) */
 export type PetState = "idle" | "walk" | "happy" | "angry" | "sleep" | "curious" | "lie" | "think";
 
-// 取自设定稿「色彩参考」：冷色调、银白发、红黑白配色
+// From the design sheet's color reference: cool tones, silver-white hair, red/black/white palette
 const C = {
   hair: "#f4f1ee",
   hairShade: "#d9d3ce",
@@ -25,16 +25,16 @@ const C = {
 };
 
 /**
- * 桌宠形象：Q 版「心月狐」（原创 SVG，无外部图片）
- * 状态：idle 待机 / walk 走动 / happy 开心 / angry 生气 / sleep 睡觉 / curious 好奇 / lie 趴着 / think 思考
- * 说明：没有图像生成工具，所以这里用矢量画，不依赖 PNG 序列图；支持 prefers-reduced-motion 降级。
+ * Pet art: a chibi "Xinyuehu" (original SVG, no external images)
+ * States: idle / walk / happy / angry / sleep / curious / lie / think
+ * Note: no image-generation tool was available, so this is drawn as vectors and does not depend on PNG frame sequences; prefers-reduced-motion is supported.
  */
 export default function MoonFoxSvg({ state = "idle" }: { state?: PetState }) {
   const closedEyes = state === "sleep" || state === "happy" || state === "lie";
   const halfEyes = state === "think";
 
   return (
-    <svg viewBox="0 0 120 120" className={`mfx mfx--${state} w-full h-full overflow-visible`} role="img" aria-label="心月狐（Q 版桌宠）">
+    <svg viewBox="0 0 120 120" className={`mfx mfx--${state} w-full h-full overflow-visible`} role="img" aria-label="Xinyuehu (chibi desktop pet)">
       <defs>
         <radialGradient id="mfx-glow" cx="50%" cy="50%">
           <stop offset="0%" stopColor="#cfd9ff" stopOpacity="0.85" />
@@ -54,19 +54,19 @@ export default function MoonFoxSvg({ state = "idle" }: { state?: PetState }) {
       <circle cx="60" cy="62" r="46" fill="url(#mfx-glow)" opacity={state === "think" ? 0.9 : 0.5} />
 
       <g className="mfx-body">
-        {/* 大尾巴 */}
+        {/* Big tail */}
         <g className="mfx-tail">
           <path d="M78 88c20 6 34-4 33-20-1-13-14-20-25-15 12 4 18 12 16 20-2 10-12 15-24 15z" fill="url(#mfx-tail)" />
           <path d="M88 53c9 2 15 10 13 19 5-11-1-19-13-19z" fill={C.hairDeep} opacity="0.55" />
         </g>
 
-        {/* 腿与鞋 */}
+        {/* Legs and shoes */}
         <ellipse cx="50" cy="104" rx="7" ry="4.6" fill={C.white} />
         <ellipse cx="70" cy="104" rx="7" ry="4.6" fill={C.white} />
         <ellipse cx="50" cy="107" rx="7.4" ry="3.2" fill={C.black} />
         <ellipse cx="70" cy="107" rx="7.4" ry="3.2" fill={C.black} />
 
-        {/* 身体（红白黑和风） */}
+        {/* Body (red/white/black Japanese style) */}
         <path d="M60 68c14 0 21 9 22 21 0 8-10 12-22 12s-22-4-22-12c1-12 8-21 22-21z" fill="url(#mfx-kimono)" />
         <path d="M40 84c3 10 3 15 2 19-6-3-9-8-9-14 0-3 3-5 7-5z" fill={C.red} />
         <path d="M80 84c-3 10-3 15-2 19 6-3 9-8 9-14 0-3-3-5-7-5z" fill={C.red} />
@@ -75,21 +75,21 @@ export default function MoonFoxSvg({ state = "idle" }: { state?: PetState }) {
         <ellipse cx="60" cy="90" rx="15" ry="7" fill={C.black} opacity="0.9" />
         <path d="M52 88h16v3H52z" fill={C.gold} opacity="0.8" />
 
-        {/* 手 */}
+        {/* Hands */}
         <ellipse cx="40" cy="86" rx="5" ry="4" fill={C.white} />
         <ellipse cx="80" cy="86" rx="5" ry="4" fill={C.white} />
 
-        {/* 头发（后层）+ 头 */}
+        {/* Hair (back layer) + head */}
         <ellipse cx="60" cy="60" rx="33" ry="31" fill={C.hair} />
         <circle cx="60" cy="54" r="29" fill={C.skin} />
         <path d="M31 54c0-16 13-27 29-27s29 11 29 27c0 4-1 7-2 10-4-12-14-19-27-19s-23 7-27 19c-1-3-2-6-2-10z" fill={C.hair} />
         <path d="M33 52c4-11 14-17 27-17s23 6 27 17c-6-7-16-10-27-10s-21 3-27 10z" fill={C.hairShade} opacity="0.5" />
-        {/* 两侧长发 */}
+        {/* Long hair on both sides */}
         <path d="M32 58c-2 14-2 26 2 36 3-2 6-3 8-3-3-10-4-21-3-33z" fill={C.hair} />
         <path d="M88 58c2 14 2 26-2 36-3-2-6-3-8-3 3-10 4-21 3-33z" fill={C.hair} />
         <path d="M34 74c0 8 1 14 3 18-2 0-4 1-5 2-3-6-4-13-3-20z" fill={C.hairShade} opacity="0.45" />
 
-        {/* 狐耳（白毛 + 黑尖） */}
+        {/* Fox ears (white fur + black tips) */}
         <g className="mfx-ear mfx-ear-l">
           <path d="M38 32 30 6l26 16z" fill={C.hair} stroke={C.hairShade} strokeWidth="1.2" strokeLinejoin="round" />
           <path d="M38 32 30 6l10 10z" fill={C.earTip} />
@@ -100,17 +100,17 @@ export default function MoonFoxSvg({ state = "idle" }: { state?: PetState }) {
           <path d="M82 32 90 6l-10 10z" fill={C.earTip} />
           <path d="M80 29 84 14l-14 8z" fill={C.blush} opacity="0.55" />
         </g>
-        {/* 耳饰：小红花 */}
+        {/* Ear ornament: little red flower */}
         <g>
           <circle cx="36" cy="30" r="2.6" fill={C.red} />
           <circle cx="32.6" cy="27.6" r="2.2" fill={C.red} opacity="0.9" />
           <circle cx="39.4" cy="27.4" r="2.2" fill={C.red} opacity="0.9" />
           <circle cx="36" cy="30" r="1" fill={C.gold} />
         </g>
-        {/* 额前印记 */}
+        {/* Forehead mark */}
         <path d="M60 30a7 7 0 1 0 0 14 5.2 5.2 0 1 1 0-14z" fill={C.gold} opacity="0.85" />
 
-        {/* 眼睛 */}
+        {/* Eyes */}
         <g className="mfx-eyes">
           {closedEyes ? (
             <g stroke={C.lash} strokeWidth="2.4" strokeLinecap="round" fill="none">
@@ -135,7 +135,7 @@ export default function MoonFoxSvg({ state = "idle" }: { state?: PetState }) {
           )}
         </g>
 
-        {/* 眉毛（生气时压低） */}
+        {/* Brows (lowered when angry) */}
         {state === "angry" && (
           <g stroke={C.lash} strokeWidth="2" strokeLinecap="round">
             <path d="M43 48l11 3" />
@@ -143,13 +143,13 @@ export default function MoonFoxSvg({ state = "idle" }: { state?: PetState }) {
           </g>
         )}
 
-        {/* 腮红 */}
+        {/* Blush */}
         <g fill={C.blush} opacity={state === "happy" ? 0.7 : 0.42}>
           <ellipse cx="38" cy="64" rx="6" ry="3.6" />
           <ellipse cx="82" cy="64" rx="6" ry="3.6" />
         </g>
 
-        {/* 嘴 */}
+        {/* Mouth */}
         {state === "happy" ? (
           <path d="M56 68q4 5 8 0q-4 3-8 0z" fill={C.lash} />
         ) : state === "angry" ? (
@@ -159,7 +159,7 @@ export default function MoonFoxSvg({ state = "idle" }: { state?: PetState }) {
         )}
       </g>
 
-      {/* 睡觉：Zzz */}
+      {/* Sleeping: Zzz */}
       {state === "sleep" && (
         <g className="mfx-zzz" fill={C.hairDeep} fontStyle="italic" fontWeight="900">
           <text x="86" y="34" fontSize="11">Z</text>
@@ -168,7 +168,7 @@ export default function MoonFoxSvg({ state = "idle" }: { state?: PetState }) {
         </g>
       )}
 
-      {/* 好奇：问号 */}
+      {/* Curious: question mark */}
       {state === "curious" && (
         <g className="mfx-mark">
           <circle cx="94" cy="26" r="11" fill={C.white} opacity="0.9" />
@@ -176,7 +176,7 @@ export default function MoonFoxSvg({ state = "idle" }: { state?: PetState }) {
         </g>
       )}
 
-      {/* 生气：井字怒气符号 */}
+      {/* Angry: anger mark */}
       {state === "angry" && (
         <g className="mfx-mark" stroke={C.red} strokeWidth="2.2" strokeLinecap="round">
           <path d="M88 22v12" />
@@ -185,7 +185,7 @@ export default function MoonFoxSvg({ state = "idle" }: { state?: PetState }) {
         </g>
       )}
 
-      {/* 开心：飘出的爱心 */}
+      {/* Happy: floating hearts */}
       {state === "happy" && (
         <g className="mfx-hearts" fill={C.blush}>
           <path className="mfx-heart mfx-heart-1" d="M92 30c1.6-3 6-2.4 6 1 0 2.4-3 4.6-6 7-3-2.4-6-4.6-6-7 0-3.4 4.4-4 6-1z" />
@@ -193,7 +193,7 @@ export default function MoonFoxSvg({ state = "idle" }: { state?: PetState }) {
         </g>
       )}
 
-      {/* 思考：月环 */}
+      {/* Thinking: moon halo */}
       {state === "think" && (
         <g className="mfx-halo">
           <circle cx="60" cy="54" r="38" fill="none" stroke={C.gold} strokeWidth="1.6" strokeDasharray="7 9" opacity="0.85" />
