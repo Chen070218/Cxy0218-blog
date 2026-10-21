@@ -164,7 +164,7 @@ fs.writeFileSync(
     '',
     '[Technical information]',
     '- This is the Next.js 16 production build (standalone mode), built from the same code as the live site',
-    '- Live site: https://chen070218.github.io/Cxy0218-blog/',
+    '- Live site: https://cxy0218-blog.pages.dev/ (mirror: https://chen070218.github.io/Cxy0218-blog/)',
     '- Source repository: https://github.com/Chen070218/Cxy0218-blog',
     '- To change the port: edit PORT in start-site.cmd',
     '',

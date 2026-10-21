@@ -122,7 +122,7 @@ export default function BuildLogPage() {
             <li><strong className="text-slate-900 dark:text-white">Responsive layout.</strong> Tested at phone, tablet and desktop widths; the navigation, timetable, check-in calendar and photo wall all have dedicated small-screen layouts.</li>
             <li><strong className="text-slate-900 dark:text-white">At least one interactive element.</strong> The site goes well past one: a live clock, a pomodoro timer, a check-in tracker with calendar heat-map, an editable timetable, search and filters, a photo lightbox and a desktop pet with a state machine.</li>
             <li><strong className="text-slate-900 dark:text-white">Live at a real address.</strong> <a className="text-indigo-600 underline dark:text-indigo-400" href="https://cxy0218-blog.pages.dev/">cxy0218-blog.pages.dev</a>, with a GitHub Pages mirror.</li>
-            <li><strong className="text-slate-900 dark:text-white">Git history showing the work develop.</strong> 89 commits on <code className="rounded bg-slate-200/70 px-1 dark:bg-white/10">main</code> between April and October, plus this rewrite.</li>
+            <li><strong className="text-slate-900 dark:text-white">Git history showing the work develop.</strong> 97 commits on <code className="rounded bg-slate-200/70 px-1 dark:bg-white/10">main</code> between April and October, including this rewrite.</li>
             <li><strong className="text-slate-900 dark:text-white">No server-side programming or database required.</strong> The site is a static export and all user data stays in the browser.</li>
           </ul>
         </section>
