@@ -56,6 +56,22 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             `
           }}
         />
+        {/* Apply the saved theme before the first paint: the content no longer waits for
+            hydration, so without this the page would flash light before the dark theme loads. */}
+        <script
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                if (localStorage.getItem('blog-theme') === 'light') {
+                  document.documentElement.classList.remove('dark');
+                } else {
+                  document.documentElement.classList.add('dark');
+                }
+              } catch (e) {}
+            `
+          }}
+        />
       </head>
 
       <body className="w-screen overflow-x-hidden min-h-full flex flex-col relative transition-colors duration-1000 bg-slate-50 dark:bg-slate-950 font-sans">

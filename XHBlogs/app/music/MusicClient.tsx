@@ -120,7 +120,7 @@ export default function MusicClient() {
         <Navbar />
         <main id="main-content" className="flex flex-1 flex-col items-center justify-center gap-3 text-center px-6 mt-24">
           <span className="text-6xl">🎧</span>
-          <h1 className="text-2xl md:text-3xl font-black tracking-widest text-slate-800 dark:text-white">Music player</h1>
+          <h2 className="text-2xl md:text-3xl font-black tracking-widest text-slate-800 dark:text-white">Music player</h2>
           <p className="text-sm text-slate-500 dark:text-slate-400 max-w-md leading-relaxed">
             This deployment is a pure static export with no server side to proxy the NetEase Cloud Music API, so the playlist cannot load here.
             The player works normally when you run the site locally or deploy the Cloudflare version.
@@ -158,7 +158,7 @@ export default function MusicClient() {
       <PageTransition>
         <div className="w-full max-w-7xl mx-auto mt-24 md:mt-28 px-4 sm:px-6 md:px-10 relative z-10">
           <div className="animate-fade-in-up mb-6 md:mb-10 text-center md:text-left">
-            <h1 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-widest mb-1 md:mb-2 transition-colors duration-700">Cloud Melodies</h1>
+            <h2 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-widest mb-1 md:mb-2 transition-colors duration-700">Cloud Melodies</h2>
             <p className="text-xs md:text-base text-slate-600 dark:text-slate-400 font-medium tracking-wider transition-colors duration-700">Finding resonance between the lines of code</p>
           </div>
 
@@ -179,7 +179,7 @@ export default function MusicClient() {
                    </motion.div>
                 </div>
                 <div className="w-full text-center px-2 md:px-4 mb-2 md:mb-6">
-                  <h1 className="text-lg md:text-xl lg:text-2xl font-black text-slate-900 dark:text-white truncate drop-shadow-sm tracking-tight">{currentSong.title || currentSong.name}</h1>
+                  <h3 className="text-lg md:text-xl lg:text-2xl font-black text-slate-900 dark:text-white truncate drop-shadow-sm tracking-tight">{currentSong.title || currentSong.name}</h3>
                   <h2 className="text-xs md:text-sm font-bold text-slate-500 dark:text-slate-400 truncate mt-1 md:mt-2 tracking-widest">{currentSong.artist || currentSong.author}</h2>
                 </div>
               </div>

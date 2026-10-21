@@ -43,11 +43,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('blog-theme', newDark ? 'dark' : 'light');
   };
 
-  // Hide the content until the client has mounted, to avoid a flash of the wrong theme
-  if (!mounted) {
-    return <div className="invisible">{children}</div>;
-  }
-
+  // Content is rendered from the server HTML and must stay visible: hiding it until
+  // hydration is what caused the blank first paint on slow phones. The theme class is
+  // applied by the inline script in app/layout.tsx before the first paint instead.
   return (
     <ThemeContext.Provider value={{ isDark, toggleTheme }}>
       {children}
