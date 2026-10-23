@@ -77,6 +77,32 @@ export default function Navbar() {
   const mobileTriggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const closeTimerRef = useRef<number | null>(null);
+
+  const clearCloseTimer = () => {
+    if (closeTimerRef.current !== null) {
+      window.clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+  };
+
+  // Opening a menu cancels any pending close, so moving the pointer between
+  // items feels immediate instead of fighting a timeout.
+  const openDropdown = (label: string) => {
+    clearCloseTimer();
+    setOpenMenu(label);
+  };
+
+  // Small grace period when leaving: enough to cross the gap into the panel,
+  // short enough that the menu does not linger.
+  const scheduleClose = (label: string) => {
+    clearCloseTimer();
+    closeTimerRef.current = window.setTimeout(() => {
+      setOpenMenu((current) => (current === label ? null : current));
+    }, 140);
+  };
+
+  useEffect(() => () => clearCloseTimer(), []);
 
   // Any navigation closes both menus.
   useEffect(() => {
@@ -191,11 +217,14 @@ export default function Navbar() {
                   <li
                     key={item.label}
                     className="relative"
-                    onMouseEnter={() => setOpenMenu(item.label)}
+                    onPointerEnter={(event) => {
+                      // Open on hover for mice and pens; touch devices have no hover, they tap.
+                      if (event.pointerType !== "touch") openDropdown(item.label);
+                    }}
                     onMouseLeave={() => {
                       const containsFocus =
                         desktopNavRef.current && desktopNavRef.current.contains(document.activeElement);
-                      if (!containsFocus) setOpenMenu(null);
+                      if (!containsFocus) scheduleClose(item.label);
                     }}
                     onBlur={(event) => {
                       if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
@@ -208,7 +237,9 @@ export default function Navbar() {
                       aria-expanded={expanded}
                       aria-haspopup="true"
                       aria-controls={panelId}
-                      onClick={() => setOpenMenu(expanded ? null : item.label)}
+                      // A click opens the menu instead of toggling it: with hover already
+                      // opening it, a toggle would slam it shut just as the user clicks.
+                      onClick={() => openDropdown(item.label)}
                       className={`flex items-center gap-1 rounded-full px-3 py-2 text-sm font-bold transition-colors ${
                         active || expanded
                           ? "text-indigo-600 dark:text-indigo-400"
@@ -227,6 +258,10 @@ export default function Navbar() {
                         <path d="M5 7l5 5 5-5" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>
                     </button>
+
+                    {/* Invisible bridge over the gap so the pointer can travel from the
+                        label to the panel without the menu closing on the way. */}
+                    <span aria-hidden="true" className="absolute inset-x-0 top-full h-2" />
 
                     <div
                       id={panelId}
