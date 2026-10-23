@@ -4,12 +4,15 @@ import { withBasePath } from './sitePath';
 
 export const siteConfig = {
   // 1. Site title and author info
-  title: "cxy0218",
+  title: "Chen Xiangyang",
   faviconUrl: withBasePath("/characters/xinyuehu-square.webp"),
-  authorName: "cxy0218",
+  authorName: "Chen Xiangyang",
+  handle: "cxy0218",
+  role: "Computer Science, 2025 intake",
+  avatarAlt: "Portrait of Chen Xiangyang",
   bio: "Computer Science, 2025 intake, Hainan Bielefeld University of Applied Sciences. I'm studying programming, algorithms and data structures, operating systems, plus German and English.",
 
-  navTitle: "cxy0218",
+  navTitle: "Chen Xiangyang",
 
   // 👇 [New] The suffix/separator in the middle of the navbar (empty means none)
   navSuffix: "",
@@ -17,7 +20,8 @@ export const siteConfig = {
   navAfter: "",
 
   // 2. Avatar (a remote URL, or drop the image into the public folder and use "/me.jpg")
-  avatarUrl: withBasePath("/characters/xinyuehu-square.webp"),
+  // The avatar is the author's photo; the fox below is the site mascot / desktop pet
+  avatarUrl: withBasePath("/avatar/me.webp"),
 
   // 3. Site background (pick one)
   // For a plain image background, write the paths in bgImages below and set useGradient to false
@@ -72,7 +76,7 @@ export const siteConfig = {
     maxOutputTokens: 150,
     temperature: 0.85,
   },
-  friendLinkApplyFormat: "Name: cxy0218\nBio: Programming, German, and a desktop fox called Xinyuehu\nLink: https://cxy0218-blog.pages.dev/\nAvatar: /characters/xinyuehu-square.webp",
+  friendLinkApplyFormat: "Name: Chen Xiangyang (cxy0218)\nBio: Programming, German, and a desktop fox called Xinyuehu\nLink: https://cxy0218-blog.pages.dev/\nAvatar: /avatar/me.webp",
   // AI backend for the Xinyuehu desktop pet: deepseek (default) or gemini
   chatProvider: "deepseek",
   deepseekConfig: {

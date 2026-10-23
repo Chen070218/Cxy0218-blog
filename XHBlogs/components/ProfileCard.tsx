@@ -21,7 +21,7 @@ export default function ProfileCard({ postCount, momentCount, photoCount }: { po
       <div className="flex items-start justify-between relative z-10">
         <div className="flex items-center gap-4 md:gap-6 w-full">
           <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-xl md:rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-500 p-1 shadow-lg flex-shrink-0 transition-transform duration-500 group-hover:rotate-3">
-            <img decoding="async" src={siteConfig.avatarUrl} alt="avatar" className="w-full h-full rounded-lg md:rounded-xl object-cover bg-white" />
+            <img decoding="async" src={siteConfig.avatarUrl} alt={siteConfig.avatarAlt} className="w-full h-full rounded-lg md:rounded-xl object-cover bg-white" />
           </div>
           <div className="flex-1 min-w-0">
             {/* 🌟 Key fixes:
@@ -31,6 +31,9 @@ export default function ProfileCard({ postCount, momentCount, photoCount }: { po
             <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-1 md:mb-2 pb-1 leading-snug tracking-wider transition-colors duration-700 truncate">
               {siteConfig.authorName}
             </h1>
+            <p className="mb-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.16em] text-indigo-600 transition-colors duration-700 dark:text-indigo-400">
+              {siteConfig.handle} · CS 2025
+            </p>
             <p className="text-xs sm:text-sm md:text-base text-slate-700 dark:text-slate-300 font-medium leading-relaxed max-w-md transition-colors duration-700 line-clamp-2 md:line-clamp-none">
               {siteConfig.bio}
             </p>

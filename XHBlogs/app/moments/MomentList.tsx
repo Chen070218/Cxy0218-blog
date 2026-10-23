@@ -23,7 +23,7 @@ function timeAgo(dateStr: string) {
   return formatDate(dateStr);
 }
 
-export default function MomentList({ moments, authorName, avatarUrl }: any) {
+export default function MomentList({ moments, authorName, avatarUrl, avatarAlt }: any) {
   const [searchQuery, setSearchQuery] = useState('');
   const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
   const [lightbox, setLightbox] = useState<{ images: string[], index: number } | null>(null);
@@ -109,7 +109,7 @@ export default function MomentList({ moments, authorName, avatarUrl }: any) {
     >
       <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-8 pb-4 md:pb-6 border-b border-slate-200/50 dark:border-slate-700/50 relative">
         <div className="w-10 h-10 md:w-14 md:h-14 shrink-0 rounded-xl md:rounded-2xl overflow-hidden shadow-sm md:shadow-md border-2 border-white dark:border-slate-700">
-          <img loading="lazy" decoding="async" src={withBasePath(avatarUrl)} alt="avatar" className="w-full h-full object-cover" />
+          <img loading="lazy" decoding="async" src={withBasePath(avatarUrl)} alt={avatarAlt} className="w-full h-full object-cover" />
         </div>
         <div className="flex flex-col">
           <h2 className="text-base md:text-lg font-black text-[#576b95] dark:text-[#7f99cc] tracking-wide">{authorName}</h2>

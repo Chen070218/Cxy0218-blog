@@ -134,7 +134,7 @@ export default function AboutClient({
 
       <div className="px-5 sm:px-8 md:px-16 pb-10 md:pb-16 relative">
         <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-white dark:border-slate-800 shadow-2xl overflow-hidden -mt-12 md:-mt-16 relative z-20 bg-white">
-          <SmartImage fill sizes="128px" src={siteConfig.avatarUrl} alt="avatar" className="object-cover" />
+          <SmartImage fill sizes="128px" src={siteConfig.avatarUrl} alt={siteConfig.avatarAlt} className="object-cover" />
         </div>
 
         {/* 🌟 main fix: tidy layout on mobile */}

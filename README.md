@@ -1,4 +1,4 @@
-# cxy0218 — Personal Site & Study Workspace
+# Chen Xiangyang (cxy0218) — Personal Site & Study Workspace
 
 My web-course final project and the site I actually use every day: a blog, a photo wall, a weekly
 timetable, a study-link library, a time-tracking board, a Pomodoro timer and a small desktop pet.

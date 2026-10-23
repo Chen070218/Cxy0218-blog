@@ -182,11 +182,13 @@ export default function Navbar() {
         </a>
 
         <div className="mx-auto flex h-16 w-[94%] max-w-6xl items-center justify-between gap-4">
-          <Link
-            href="/"
-            className="text-xl font-black tracking-tighter text-slate-800 transition-colors duration-300 hover:text-indigo-600 dark:text-white dark:hover:text-indigo-400"
-          >
-            {siteConfig.navTitle || siteConfig.authorName}
+          <Link href="/" className="group flex flex-col leading-none">
+            <span className="text-lg font-black tracking-tight text-slate-800 transition-colors duration-300 group-hover:text-indigo-600 sm:text-xl dark:text-white dark:group-hover:text-indigo-400">
+              {siteConfig.authorName}
+            </span>
+            <span className="mt-1 text-[9px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400 sm:text-[10px]">
+              {siteConfig.handle} · CS 2025
+            </span>
           </Link>
 
           <nav ref={desktopNavRef} aria-label="Primary" className="hidden md:block">
@@ -330,8 +332,13 @@ export default function Navbar() {
             className="absolute right-0 top-0 flex h-full w-[86%] max-w-sm flex-col overflow-y-auto bg-white p-6 shadow-2xl dark:bg-slate-900"
           >
             <div className="flex items-center justify-between">
-              <span className="text-sm font-black tracking-tight text-slate-900 dark:text-white">
-                {siteConfig.navTitle || siteConfig.authorName}
+              <span className="flex flex-col leading-none">
+                <span className="text-base font-black tracking-tight text-slate-900 dark:text-white">
+                  {siteConfig.authorName}
+                </span>
+                <span className="mt-1 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400">
+                  {siteConfig.handle} · CS 2025
+                </span>
               </span>
               <button
                 ref={closeButtonRef}

@@ -55,6 +55,7 @@ export default function MomentsPage() {
             moments={allMoments}
             authorName={siteConfig.authorName}
             avatarUrl={siteConfig.avatarUrl}
+            avatarAlt={siteConfig.avatarAlt}
           />
         </main>
       </PageTransition>

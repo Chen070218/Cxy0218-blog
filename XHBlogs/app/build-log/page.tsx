@@ -1,8 +1,9 @@
 import Navbar from '../../components/Navbar';
 import Link from 'next/link';
+import { siteConfig } from '../../siteConfig';
 
 export const metadata = {
-  title: 'Build Log | cxy0218',
+  title: 'Build Log | ' + siteConfig.title,
   description:
     'How this site was built: the decisions behind it, the process week by week, and what I checked before calling it finished.',
 };
