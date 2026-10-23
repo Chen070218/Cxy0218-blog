@@ -19,7 +19,7 @@ const pages = [
   { route: '/resources', name: 'Resources', purpose: 'Study links I keep coming back to.', interactive: 'Category filters, add your own' },
   { route: '/photowall', name: 'Photo Wall', purpose: 'Albums of screenshots and photos, with captions.', interactive: 'Lightbox with keyboard navigation' },
   { route: '/moments', name: 'Moments', purpose: 'Short diary entries with a location and images.', interactive: 'Image lightbox, comments' },
-  { route: '/music', name: 'Music', purpose: 'What I listen to while coding.', interactive: 'Music player and lyrics' },
+  { route: '/music', name: 'Music', purpose: 'What I listen to while coding.', interactive: 'Music player and previews' },
   { route: '/checkin', name: 'Check-in', purpose: 'Time-block tracking with a monthly log.', interactive: 'Timer, calendar heat-map, export/import' },
   { route: '/tree', name: 'Creative Workshop', purpose: 'Small 3D and canvas experiments.', interactive: 'Interactive 3D scenes' },
   { route: '/about', name: 'About Me', purpose: 'Who I am and why the site exists.', interactive: 'Profile card, social links' },
@@ -57,7 +57,7 @@ const decisions = [
   {
     title: 'One codebase, two hosts',
     body:
-      'Cloudflare Pages runs the main site, including two small Pages Functions for the pet chat and the music lyrics. GitHub Pages mirrors the same static build and demonstrates that the site still works with no server at all. A shared path helper keeps every asset URL correct when the site is served from a sub-directory.',
+      'Cloudflare Pages runs the main site, including a small Pages Function for the pet chat. GitHub Pages mirrors the same static build and demonstrates that the site still works with no server at all. A shared path helper keeps every asset URL correct when the site is served from a sub-directory.',
   },
   {
     title: 'Rebuilt navigation for the English version',

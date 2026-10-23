@@ -67,7 +67,7 @@ All of them are wrapped in `try/catch` because a user can edit or clear storage 
   the script refuses to run again until `app/_api_disabled` is put back — that guard exists because
   an interrupted build once left the API folder moved.
 - `out/` plus `functions/api/` is what `wrangler pages deploy` uploads to Cloudflare. The functions
-  re-implement the two API endpoints the static site cannot run: pet chat and music lyrics.
+  re-implement the one API endpoint the static site cannot run: the pet chat.
 - `scripts/audit-links.mjs`, `audit-a11y.mjs` and `audit-mobile.mjs` are the acceptance checks.
   They run against `out/` or a URL, which is why they can check the deployed site and not just the
   source.
@@ -96,9 +96,9 @@ different storage. That is a state/expectation problem, not a code bug — the e
 exists for exactly this.
 
 **5. The music card says "no music available".**
-Static hosting has no `/api/music`, or the upstream NetEase endpoint is rate-limiting. Evidence:
-the network panel shows 404/500 for `/api/music?ids=...`. The component must degrade with a clear
-message instead of spinning forever; the player is not the fault.
+The playlist is static data in `XHBlogs/data/music.ts`; regenerate it with
+`node scripts/build-music-data.mjs`. If one track fails, the audio URL has expired or the browser
+blocked playback — check the network panel for the `audio-ssl.itunes.apple.com` request.
 
 ## Reading unfamiliar code: a routine
 

@@ -122,10 +122,10 @@ export default function MusicClient() {
           <span className="text-6xl">🎧</span>
           <h2 className="text-2xl md:text-3xl font-black tracking-widest text-slate-800 dark:text-white">Music player</h2>
           <p className="text-sm text-slate-500 dark:text-slate-400 max-w-md leading-relaxed">
-            This deployment is a pure static export with no server side to proxy the NetEase Cloud Music API, so the playlist cannot load here.
+            The playlist could not be loaded in this browser.
             The player works normally when you run the site locally or deploy the Cloudflare version.
           </p>
-          <p className="text-[11px] text-slate-400 dark:text-slate-500">The playlist is configured in cloudMusicIds in siteConfig.ts</p>
+          <p className="text-[11px] text-slate-400 dark:text-slate-500">The playlist is resolved into data/music.ts by scripts/build-music-data.mjs</p>
         </main>
       </div>
     );
@@ -181,6 +181,11 @@ export default function MusicClient() {
                 <div className="w-full text-center px-2 md:px-4 mb-2 md:mb-6">
                   <h3 className="text-lg md:text-xl lg:text-2xl font-black text-slate-900 dark:text-white truncate drop-shadow-sm tracking-tight">{currentSong.title || currentSong.name}</h3>
                   <h2 className="text-xs md:text-sm font-bold text-slate-500 dark:text-slate-400 truncate mt-1 md:mt-2 tracking-widest">{currentSong.artist || currentSong.author}</h2>
+                  {currentSong.preview && (
+                    <span className="mt-2 inline-block rounded-full bg-indigo-500/10 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-widest text-indigo-600 dark:text-indigo-300">
+                      30s preview
+                    </span>
+                  )}
                 </div>
               </div>
 

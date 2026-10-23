@@ -38,8 +38,6 @@ export const siteConfig = {
 
   // 5. Photo wall preview on the home page
   photoWallImage: "/photos/329a8f2e4296.webp",
-  // Popular English-language playlist (NetEase song ids). Order = default play order.
-  cloudMusicIds: ["3986017", "451703096", "1406633327", "26060065", "27713920", "36990266", "16435051", "460043703", "16686599", "1868553", "22605222", "26484066", "1338149101"],
   social: {
     github: "https://github.com/Chen070218",
     gitee: "",

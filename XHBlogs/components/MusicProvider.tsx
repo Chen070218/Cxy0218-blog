@@ -1,8 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useRef, useEffect, ReactNode } from 'react';
-import { siteConfig } from '../siteConfig';
-import { withBasePath } from '../sitePath';
+import { musicTracks } from '../data/music';
 
 // [Enhanced LRC lyric parser]
 function parseLrc(lrcText: string) {
@@ -51,7 +50,7 @@ interface MusicContextType {
   duration: number;
   currentLyric: string;
   isLoading: boolean;
-  /** True when the music API is unavailable (e.g. pure static hosting with no /api/music) */
+  /** True when the static playlist is empty */
   unavailable: boolean;
   volume: number;
   isMuted: boolean;
@@ -88,44 +87,26 @@ export function MusicProvider({ children }: { children: ReactNode }) {
 
   const audioRef = useRef<HTMLAudioElement>(null);
 
+  // The playlist is static data resolved at build time (scripts/build-music-data.mjs),
+  // so playback works on every host, with no API route and no login.
   useEffect(() => {
-    let isMounted = true;
-    const fetchMusicData = async () => {
-      try {
-        const res = await fetch(withBasePath(`/api/music?ids=${siteConfig.cloudMusicIds.join(',')}`));
-        if (!res.ok) {
-          // Static hosting has no such API: degrade silently instead of showing an empty “playlist error” card
-          if (isMounted) { setUnavailable(true); setIsLoading(false); }
-          return;
-        }
-        const rawResults = await res.json();
-
-        const mergedPlaylist = rawResults
-          .filter((song: any) => song && song.url && !song.error)
-          .map((song: any) => ({
-            id: song.id || Math.random().toString(),
-            title: song.name || 'Unknown song',
-            artist: song.artist || song.author || 'Unknown artist',
-            cover: song.cover || song.pic || '/covers/notes.jpg',
-            src: song.url,
-            lrcUrl: null,
-            lyrics: song.lrc ? parseLrc(song.lrc) : []
-          }));
-
-        if (isMounted) {
-          if (mergedPlaylist.length > 0) setPlaylist(mergedPlaylist);
-          else { setCurrentLyric("Cloud link blocked"); setUnavailable(true); }
-          setIsLoading(false);
-        }
-      } catch (error) {
-        if (isMounted) { setUnavailable(true); setCurrentLyric("Network initialization failed"); setIsLoading(false); }
-      }
-    };
-
-    if (siteConfig.cloudMusicIds?.length > 0) fetchMusicData();
-    else setIsLoading(false);
-
-    return () => { isMounted = false; };
+    if (musicTracks.length === 0) {
+      setUnavailable(true);
+    } else {
+      setPlaylist(
+        musicTracks.map((track) => ({
+          id: track.id,
+          title: track.title,
+          artist: track.artist,
+          cover: track.cover,
+          src: track.src,
+          lrcUrl: null,
+          lyrics: [],
+          preview: true,
+        })),
+      );
+    }
+    setIsLoading(false);
   }, []);
 
   useEffect(() => {
@@ -134,7 +115,10 @@ export function MusicProvider({ children }: { children: ReactNode }) {
     const currentSong = playlist[currentIndex];
     setLyrics([]);
     setCurrentLyric("♪ Buffering ♪");
-    if (currentSong.lyrics && currentSong.lyrics.length > 0) {
+    if (currentSong.preview) {
+      // Apple's 30-second clips have no synced lyrics; say so instead of showing an empty panel.
+      if (isMounted) setCurrentLyric("30-second preview · full track on your streaming service");
+    } else if (currentSong.lyrics && currentSong.lyrics.length > 0) {
       if (isMounted) {
         setLyrics(currentSong.lyrics);
         setCurrentLyric(currentSong.lyrics[0]?.text || "♪ Pure music ♪");
