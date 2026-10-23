@@ -31,9 +31,11 @@ const process = [
   { period: 'Jun 8 – Jul 13', commits: '3', work: 'Small fixes and license/attribution clean-up over the summer break.' },
   { period: 'Oct 14 – Oct 18', commits: '51', work: 'The main build: pages and components, the desktop pet, check-in, accessibility fixes, performance work, Cloudflare Pages deployment and the local package for submission.' },
   { period: 'Oct 21', commits: 'this rewrite', work: 'Full English rewrite of the interface and articles, rebuilt navigation, and a final accessibility and responsiveness pass.' },
+  { period: 'Oct 24', commits: 'polish pass', work: 'Type checking turned back on, reduced-motion support, sitemap/robots/RSS/manifest/Open Graph, phone asset loading cut by more than half, and dead components removed.' },
 ];
 
 const decisions = [
+  { title: 'Licensed 30-second previews, not a pirated stream', body: 'The old player pointed at NetEase\'s free stream URL, which now redirects anonymous listeners to /404. The playlist is resolved once at build time through Apple\'s public iTunes API and played from its official 30-second previews. The trade-off is 30 seconds instead of a full track, but it is legal, it actually plays, and it needs no key or login.' },
   {
     title: 'Next.js App Router, exported as static files',
     body:
@@ -67,7 +69,7 @@ const decisions = [
 ];
 
 const checks = [
-  'Every page is rendered by the production build and statically exported without errors.',
+  'Every page is rendered by the production build and statically exported without errors; the build now type-checks the project instead of skipping TypeScript errors.',
   'All internal links, images, stylesheets and scripts return 200 — checked by following every link on every page with a script, not by clicking a few by hand.',
   'One main landmark and one h1 per page; headings run in order without skipping levels.',
   'Images carry meaningful alt text, or an empty alt when they are purely decorative.',
@@ -77,6 +79,9 @@ const checks = [
   'The layout was tested at 1280px, 768px and 390px wide, including the timetable, check-in calendar, photo wall and navigation.',
   'Colors meet WCAG AA contrast in both light and dark themes, and heavy background effects are disabled on small screens and for visitors who prefer reduced motion.',
   'The HTML language is set to en, dates and numbers are formatted in English, and no Chinese text remains anywhere in the interface, articles or metadata.',
+  'Reduced-motion mode removes every decorative animation (measured 113 animated elements down to 0) and skips the splash screen, while navigation and forms keep working.',
+  'On a throttled 4G phone profile the home page went from 1.45 MB and 5.6 s LCP to 655 KB and 2.4 s; the pet no longer preloads its sprites on phones.',
+  'SEO files are generated at build time: sitemap.xml, robots.txt, rss.xml, manifest.webmanifest, Open Graph/Twitter cards and JSON-LD.',
 ];
 
 export default function BuildLogPage() {

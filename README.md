@@ -45,6 +45,7 @@ friend links.
 - **Desktop pet** — a Q-version fox spirit (Xinyuehu) with nine states, a daily greeting, a
   stand-up reminder and a chat bubble powered by DeepSeek through `/api/chat`.
 - **Extras** — light/dark theme, music player, danmaku background, calculator, custom 404 page.
+- **SEO and discoverability** — sitemap, robots.txt, RSS feed, web manifest, Open Graph/Twitter cards and JSON-LD, all generated at build time.
 
 ## Tech stack
 
@@ -75,7 +76,7 @@ Production build and preview:
 
 ```bash
 cd XHBlogs
-npx next build --webpack    # webpack is required; the Turbopack build fails for this project
+npx next build --webpack    # webpack is required; this build also type-checks the project
 npm start
 ```
 
@@ -96,6 +97,8 @@ node scripts/audit-a11y.mjs XHBlogs/out              # html lang, one h1 per pag
 node scripts/audit-links.mjs http://127.0.0.1:4500/  # walks every page and every internal asset
 node scripts/audit-mobile.mjs http://127.0.0.1:4500/ # 390×844 viewport: overflow and console errors
 ```
+
+`npx tsc --noEmit` type-checks every page and component; `next build` fails on a type error instead of skipping it.
 
 The same checks (plus a production build) run in CI on every push: `.github/workflows/ci.yml`.
 
