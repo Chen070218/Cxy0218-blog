@@ -151,7 +151,7 @@ export default function MomentList({ moments, authorName, avatarUrl, avatarAlt }
       <div className="mb-10 md:mb-16 flex flex-col items-center gap-5 md:gap-8">
         <div className="relative w-full max-w-lg group px-2 md:px-0">
           <Search className="w-5 h-5 md:w-6 md:h-6 absolute left-6 md:left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors z-20 pointer-events-none" />
-          <input type="text" placeholder="Search for forgotten memories..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-white/40 dark:bg-slate-800/40 backdrop-blur-xl border border-white/40 dark:border-white/5 rounded-xl md:rounded-2xl px-5 md:px-6 py-3 md:py-4 pl-12 md:pl-14 text-sm md:text-base text-slate-800 dark:text-white shadow-lg md:shadow-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all font-medium relative z-10" />
+          <input type="text" placeholder="Search for forgotten memories..." aria-label="Search moments" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-white/40 dark:bg-slate-800/40 backdrop-blur-xl border border-white/40 dark:border-white/5 rounded-xl md:rounded-2xl px-5 md:px-6 py-3 md:py-4 pl-12 md:pl-14 text-sm md:text-base text-slate-800 dark:text-white shadow-lg md:shadow-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all font-medium relative z-10" />
         </div>
 
         <div className="flex bg-white/50 dark:bg-slate-800/50 p-1 md:p-1.5 rounded-xl md:rounded-2xl border border-white/50 dark:border-white/10 shadow-sm relative z-10">

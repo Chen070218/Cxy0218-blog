@@ -70,7 +70,7 @@ export default function PhotoWallClient() {
                   </svg>
                   <input
                     type="text"
-                    placeholder="Search album names or photo captions..."
+                    placeholder="Search album names or photo captions..." aria-label="Search albums and captions"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="w-full h-12 pl-12 pr-4 bg-white/40 dark:bg-slate-800/40 backdrop-blur-md border border-white/50 dark:border-white/10 rounded-full text-sm text-slate-800 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 shadow-sm transition-all duration-700"

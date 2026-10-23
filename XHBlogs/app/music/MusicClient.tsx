@@ -259,7 +259,7 @@ export default function MusicClient() {
                     <div className="relative w-full max-w-md mx-auto group mb-4 md:mb-8 shrink-0">
                       <div className="absolute inset-0 bg-indigo-500/5 blur-xl group-focus-within:bg-indigo-500/10 transition-all rounded-full" />
                       <Search className="w-4 h-4 md:w-5 md:h-5 absolute left-4 top-1/2 -translate-y-1/2 z-10 text-slate-400 group-focus-within:text-indigo-500 transition-colors" />
-                      <input type="text" placeholder="Search tracks..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full h-10 md:h-12 pl-10 md:pl-12 pr-10 md:pr-12 bg-white/30 dark:bg-slate-900/60 backdrop-blur-md border border-white/50 dark:border-white/10 rounded-full text-xs md:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/40 shadow-inner transition-all" />
+                      <input type="text" placeholder="Search tracks..." aria-label="Search tracks" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full h-10 md:h-12 pl-10 md:pl-12 pr-10 md:pr-12 bg-white/30 dark:bg-slate-900/60 backdrop-blur-md border border-white/50 dark:border-white/10 rounded-full text-xs md:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500/40 shadow-inner transition-all" />
                       {searchQuery && (<button onClick={() => setSearchQuery('')} className="absolute right-4 top-1/2 -translate-y-1/2 p-1.5 hover:bg-black/10 rounded-full transition-colors"><X size={14} className="text-slate-500" /></button>)}
                     </div>
                     <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 flex flex-col gap-2 md:gap-2.5">

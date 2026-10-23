@@ -57,7 +57,7 @@ export default function ChatterBoard({ chatters }: { chatters: Chatter[] }) {
           {/* 🌟 Core change: a more compact search box on mobile */}
           <input
             type="text"
-            placeholder="Search forgotten thoughts..."
+            placeholder="Search forgotten thoughts..." aria-label="Search musings"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full bg-white/40 dark:bg-slate-800/40 backdrop-blur-xl border border-white/40 dark:border-white/5 rounded-xl md:rounded-2xl px-4 md:px-6 py-3 md:py-4 pl-10 md:pl-14 text-sm md:text-base text-slate-800 dark:text-white shadow-lg md:shadow-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all placeholder-slate-400 font-medium"
