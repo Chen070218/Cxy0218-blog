@@ -11,6 +11,7 @@ import BackgroundEffects from "../components/BackgroundEffects";
 import { MusicProvider } from "../components/MusicProvider";
 import FloatingPlayer from "../components/FloatingPlayer";
 import { siteConfig } from "../siteConfig";
+import { withBasePath } from "../sitePath";
 import ClickEffect from "../components/ClickEffect";
 import SiteBackground from "../components/SiteBackground";
 import GlobalToolbox from "../components/GlobalToolbox";
@@ -50,9 +51,9 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: siteConfig.faviconUrl, type: 'image/webp' },
-      { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: withBasePath('/icons/icon-192.png'), sizes: '192x192', type: 'image/png' },
     ],
-    apple: [{ url: '/icons/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
+    apple: [{ url: withBasePath('/icons/apple-touch-icon.png'), sizes: '180x180', type: 'image/png' }],
     shortcut: siteConfig.faviconUrl,
   },
   manifest: '/manifest.webmanifest',
