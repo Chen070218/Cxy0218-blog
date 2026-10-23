@@ -121,3 +121,32 @@ input[type=range]::-webkit-slider-thumb {
 }
 .card-enter { animation: cardEnter 0.36s cubic-bezier(0.16, 1, 0.3, 1) both; }
 @media (prefers-reduced-motion: reduce) { .card-enter { animation: none; } }
+/* ========================================================
+   8. Keyboard focus: visible everywhere, without styling every component
+   ======================================================== */
+:focus-visible {
+  outline: 3px solid #6366f1;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ========================================================
+   9. Reduced motion: honour the operating-system setting.
+      Ambient canvas layers are also hidden by <EffectsGate>, so this mainly
+      stops CSS loops and long transitions (including the page/splash fades).
+   ======================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .page-enter,
+  .card-enter {
+    animation: none !important;
+  }
+}

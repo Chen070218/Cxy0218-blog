@@ -319,7 +319,7 @@ export default function CheckinBoard() {
           <div className="mt-6 flex flex-wrap gap-3">
             <button type="button" onClick={exportBackup} className="px-4 py-2 rounded-full text-sm font-bold border border-white/50 dark:border-white/10 bg-white/60 dark:bg-slate-700/40 text-slate-700 dark:text-slate-200 hover:bg-white/85 transition-colors">Export backup</button>
             <button type="button" onClick={() => fileInput.current?.click()} className="px-4 py-2 rounded-full text-sm font-bold border border-white/50 dark:border-white/10 bg-white/60 dark:bg-slate-700/40 text-slate-700 dark:text-slate-200 hover:bg-white/85 transition-colors">Import backup (merge)</button>
-            <input ref={fileInput} type="file" accept="application/json,.json" className="hidden" onChange={(e) => { importBackup(e.target.files?.[0]); e.target.value = ""; }} />
+            <input ref={fileInput} type="file" accept="application/json,.json" aria-label="Import check-in backup" className="hidden" onChange={(e) => { importBackup(e.target.files?.[0]); e.target.value = ""; }} />
           </div>
         </div>
       </section>

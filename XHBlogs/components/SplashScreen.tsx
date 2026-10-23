@@ -12,7 +12,9 @@ export default function SplashScreen() {
     setIsMounted(true);
     // With ?nosplash=1 the splash screen is skipped (for screenshots/demos; normal visitors are unaffected)
     const skipSplash = typeof window !== "undefined" && new URLSearchParams(window.location.search).has("nosplash");
-    const hasSeenSplash = skipSplash || sessionStorage.getItem('hasSeenSplash') === 'true';
+    // Visitors who ask for reduced motion should not get a 1.2 s animated intro at all.
+    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false;
+    const hasSeenSplash = skipSplash || reduceMotion || sessionStorage.getItem('hasSeenSplash') === 'true';
 
     if (!hasSeenSplash) {
       setShow(true);

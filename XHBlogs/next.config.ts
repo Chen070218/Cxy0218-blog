@@ -16,7 +16,8 @@ const nextConfig: NextConfig = {
     // A static export has no server, so on-demand optimization must be off or images 404
     unoptimized: isStaticExport,
   },
-  typescript: { ignoreBuildErrors: true },
+  // Type errors now fail the build instead of being skipped.
+  typescript: { ignoreBuildErrors: false },
   ...(isStaticExport
     ? { output: "export" as const, basePath, assetPrefix: basePath || undefined, trailingSlash: true }
     : {}),

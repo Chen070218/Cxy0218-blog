@@ -14,7 +14,7 @@ import { ReactNode, useMemo } from "react";
  */
 let lastNavigationAt = 0;
 
-export default function PageTransition({ children }: { children: ReactNode }) {
+export default function PageTransition({ children, className }: { children: ReactNode; className?: string }) {
   const shouldAnimate = useMemo(() => {
     const now = Date.now();
     const isRapidNavigation = now - lastNavigationAt < 600;
@@ -22,5 +22,6 @@ export default function PageTransition({ children }: { children: ReactNode }) {
     return !isRapidNavigation;
   }, []);
 
-  return <div className={shouldAnimate ? "page-enter" : undefined}>{children}</div>;
+  const classes = [className, shouldAnimate ? "page-enter" : null].filter(Boolean).join(" ");
+  return <div className={classes || undefined}>{children}</div>;
 }

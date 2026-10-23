@@ -74,7 +74,7 @@ export default function CyberCat() {
       const reply: string = data?.reply || 'Hmph. This fox does not feel like talking today.';
       speak(reply, Math.min(15000, 4000 + reply.length * 150));
       setModelTag(data?.model ? `${data.provider} · ${data.model}` : null);
-      setHistory((prev) => [...prev, { role: 'user', content: text }, { role: 'assistant', content: reply }].slice(-8));
+      setHistory((prev) => [...prev, { role: 'user' as const, content: text }, { role: 'assistant' as const, content: reply }].slice(-8));
       setPetState('happy');
       setTimeout(() => setPetState('idle'), 2600);
     } catch (error) {
