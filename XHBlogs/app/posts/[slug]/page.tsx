@@ -18,6 +18,7 @@ import rehypeKatex from 'rehype-katex';
 
 // Import the highlight theme
 import 'highlight.js/styles/atom-one-dark.css';
+import 'katex/dist/katex.min.css';
 
 import Navbar from '../../../components/Navbar';
 import PageTransition from '../../../components/PageTransition';

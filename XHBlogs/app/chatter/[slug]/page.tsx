@@ -15,6 +15,7 @@ import rehypeStringify from "rehype-stringify";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "highlight.js/styles/atom-one-dark.css";
+import "katex/dist/katex.min.css";
 import Navbar from "../../../components/Navbar";
 import PageTransition from "../../../components/PageTransition";
 import SmartImage from "../../../components/SmartImage";

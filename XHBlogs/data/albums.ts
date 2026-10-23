@@ -7,7 +7,7 @@ export const albums: Album[] = [
     "id": "solaris-journey",
     "title": "A Walk Through Solaris",
     "description": "A walk through the world of Wuthering Waves: rain in Jinzhou, wind over the wilds, and the echoes of the old world.",
-    "cover": "/photos/002d7f553e5e.webp",
+    "cover": "/covers/solaris-card.webp",
     "date": "2026.01",
     "photos": [
       {

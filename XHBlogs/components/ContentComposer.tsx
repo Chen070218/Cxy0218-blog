@@ -37,7 +37,7 @@ export default function ContentComposer({kind,albums=[],onSaved}:{kind:'photos'|
         await writeContent('albums',[album,...saved.filter(a=>a.id!==album.id)]);
       }else{
         if(!get('title')||!get('content'))throw new Error('Enter a title and body text.');
-        const slug=crypto.randomUUID();const post:LocalPost={slug,title:get('title'),date:get('date'),description:get('description')||get('content').slice(0,100),tags:get('tags').split(/[,，]/).map(s=>s.trim()).filter(Boolean),cover:urls[0]||withBasePath('/covers/notes.jpg'),content:get('content'),href:`/local-posts?id=${slug}`};
+        const slug=crypto.randomUUID();const post:LocalPost={slug,title:get('title'),date:get('date'),description:get('description')||get('content').slice(0,100),tags:get('tags').split(/[,，]/).map(s=>s.trim()).filter(Boolean),cover:urls[0]||withBasePath('/covers/notes.webp'),content:get('content'),href:`/local-posts?id=${slug}`};
         if(!post.tags.length)post.tags=['Uncategorized'];
         await writeContent('posts',[post,...await readContent<LocalPost>('posts')]);
       }

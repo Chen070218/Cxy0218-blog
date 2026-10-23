@@ -112,7 +112,7 @@ export default function Home() {
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 w-full flex-1">
                     <div className="sm:col-span-2 flex flex-col min-h-[200px]">
                       <Link href="/resources" className="relative overflow-hidden flex flex-col justify-end flex-1 min-h-[200px] rounded-3xl border border-white/40 shadow-xl p-6 text-white group">
-                        <SmartImage fill sizes="(max-width: 640px) 100vw, 640px" src="/covers/notes.jpg" alt="" className="object-cover transition-transform duration-700 group-hover:scale-105" />
+                        <SmartImage fill sizes="(max-width: 640px) 100vw, 640px" src="/covers/notes.webp" alt="" className="object-cover transition-transform duration-700 group-hover:scale-105" />
                         <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 to-slate-900/15" />
                         <div className="relative"><p className="text-xs tracking-widest mb-2">Resources</p><h3 className="text-2xl font-bold">Lecture notes and useful sites ↗</h3><p className="text-sm mt-2 text-white/85">Course notes, reference sites, handy tools</p></div>
                       </Link>

@@ -37,7 +37,7 @@ export default function SectionCover({ storageKey, title, subtitle, image, eyebr
     <section className={`section-cover ${compact ? 'section-cover-compact' : ''}`} aria-label={title + ' cover'}>
       {/* Native img permits local uploads and arbitrary user-configured image hosts. */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img decoding="async" src={failed ? withBasePath('/covers/notes.jpg') : selected} alt="" onError={() => setFailed(true)} />
+      <img decoding="async" src={failed ? withBasePath('/covers/notes.webp') : selected} alt="" onError={() => setFailed(true)} />
       <div className="section-cover-shade" />
       <div className="section-cover-copy"><span>{eyebrow}</span><h1>{title}</h1>{subtitle && <p>{subtitle}</p>}</div>
       <button className="cover-change" aria-label={`Change the ${title} cover`} onClick={() => {setDraft(custom);setError('');dialog.current?.showModal();}}><ImagePlus size={16}/><span>Change cover</span></button>
@@ -45,7 +45,7 @@ export default function SectionCover({ storageKey, title, subtitle, image, eyebr
     <dialog ref={dialog} className="cover-dialog">
       <div className="cover-dialog-head"><h2>Change the "{title}" cover</h2><button aria-label="Close cover settings" onClick={() => dialog.current?.close()}><X size={20}/></button></div>
       <p>Saved only in this browser; nothing is uploaded to a server.</p>
-      <label>Image link<input aria-label="Cover image link" value={draft.startsWith('data:') ? '' : draft} placeholder="https://… or /covers/notes.jpg" onChange={e => setDraft(e.target.value)}/></label>
+      <label>Image link<input aria-label="Cover image link" value={draft.startsWith('data:') ? '' : draft} placeholder="https://… or /covers/notes.webp" onChange={e => setDraft(e.target.value)}/></label>
       <label>Or upload an image<input type="file" accept="image/jpeg,image/png,image/webp" onChange={e => upload(e.target.files?.[0])}/></label>
       {draft && validCover(draft) && <img decoding="async" className="cover-preview" src={draft} alt="Cover preview"/>}
       <p role="status">{error}</p>

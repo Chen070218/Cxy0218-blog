@@ -21,6 +21,17 @@ export default function SiteBackground() {
 
   const { reducedMotion, visible } = usePerfProfile();
   const [index, setIndex] = useState(0);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  // The portrait is hidden by CSS on phones, but a hidden lazy <img> is still fetched;
+  // don't render it at all below 768 px so a phone does not download ~180 KB it cannot see.
+  useEffect(() => {
+    const query = window.matchMedia('(min-width: 768px)');
+    const update = () => setIsDesktop(query.matches);
+    update();
+    query.addEventListener?.('change', update);
+    return () => query.removeEventListener?.('change', update);
+  }, []);
 
   useEffect(() => {
     if (images.length <= 1 || reducedMotion || !visible) return;
@@ -47,7 +58,7 @@ export default function SiteBackground() {
       )}
 
       {/* 2) Portrait layer */}
-      {portrait && (
+      {portrait && isDesktop && (
         <div className="hidden md:block absolute right-[-1%] top-0 bottom-0 w-[44%] max-w-[680px]">
           <img
             src={portrait}
