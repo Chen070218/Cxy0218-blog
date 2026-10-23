@@ -140,6 +140,46 @@ fs.writeFileSync(
 );
 
 fs.writeFileSync(
+  path.join(PKG, 'start-site-lan.cmd'),
+  [
+    '@echo off',
+    'chcp 65001 >nul',
+    'rem Phone access on the same Wi-Fi: run allow-phone-access.cmd once first.',
+    'cd /d "%~dp0site"',
+    'if exist "%~dp0node\\node.exe" set "PATH=%~dp0node;%PATH%"',
+    'set "NEXT_TELEMETRY_DISABLED=1"',
+    'set "PORT=4322"',
+    'set "HOSTNAME=0.0.0.0"',
+    'echo.',
+    'echo This computer:   http://127.0.0.1:4322',
+    'echo Phone, same Wi-Fi: use one of these IPv4 addresses with :4322',
+    'echo ------------------------------------------------------------',
+    'ipconfig | findstr /i "IPv4"',
+    'echo ------------------------------------------------------------',
+    'echo Example: http://10.47.3.34:4322',
+    'echo Keep this window open while using the site.',
+    'echo.',
+    'node server.js',
+    'pause',
+    '',
+  ].join('\r\n'),
+  'utf8',
+);
+
+fs.writeFileSync(
+  path.join(PKG, 'allow-phone-access.cmd'),
+  [
+    '@echo off',
+    'chcp 65001 >nul',
+    'echo Requesting administrator rights to open TCP 4322 for phone access...',
+    'powershell -NoProfile -Command "Start-Process cmd -Verb RunAs -ArgumentList \'/c\',\'netsh advfirewall firewall add rule name=\\"XinghuiBlog 4322\\" dir=in action=allow protocol=TCP localport=4322 && echo. && echo Port 4322 is open. Run start-site-lan.cmd, then open the IPv4 address from the phone. && pause\'"',
+    'pause',
+    '',
+  ].join('\r\n'),
+  'utf8',
+);
+
+fs.writeFileSync(
   path.join(PKG, 'README.txt'),
   [
     'cxy0218 personal website · local version',
@@ -149,6 +189,11 @@ fs.writeFileSync(
     '2. Double-click start-site.cmd',
     '3. Wait a few seconds; the browser opens http://127.0.0.1:4322 automatically',
     '4. When you are done, just close that black window (do not close the browser and keep clicking around: closing the window stops the site)',
+    '',
+    '[Phone on the same Wi-Fi]',
+    '1. Double-click allow-phone-access.cmd and click "Yes" (opens TCP 4322 once)',
+    '2. Double-click start-site-lan.cmd; it prints this computer\'s IPv4 address',
+    '3. On the phone, open http://THAT-IPv4:4322 (for example http://10.47.3.34:4322)',
     '',
     '[Do I need to install anything]',
     withNode
