@@ -1,12 +1,15 @@
 // scripts/build-music-data.mjs
 //
-// Resolves the music playlist to Apple iTunes 30-second previews at build time and
-// writes XHBlogs/data/music.ts. Playback then needs no API route, no key and no login.
+// Builds XHBlogs/data/music.ts, the single source of truth for the music player.
 //
-// Why not stream the full tracks? NetEase's free "outer url" now redirects anonymous
-// listeners to /404 (VIP only), and Apple's own API refuses datacenter IPs such as the
-// Cloudflare Workers range — so resolving once at build time and shipping static JSON
-// is the reliable option.
+// Two kinds of tracks:
+//   1. FULL — free-licensed instrumentals from ccMixter. The audio files are
+//      committed under XHBlogs/public/music/ (96 kbps MP3, ~2-4 MB each), so they
+//      play offline on every host, with no key, no login and no external stream.
+//      Credit and licence are stored per track and shown on the music page; this
+//      is what the CC BY licences require.
+//   2. PREVIEW — 30-second Apple iTunes previews of well-known songs. Resolved at
+//      build time, so playback still needs no API route.
 //
 // Usage: node scripts/build-music-data.mjs
 
@@ -16,8 +19,83 @@ import path from 'path';
 const ROOT = path.resolve(import.meta.dirname, '..');
 const OUT = path.join(ROOT, 'XHBlogs', 'data', 'music.ts');
 
-// iTunes track ids, in play order.
-const TRACK_IDS = [
+const FULL_TRACKS = [
+  {
+    id: 'full-drops-of-h2o',
+    slug: 'drops-of-h2o-the-filtered-water-treatment',
+    title: 'Drops of H2O (The Filtered Water Treatment)',
+    artist: 'djlang59',
+    license: 'CC BY 3.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by/3.0/',
+    sourceUrl: 'https://ccmixter.org/files/djlang59/37792',
+  },
+  {
+    id: 'full-improvisation-on-friday',
+    slug: 'improvisation-on-friday',
+    title: 'Improvisation On Friday…',
+    artist: 'AlexBeroza',
+    license: 'CC BY 3.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by/3.0/',
+    sourceUrl: 'https://ccmixter.org/files/AlexBeroza/17253',
+  },
+  {
+    id: 'full-parametaphoriquement',
+    slug: 'parametaphoriquement',
+    title: 'Parametaphoriquement',
+    artist: 'gmz',
+    license: 'CC BY 3.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by/3.0/',
+    sourceUrl: 'https://ccmixter.org/files/gmz/19367',
+  },
+  {
+    id: 'full-silence-await',
+    slug: 'silence-await',
+    title: 'Silence Await',
+    artist: 'cdk',
+    license: 'CC BY 3.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by/3.0/',
+    sourceUrl: 'https://ccmixter.org/files/cdk/17432',
+  },
+  {
+    id: 'full-awel',
+    slug: 'awel',
+    title: 'Awel',
+    artist: 'stefsax',
+    license: 'CC BY 2.5',
+    licenseUrl: 'https://creativecommons.org/licenses/by/2.5/',
+    sourceUrl: 'https://ccmixter.org/files/stefsax/7785',
+  },
+  {
+    id: 'full-urbana-metronica',
+    slug: 'urbana-metronica-wooh-yeah-mix',
+    title: 'Urbana-Metronica (wooh-yeah mix)',
+    artist: 'jlbrock44',
+    license: 'CC BY 3.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by/3.0/',
+    sourceUrl: 'https://ccmixter.org/files/jlbrock44/33345',
+  },
+  {
+    id: 'full-long-goodbye',
+    slug: 'the-long-goodbye',
+    title: 'The Long Goodbye',
+    artist: 'flatwound',
+    license: 'CC BY 2.5',
+    licenseUrl: 'https://creativecommons.org/licenses/by/2.5/',
+    sourceUrl: 'https://ccmixter.org/files/flatwound/14476',
+  },
+  {
+    id: 'full-rkod-pulse',
+    slug: 'dj-rkod-pulse-george-ellinas-remix',
+    title: 'DJ Rkod — Pulse (George Ellinas remix)',
+    artist: 'George_Ellinas',
+    license: 'CC BY 3.0',
+    licenseUrl: 'https://creativecommons.org/licenses/by/3.0/',
+    sourceUrl: 'https://ccmixter.org/files/George_Ellinas/14073',
+  },
+];
+
+// iTunes track ids for the "popular previews" half of the playlist.
+const PREVIEW_IDS = [
   '1122773680', // Viva La Vida — Coldplay
   '1193701392', // Shape of You — Ed Sheeran
   '1499378607', // Blinding Lights — The Weeknd
@@ -33,53 +111,77 @@ const TRACK_IDS = [
   '1411628233', // Believer — Imagine Dragons
 ];
 
-const response = await fetch(
-  `https://itunes.apple.com/lookup?id=${TRACK_IDS.join(',')}&entity=song&country=US`,
-  {
-    headers: {
-      'User-Agent':
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0 Safari/537.36',
-      Accept: 'application/json',
+async function resolvePreviews() {
+  const response = await fetch(
+    `https://itunes.apple.com/lookup?id=${PREVIEW_IDS.join(',')}&entity=song&country=US`,
+    {
+      headers: {
+        'User-Agent':
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0 Safari/537.36',
+        Accept: 'application/json',
+      },
     },
-  },
-);
-
-if (!response.ok) {
-  console.error(`[x] iTunes lookup failed with ${response.status}`);
-  process.exit(1);
-}
-
-const payload = await response.json();
-const byId = new Map((payload.results || []).map((track) => [String(track.trackId), track]));
-const tracks = [];
-
-for (const id of TRACK_IDS) {
-  const track = byId.get(id);
-  if (!track || !track.previewUrl) {
-    console.warn(`[!] no preview for ${id}, skipping`);
-    continue;
+  );
+  if (!response.ok) throw new Error(`iTunes lookup failed: ${response.status}`);
+  const payload = await response.json();
+  const byId = new Map((payload.results || []).map((track) => [String(track.trackId), track]));
+  const tracks = [];
+  for (const id of PREVIEW_IDS) {
+    const track = byId.get(id);
+    if (!track?.previewUrl) continue;
+    tracks.push({
+      id: 'preview-' + id,
+      title: track.trackName,
+      artist: track.artistName,
+      cover: String(track.artworkUrl100 || '').replace('/100x100bb', '/600x600bb'),
+      src: track.previewUrl,
+      kind: 'preview',
+      license: 'Preview',
+      licenseUrl: 'https://www.apple.com/legal/internet-services/itunes/',
+      sourceUrl: track.trackViewUrl || 'https://music.apple.com/',
+    });
   }
-  tracks.push({
-    id,
-    title: track.trackName,
-    artist: track.artistName,
-    cover: String(track.artworkUrl100 || '').replace('/100x100bb', '/600x600bb'),
-    src: track.previewUrl,
-  });
+  return tracks;
 }
+
+const full = FULL_TRACKS.map((track) => ({
+  id: track.id,
+  title: track.title,
+  artist: track.artist,
+  cover: `/music/covers/${track.slug}.webp`,
+  src: `/music/${track.slug}.mp3`,
+  kind: 'full',
+  license: track.license,
+  licenseUrl: track.licenseUrl,
+  sourceUrl: track.sourceUrl,
+}));
+
+const previews = await resolvePreviews();
 
 const file = [
   '// Generated by scripts/build-music-data.mjs — do not edit by hand.',
-  '// Apple iTunes 30-second previews: the only audio source that plays without a login.',
+  '// Full tracks: free-licensed ccMixter audio hosted in public/music (CC BY, credited on /music).',
+  '// Previews: official 30-second Apple iTunes clips, resolved at build time.',
   '',
-  'export type MusicTrack = { id: string; title: string; artist: string; cover: string; src: string };',
+  'export type MusicKind = "full" | "preview";',
+  '',
+  'export type MusicTrack = {',
+  '  id: string;',
+  '  title: string;',
+  '  artist: string;',
+  '  cover: string;',
+  '  src: string;',
+  '  kind: MusicKind;',
+  '  license: string;',
+  '  licenseUrl: string;',
+  '  sourceUrl: string;',
+  '};',
   '',
   'export const musicTracks: MusicTrack[] = [',
-  ...tracks.map((track) => '  ' + JSON.stringify(track) + ','),
+  ...[...full, ...previews].map((track) => '  ' + JSON.stringify(track) + ','),
   '];',
   '',
 ].join('\n');
 
 fs.writeFileSync(OUT, file, 'utf8');
-console.log(`[ok] wrote ${tracks.length} tracks to ${path.relative(ROOT, OUT)}`);
-for (const track of tracks) console.log(`  ${track.title} — ${track.artist}`);
+console.log(`[ok] wrote ${full.length} full tracks and ${previews.length} previews to ${path.relative(ROOT, OUT)}`);

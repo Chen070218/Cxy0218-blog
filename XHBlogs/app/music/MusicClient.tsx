@@ -6,6 +6,7 @@ import { Play, Pause, SkipBack, SkipForward, Repeat, Shuffle, RefreshCcw, ListMu
 import Navbar from '../../components/Navbar';
 import PageTransition from '../../components/PageTransition';
 import { useMusic } from '../../components/MusicProvider';
+import { musicTracks } from '../../data/music';
 
 export default function MusicClient() {
   const {
@@ -180,11 +181,9 @@ export default function MusicClient() {
                 <div className="w-full text-center px-2 md:px-4 mb-2 md:mb-6">
                   <h3 className="text-lg md:text-xl lg:text-2xl font-black text-slate-900 dark:text-white truncate drop-shadow-sm tracking-tight">{currentSong.title || currentSong.name}</h3>
                   <h2 className="text-xs md:text-sm font-bold text-slate-500 dark:text-slate-400 truncate mt-1 md:mt-2 tracking-widest">{currentSong.artist || currentSong.author}</h2>
-                  {currentSong.preview && (
-                    <span className="mt-2 inline-block rounded-full bg-indigo-500/10 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-widest text-indigo-600 dark:text-indigo-300">
-                      30s preview
-                    </span>
-                  )}
+                  <span className={`mt-2 inline-block rounded-full px-2.5 py-0.5 text-[10px] font-black uppercase tracking-widest ${currentSong.kind === 'full' ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-300' : 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-300'}`}>
+                    {currentSong.kind === 'full' ? 'Full track' : '30s preview'}
+                  </span>
                 </div>
               </div>
 
@@ -275,6 +274,7 @@ export default function MusicClient() {
                                   {isPlayingThis && isPlaying && <div className="absolute inset-0 bg-black/40 flex items-center justify-center backdrop-blur-[1px]"><div className="flex gap-[3px] items-end h-2 md:h-3"><span className="w-0.5 bg-white rounded-full animate-[bounce_1s_infinite_0ms]" /><span className="w-0.5 bg-white rounded-full animate-[bounce_1s_infinite_200ms]" /><span className="w-0.5 bg-white rounded-full animate-[bounce_1s_infinite_400ms]" /></div></div>}
                                 </div>
                                 <div className="flex flex-col truncate"><span className={`text-sm md:text-[15px] font-black truncate ${isPlayingThis ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-800 dark:text-slate-200'}`}>{song.title || song.name}</span><span className="text-[10px] md:text-[11px] font-medium text-slate-500 dark:text-slate-400 truncate mt-0.5">{song.artist || song.author}</span></div>
+                                <span className={`ml-auto shrink-0 rounded-full px-2 py-0.5 text-[9px] font-black uppercase tracking-wider ${song.kind === 'full' ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-300' : 'bg-slate-500/10 text-slate-500 dark:text-slate-400'}`}>{song.kind === 'full' ? 'Full' : '30s'}</span>
                               </div>
                             </motion.div>
                           );
@@ -287,6 +287,21 @@ export default function MusicClient() {
             </div>
           </div>
 
+          <section aria-labelledby="music-credits" className="mt-10 rounded-3xl border border-white/40 bg-white/60 p-5 backdrop-blur-xl md:p-6 dark:border-white/10 dark:bg-slate-800/50">
+            <h2 id="music-credits" className="text-sm font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Music credits</h2>
+            <p className="mt-2 text-xs text-slate-600 md:text-sm dark:text-slate-300">
+              The full tracks are free-licensed instrumentals from ccMixter, hosted with the site so they play offline on every device. The 30-second previews are official Apple iTunes clips.
+            </p>
+            <ul className="mt-3 space-y-1.5 text-xs text-slate-600 md:text-sm dark:text-slate-300">
+              {musicTracks.filter((track) => track.kind === 'full').map((track) => (
+                <li key={track.id}>
+                  <span className="font-bold text-slate-800 dark:text-slate-100">{track.title}</span> — {track.artist},{' '}
+                  <a className="text-indigo-600 underline dark:text-indigo-400" href={track.licenseUrl} target="_blank" rel="noopener noreferrer">{track.license}</a>,{' '}
+                  <a className="text-indigo-600 underline dark:text-indigo-400" href={track.sourceUrl} target="_blank" rel="noopener noreferrer">source</a>
+                </li>
+              ))}
+            </ul>
+          </section>
         </div>
       </PageTransition>
       </main>

@@ -102,7 +102,11 @@ export function MusicProvider({ children }: { children: ReactNode }) {
           src: track.src,
           lrcUrl: null,
           lyrics: [],
-          preview: true,
+          kind: track.kind,
+          preview: track.kind === 'preview',
+          license: track.license,
+          licenseUrl: track.licenseUrl,
+          sourceUrl: track.sourceUrl,
         })),
       );
     }
@@ -118,6 +122,8 @@ export function MusicProvider({ children }: { children: ReactNode }) {
     if (currentSong.preview) {
       // Apple's 30-second clips have no synced lyrics; say so instead of showing an empty panel.
       if (isMounted) setCurrentLyric("30-second preview · full track on your streaming service");
+    } else if (currentSong.kind === 'full') {
+      if (isMounted) setCurrentLyric("Full track · free-licensed music · credits below");
     } else if (currentSong.lyrics && currentSong.lyrics.length > 0) {
       if (isMounted) {
         setLyrics(currentSong.lyrics);

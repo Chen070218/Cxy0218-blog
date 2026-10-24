@@ -19,7 +19,7 @@ const pages = [
   { route: '/resources', name: 'Resources', purpose: 'Study links I keep coming back to.', interactive: 'Category filters, add your own' },
   { route: '/photowall', name: 'Photo Wall', purpose: 'Albums of screenshots and photos, with captions.', interactive: 'Lightbox with keyboard navigation' },
   { route: '/moments', name: 'Moments', purpose: 'Short diary entries with a location and images.', interactive: 'Image lightbox, comments' },
-  { route: '/music', name: 'Music', purpose: 'What I listen to while coding.', interactive: 'Music player and previews' },
+  { route: '/music', name: 'Music', purpose: 'What I listen to while coding.', interactive: 'Full free-licensed tracks and popular previews' },
   { route: '/checkin', name: 'Check-in', purpose: 'Time-block tracking with a monthly log.', interactive: 'Timer, calendar heat-map, export/import' },
   { route: '/tree', name: 'Creative Workshop', purpose: 'Small 3D and canvas experiments.', interactive: 'Interactive 3D scenes' },
   { route: '/about', name: 'About Me', purpose: 'Who I am and why the site exists.', interactive: 'Profile card, social links' },
@@ -35,7 +35,7 @@ const process = [
 ];
 
 const decisions = [
-  { title: 'Licensed 30-second previews, not a pirated stream', body: 'The old player pointed at NetEase\'s free stream URL, which now redirects anonymous listeners to /404. The playlist is resolved once at build time through Apple\'s public iTunes API and played from its official 30-second previews. The trade-off is 30 seconds instead of a full track, but it is legal, it actually plays, and it needs no key or login.' },
+  { title: 'Licensed 30-second previews, not a pirated stream', body: 'Mainstream streaming endpoints either need a paid account (NetEase now sends anonymous listeners to /404) or refuse datacenter IPs (Apple\'s API blocks Cloudflare). The playlist therefore has two halves: eight full-length free-licensed instrumentals from ccMixter, hosted with the site and credited on /music under their CC BY licences, which play offline on any device; and 30-second Apple previews of popular songs. Playback is legal and guaranteed instead of pretending a stream works.' },
   {
     title: 'Next.js App Router, exported as static files',
     body:
@@ -82,6 +82,7 @@ const checks = [
   'Reduced-motion mode removes every decorative animation (measured 113 animated elements down to 0) and skips the splash screen, while navigation and forms keep working.',
   'On a throttled 4G phone profile the home page went from 1.45 MB and 5.6 s LCP to 655 KB and 2.4 s; the pet no longer preloads its sprites on phones.',
   'SEO files are generated at build time: sitemap.xml, robots.txt, rss.xml, manifest.webmanifest, Open Graph/Twitter cards and JSON-LD.',
+  'Full-length tracks play from the site\'s own audio files (checked offline in the local package and online), and every preview is labelled as a 30-second clip.',
 ];
 
 export default function BuildLogPage() {
