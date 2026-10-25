@@ -1,5 +1,5 @@
 @import "tailwindcss";
-/* Fonts: Geist Sans / Geist Mono are self-hosted through the npm package and loaded in app/layout.tsx — no Google Fonts at runtime */
+/* Fonts: self-hosted variable families imported in app/layout.tsx (fontsource) — no Google Fonts at runtime */
 
 /* 1. Declare the dark mode variant */
 @custom-variant dark (&:where(.dark, .dark *));
@@ -7,10 +7,12 @@
 /* 2. Base environment and performance tuning */
 @layer base {
   :root {
-    /* Latin-first stack for the English site: Geist Sans for UI, with a system serif
-       kept for the few places that still ask for it */
-    --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-    --font-serif: "Georgia", "Times New Roman", var(--font-geist-sans), serif;
+    /* Latin-first stack: Manrope for UI/body, Space Grotesk for display headings,
+       JetBrains Mono for labels and code. A system serif stays for pull quotes. */
+    --font-sans: "Manrope Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "JetBrains Mono Variable", ui-monospace, "SFMono-Regular", Menlo, monospace;
+    --font-display: "Space Grotesk Variable", "Manrope Variable", ui-sans-serif, sans-serif;
+    --font-serif: "Georgia", "Times New Roman", serif;
   }
 
   body {
@@ -182,7 +184,7 @@ input[type=range]::-webkit-slider-thumb {
        condensed display headings, monospaced micro-labels.
    ======================================================== */
 @theme {
-  --font-display: "Anton", var(--font-geist-sans), ui-sans-serif, sans-serif;
+  --font-display: "Space Grotesk Variable", "Manrope Variable", ui-sans-serif, sans-serif;
 
   /* warm neutral surfaces instead of cool slate */
   --color-slate-50: #f8f7f0;
@@ -253,8 +255,25 @@ input[type=range]::-webkit-slider-thumb {
 @layer base {
   h1 {
     font-family: var(--font-display);
-    font-weight: 400;
-    letter-spacing: 0.01em;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  h3 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  ::selection {
+    background: var(--color-indigo-300);
+    color: #0f130f;
   }
 }
 
@@ -268,4 +287,13 @@ main .rounded-2xl {
 .prose .hljs-comment,
 .prose .hljs-quote {
   color: #9aa5b1 !important;
+}
+
+/* Performance fallback for slow machines: PerfGuard measures the first two
+   seconds and adds .perf-lite when frames are consistently slow. */
+html.perf-lite [data-ambient] {
+  display: none !important;
+}
+html.perf-lite [data-ambient] * {
+  animation: none !important;
 }

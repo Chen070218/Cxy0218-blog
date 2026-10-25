@@ -34,7 +34,7 @@ export default function ProfileCard({ postCount, momentCount, photoCount }: { po
             <img decoding="async" src={siteConfig.avatarUrl} alt={siteConfig.avatarAlt} className="w-full h-full rounded-sm object-cover" />
           </div>
           <div className="flex-1 min-w-0">
-            <h1 className="font-display text-3xl uppercase leading-[0.95] tracking-wide text-slate-50 transition-colors duration-700 sm:text-4xl md:text-[3.4rem]">
+            <h1 className="font-display text-[2rem] uppercase leading-[0.95] tracking-tight text-slate-50 transition-colors duration-700 sm:text-[2.6rem] md:text-[2.95rem]">
               {siteConfig.authorName}
             </h1>
             <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.2em] text-indigo-300 transition-colors duration-700">

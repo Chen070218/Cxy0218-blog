@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
-// Self-hosted fonts (from the geist npm package), served locally instead of Google Fonts — no network needed at build time
-import { GeistSans } from 'geist/font/sans';
-import { GeistMono } from 'geist/font/mono';
-import '@fontsource/anton/400.css';
+// Self-hosted variable fonts (fontsource packages), no Google Fonts at runtime.
+import '@fontsource-variable/manrope/wght.css';
+import '@fontsource-variable/space-grotesk/wght.css';
+import '@fontsource-variable/jetbrains-mono/wght.css';
 import "./globals.css";
 import { ThemeProvider } from "../components/ThemeProvider";
 import { MotionConfig } from 'framer-motion';
 import EffectsGate from '../components/EffectsGate';
 import SiteFooter from '../components/SiteFooter';
+import PerfGuard from '../components/PerfGuard';
 import DesktopOnly from '../components/DesktopOnly';
 import BackgroundEffects from "../components/BackgroundEffects";
 import { MusicProvider } from "../components/MusicProvider";
@@ -104,7 +105,7 @@ const personJsonLd = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable} h-full antialiased`} suppressHydrationWarning>
+    <html lang="en" className="h-full antialiased" suppressHydrationWarning>
       <head>
         <style
           suppressHydrationWarning
@@ -124,6 +125,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               try {
                 if (sessionStorage.getItem('hasSeenSplash') === 'true') {
                   document.documentElement.classList.add('splash-seen');
+                }
+                if (sessionStorage.getItem('perfLite') === '1') {
+                  document.documentElement.classList.add('perf-lite');
                 }
               } catch (e) {}
             `
@@ -155,6 +159,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 
       <body className="w-screen overflow-x-hidden min-h-full flex flex-col relative transition-colors duration-1000 bg-slate-50 dark:bg-slate-950 font-sans">
         <ThemeProvider>
+          <PerfGuard />
           <MotionConfig reducedMotion="user">
 
           <SplashScreen />
@@ -179,13 +184,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                 <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-indigo-400/30 dark:bg-purple-900/30 blur-[100px] rounded-full z-[-7] md:mix-blend-overlay"></div>
 
                 {/* Hide the heavy particle effect on mobile */}
-                <div className="hidden md:block absolute inset-0 w-full h-full">
+                <div className="hidden md:block absolute inset-0 w-full h-full" data-ambient="true">
                   <DesktopOnly><EffectsGate><BackgroundEffects /></EffectsGate></DesktopOnly>
                 </div>
               </div>
 
               {/* Hide danmaku on mobile */}
-              <div className="hidden md:block">
+              <div className="hidden md:block" data-ambient="true">
                 <DesktopOnly><EffectsGate><DanmakuBackground /></EffectsGate></DesktopOnly>
               </div>
 
@@ -207,7 +212,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               </div>
 
               {/* Hide click particles on mobile */}
-              <div className="hidden md:block">
+              <div className="hidden md:block" data-ambient="true">
                 <DesktopOnly><EffectsGate><ClickEffect /></EffectsGate></DesktopOnly>
               </div>
             </div>
@@ -221,7 +226,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             `}} />
           </MusicProvider>
 
-          <div className="hidden md:block">
+          <div className="hidden md:block" data-ambient="true">
             <DesktopOnly><CyberCat /></DesktopOnly>
           </div>
 
