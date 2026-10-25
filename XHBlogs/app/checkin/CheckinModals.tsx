@@ -6,7 +6,7 @@ const overlay = "fixed inset-0 z-[9998] bg-slate-950/60 backdrop-blur-sm flex it
 const panel = "card-enter w-full rounded-3xl bg-white/95 dark:bg-slate-900/95 border border-white/40 dark:border-white/10 shadow-2xl p-6";
 const input = "mt-1 w-full rounded-xl bg-white/70 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 outline-none focus:ring-2 focus:ring-indigo-400";
 const ghost = "px-4 py-2 rounded-full text-sm font-bold border border-white/50 dark:border-white/10 bg-white/60 dark:bg-slate-700/40 text-slate-700 dark:text-slate-200";
-const primary = "px-5 py-2 rounded-full text-sm font-bold bg-indigo-500 text-white hover:bg-indigo-600 transition-colors";
+const primary = "px-5 py-2 rounded-full text-sm font-bold bg-indigo-300 text-slate-950 hover:bg-indigo-200 transition-colors";
 
 export default function CheckinModals({
   showAddCategory, onCloseAddCategory, catName, setCatName, catColor, setCatColor, onAddCategory,

@@ -41,7 +41,7 @@ export default function GlobalToolbox() {
                 <button
                   key={tool.id}
                   onClick={() => setActiveToolId(activeToolId === tool.id ? null : tool.id)}
-                  className={`text-xs font-bold px-3 py-1.5 rounded-full transition-colors ${activeToolId === tool.id ? 'bg-indigo-500 text-white shadow-md' : 'bg-white/50 dark:bg-slate-700/50 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'}`}
+                  className={`text-xs font-bold px-3 py-1.5 rounded-full transition-colors ${activeToolId === tool.id ? 'bg-indigo-300 text-slate-950 shadow-md' : 'bg-white/50 dark:bg-slate-700/50 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'}`}
                 >
                   {tool.icon} {tool.name}
                 </button>
@@ -75,7 +75,7 @@ export default function GlobalToolbox() {
       <button aria-label={isOpen ? "Collapse calculator" : "Open calculator"} aria-expanded={isOpen}
         onClick={() => { setIsOpen(!isOpen); if (!isOpen && !activeToolId) setActiveToolId(TOOL_REGISTRY[0].id); }}
         className={`px-4 h-12 gap-2 rounded-full flex items-center justify-center shadow-xl backdrop-blur-xl border border-white/40 dark:border-white/10 transition-all duration-500 hover:scale-110 active:scale-95 z-50
-          ${isOpen ? 'bg-indigo-500 text-white' : 'bg-white/70 dark:bg-slate-800/80 text-slate-700 dark:text-white'}
+          ${isOpen ? 'bg-indigo-300 text-slate-950' : 'bg-white/70 dark:bg-slate-800/80 text-slate-700 dark:text-white'}
         `}
       >
         <span aria-hidden="true">{isOpen ? '✕' : '🧮'}</span><span>{isOpen ? 'Close' : 'Calculator'}</span>

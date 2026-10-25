@@ -31,7 +31,7 @@ export default function SiteDashboard() {
 
   return (
     // A long strip spanning all 12 columns
-    <div className="md:col-span-12 rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl overflow-hidden flex flex-col md:flex-row items-stretch transition-colors duration-700 h-auto md:h-20 group">
+    <div className="md:col-span-12 rounded-3xl bg-slate-950/75 backdrop-blur-md border border-white/15 shadow-xl overflow-hidden flex flex-col md:flex-row items-stretch transition-colors duration-700 h-auto md:h-20 group">
 
       {/* Left: flip-clock effect (monospace font) */}
       <div className="bg-slate-900 dark:bg-black text-white px-8 py-4 md:py-0 flex items-center justify-center font-mono text-2xl md:text-3xl font-black tracking-widest shadow-inner relative overflow-hidden group-hover:text-indigo-400 transition-colors">
@@ -42,12 +42,12 @@ export default function SiteDashboard() {
       </div>
 
       {/* Middle and right: status info */}
-      <div className="flex-1 px-6 py-4 md:py-0 flex flex-wrap items-center justify-between gap-4 text-xs md:text-sm font-bold text-slate-600 dark:text-slate-300">
+      <div className="flex-1 px-6 py-4 md:py-0 flex flex-wrap items-center justify-between gap-4 text-xs md:text-sm font-bold text-slate-300">
 
         {/* Uptime */}
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-          <span>System uptime: <span className="text-indigo-600 dark:text-indigo-400 font-black">{uptimeStr}</span></span>
+          <span>System uptime: <span className="text-indigo-300 font-black">{uptimeStr}</span></span>
         </div>
 
         {/* Tech stack badges (🌟 mapped dynamically from the array in siteConfig) */}
@@ -55,7 +55,7 @@ export default function SiteDashboard() {
           {siteConfig.footerBadges?.map((badge, index) => (
             <span
               key={index}
-              className="px-2 py-1 bg-white/50 dark:bg-slate-700/50 rounded-md shadow-sm flex items-center gap-1 border border-white/40 dark:border-slate-600"
+              className="px-2 py-1 bg-white/5 rounded-md shadow-sm flex items-center gap-1 border border-white/10"
             >
               <svg className={`w-3.5 h-3.5 ${badge.color}`} fill="currentColor" viewBox="0 0 24 24" dangerouslySetInnerHTML={{ __html: badge.svg }} />
               {badge.name}

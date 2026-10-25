@@ -279,7 +279,7 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
                   .dark .prose p code, .dark .prose li code { background-color: rgba(99, 102, 241, 0.2) !important; color: #818cf8 !important; }
                   .prose img { display: block !important; margin: 1.5rem auto !important; border-radius: 1rem !important; box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important; max-width: 100% !important; height: auto !important; }
 
-                  .prose pre code .hljs-comment, .prose pre code .hljs-quote { color: #5c6370 !important; font-style: italic !important; }
+                  .prose pre code .hljs-comment, .prose pre code .hljs-quote { color: #9aa5b1 !important; font-style: italic !important; }
                   .prose pre code .hljs-doctag, .prose pre code .hljs-keyword, .prose pre code .hljs-formula { color: #c678dd !important; }
                   .prose pre code .hljs-keyword.type_, .prose pre code .hljs-type { color: #c678dd !important; } 
                   .prose pre code .hljs-section, .prose pre code .hljs-name, .prose pre code .hljs-selector-tag, .prose pre code .hljs-deletion, .prose pre code .hljs-subst { color: #e06c75 !important; }

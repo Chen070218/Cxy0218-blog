@@ -248,7 +248,7 @@ export default function CheckinBoard() {
           <button
             type="button"
             onClick={running ? stopCheckin : startCheckin}
-            className={`flex-1 rounded-2xl px-6 py-5 text-left transition-all duration-300 shadow-lg ${running ? "bg-rose-500 text-white shadow-rose-500/30" : "bg-indigo-500 text-white shadow-indigo-500/30 hover:bg-indigo-600"}`}
+            className={`flex-1 rounded-2xl px-6 py-5 text-left transition-all duration-300 shadow-lg ${running ? "bg-rose-500 text-white shadow-rose-500/30" : "bg-indigo-300 text-slate-950 shadow-indigo-500/30 hover:bg-indigo-200"}`}
           >
             <span className="block text-xs font-black tracking-widest opacity-85">{running ? "Checking in" : "Ready"}</span>
             <span className="mt-1 block text-2xl md:text-3xl font-black">{running ? `${hms(minutesOf(running))} · tap to stop` : "Start check-in"}</span>

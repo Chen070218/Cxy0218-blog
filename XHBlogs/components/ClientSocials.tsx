@@ -28,7 +28,7 @@ function SocialBtn({ type, url, onClick }: { type: string, url?: string, onClick
       tabIndex={onClick ? 0 : undefined}
       aria-label={label}
       onKeyDown={onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(); } } : undefined}
-      className="w-8 h-8 rounded-lg bg-white/50 dark:bg-slate-700/50 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-indigo-500 hover:text-white dark:hover:bg-indigo-600 dark:hover:text-white transition-all duration-300 border border-white/40 dark:border-white/10 shadow-sm cursor-pointer"
+      className="w-8 h-8 rounded-lg bg-white/50 dark:bg-slate-700/50 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-indigo-300 hover:text-slate-950 dark:hover:bg-indigo-300 dark:hover:text-slate-950 transition-all duration-300 border border-white/40 dark:border-white/10 shadow-sm cursor-pointer"
       title={type}
     >
       {getIcon()}

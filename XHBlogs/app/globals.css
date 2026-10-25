@@ -182,3 +182,97 @@ input[type=range]::-webkit-slider-thumb {
   background: rgba(79, 70, 229, 0.9);
   color: #fff;
 }
+
+/* ========================================================
+   11. Reference-inspired visual system (shuike.pages.dev):
+       near-black surfaces, warm paper ink, pale chartreuse accent,
+       condensed display headings, monospaced micro-labels.
+   ======================================================== */
+@theme {
+  --font-display: "Anton", var(--font-geist-sans), ui-sans-serif, sans-serif;
+
+  /* warm neutral surfaces instead of cool slate */
+  --color-slate-50: #f8f7f0;
+  --color-slate-100: #efeee4;
+  --color-slate-200: #dcdacd;
+  --color-slate-300: #bdbbac;
+  --color-slate-400: #96998d;
+  --color-slate-500: #6f7468;
+  --color-slate-600: #4d5349;
+  --color-slate-700: #333a33;
+  --color-slate-800: #1c211c;
+  --color-slate-900: #0f130f;
+  --color-slate-950: #070907;
+
+  /* primary accent: pale chartreuse */
+  --color-indigo-50: #f7fbe8;
+  --color-indigo-100: #eef7c9;
+  --color-indigo-200: #e3f0a1;
+  --color-indigo-300: #dce896;
+  --color-indigo-400: #d0e37b;
+  --color-indigo-500: #8b9c3f;
+  --color-indigo-600: #5f7020;
+  --color-indigo-700: #4b5a1a;
+  --color-indigo-800: #4f5b1d;
+  --color-indigo-900: #404a1a;
+  --color-indigo-950: #20260b;
+
+  /* secondary: muted bronze instead of purple */
+  --color-purple-50: #faf6ec;
+  --color-purple-100: #f3ead4;
+  --color-purple-200: #e8d6ad;
+  --color-purple-300: #dbbd80;
+  --color-purple-400: #cfa65c;
+  --color-purple-500: #b98c45;
+  --color-purple-600: #9a6f36;
+  --color-purple-700: #7c552e;
+  --color-purple-800: #664628;
+  --color-purple-900: #573d25;
+  --color-purple-950: #332114;
+
+  /* tertiary: clay instead of pink */
+  --color-pink-50: #fdf5f1;
+  --color-pink-100: #fae8df;
+  --color-pink-200: #f5d0bf;
+  --color-pink-300: #ecae93;
+  --color-pink-400: #e08a69;
+  --color-pink-500: #cf6c4a;
+  --color-pink-600: #b55236;
+  --color-pink-700: #97402d;
+  --color-pink-800: #7c3829;
+  --color-pink-900: #663225;
+  --color-pink-950: #39170f;
+
+  /* muted sage for the remaining cool accents */
+  --color-sky-50: #f2f7f3;
+  --color-sky-100: #e3efe5;
+  --color-sky-200: #c8dfcc;
+  --color-sky-300: #a2c7a9;
+  --color-sky-400: #7aaa84;
+  --color-sky-500: #5a8d66;
+  --color-sky-600: #45724f;
+  --color-sky-700: #385c41;
+  --color-sky-800: #2f4a36;
+  --color-sky-900: #283d2e;
+  --color-sky-950: #142118;
+}
+
+@layer base {
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: 0.01em;
+  }
+}
+
+/* Cards use a near-square radius, like the archive/desktop reference. Pills keep rounded-full. */
+main .rounded-3xl,
+main .rounded-2xl {
+  border-radius: 2px;
+}
+
+/* code comments need a lighter tone on the dark code surface */
+.prose .hljs-comment,
+.prose .hljs-quote {
+  color: #9aa5b1 !important;
+}

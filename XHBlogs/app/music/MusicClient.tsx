@@ -196,7 +196,7 @@ export default function MusicClient() {
                   <button onClick={togglePlayMode} className="p-2 transition-transform hover:scale-110">{getPlayModeIcon()}</button>
                   <div className="flex items-center gap-3 md:gap-4 lg:gap-6">
                     <button onClick={prevSong} className="p-2 text-slate-700 dark:text-slate-300 hover:text-indigo-500 transition-transform hover:scale-110"><SkipBack size={24} className="md:w-7 md:h-7" fill="currentColor" /></button>
-                    <button onClick={togglePlay} className="w-14 h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 flex items-center justify-center bg-indigo-500 text-white rounded-full hover:scale-105 shadow-xl shadow-indigo-500/40">
+                    <button onClick={togglePlay} className="w-14 h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 flex items-center justify-center bg-indigo-300 text-slate-950 rounded-full hover:scale-105 shadow-xl shadow-indigo-500/40">
                       {isPlaying ? <Pause size={28} className="md:w-8 md:h-8" fill="currentColor" /> : <Play size={28} className="md:w-8 md:h-8 ml-1" fill="currentColor" />}
                     </button>
                     <button onClick={nextSong} className="p-2 text-slate-700 dark:text-slate-300 hover:text-indigo-500 transition-transform hover:scale-110"><SkipForward size={24} className="md:w-7 md:h-7" fill="currentColor" /></button>
@@ -209,7 +209,7 @@ export default function MusicClient() {
                         </motion.div>
                       )}
                     </AnimatePresence>
-                    <button onClick={() => setShowVolumeSlider(!showVolumeSlider)} onDoubleClick={toggleMute} className={`p-2 rounded-full transition-all ${showVolumeSlider ? 'bg-indigo-500 text-white shadow-lg' : 'text-slate-500 hover:text-indigo-500'}`}>{isMuted || volume === 0 ? <VolumeX size={18} className="md:w-5 md:h-5"/> : <Volume2 size={18} className="md:w-5 md:h-5" />}</button>
+                    <button onClick={() => setShowVolumeSlider(!showVolumeSlider)} onDoubleClick={toggleMute} className={`p-2 rounded-full transition-all ${showVolumeSlider ? 'bg-indigo-300 text-slate-950 shadow-lg' : 'text-slate-500 hover:text-indigo-500'}`}>{isMuted || volume === 0 ? <VolumeX size={18} className="md:w-5 md:h-5"/> : <Volume2 size={18} className="md:w-5 md:h-5" />}</button>
                   </div>
                 </div>
               </div>
@@ -218,8 +218,8 @@ export default function MusicClient() {
             {/* ====== Right/bottom: lyrics and playlist panel ====== */}
             <div className="md:col-span-7 flex flex-col bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 rounded-[32px] shadow-2xl relative transition-colors duration-700 overflow-hidden h-[450px] md:h-auto shrink-0">
               <div className="flex items-center justify-center gap-1 p-1 mt-4 md:mt-6 mx-auto bg-white/50 dark:bg-slate-900/50 rounded-full shadow-inner border border-white/40 w-48 md:w-64 z-20 shrink-0">
-                <button onClick={() => setActiveTab('lyrics')} className={`flex-1 py-1.5 md:py-2 rounded-full font-black text-xs md:text-[13px] transition-all ${activeTab === 'lyrics' ? 'bg-indigo-500 text-white shadow-md' : 'text-slate-500'}`}>Lyrics</button>
-                <button onClick={() => setActiveTab('playlist')} className={`flex-1 py-1.5 md:py-2 rounded-full font-black text-xs md:text-[13px] transition-all ${activeTab === 'playlist' ? 'bg-indigo-500 text-white shadow-md' : 'text-slate-500'}`}>Playlist</button>
+                <button onClick={() => setActiveTab('lyrics')} className={`flex-1 py-1.5 md:py-2 rounded-full font-black text-xs md:text-[13px] transition-all ${activeTab === 'lyrics' ? 'bg-indigo-300 text-slate-950 shadow-md' : 'text-slate-500'}`}>Lyrics</button>
+                <button onClick={() => setActiveTab('playlist')} className={`flex-1 py-1.5 md:py-2 rounded-full font-black text-xs md:text-[13px] transition-all ${activeTab === 'playlist' ? 'bg-indigo-300 text-slate-950 shadow-md' : 'text-slate-500'}`}>Playlist</button>
               </div>
 
               <div className="flex-1 relative mt-2 flex flex-col overflow-hidden">

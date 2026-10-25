@@ -122,9 +122,9 @@ export function MusicProvider({ children }: { children: ReactNode }) {
     setCurrentLyric("♪ Buffering ♪");
     if (currentSong.preview) {
       // Apple's 30-second clips have no synced lyrics; say so instead of showing an empty panel.
-      if (isMounted) setCurrentLyric("30-second preview · full track on your streaming service");
+      if (isMounted) setCurrentLyric("30s preview · full track on streaming");
     } else if (currentSong.kind === 'full') {
-      if (isMounted) setCurrentLyric("Full track · free-licensed music · credits below");
+      if (isMounted) setCurrentLyric("Full track · free-licensed");
     } else if (currentSong.lyrics && currentSong.lyrics.length > 0) {
       if (isMounted) {
         setLyrics(currentSong.lyrics);

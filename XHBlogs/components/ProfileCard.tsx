@@ -16,38 +16,42 @@ export default function ProfileCard({ postCount, momentCount, photoCount }: { po
   return (
     <div
       onClick={() => router.push('/about')}
-      className="md:col-span-7 rounded-3xl bg-white/40 dark:bg-slate-800/50 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl p-5 sm:p-6 md:p-8 flex flex-col justify-between transition-all duration-700 hover:scale-[1.01] cursor-pointer group relative overflow-hidden h-full min-h-[220px] md:min-h-[280px]"
+      className="group relative flex h-full min-h-[260px] cursor-pointer flex-col justify-between overflow-hidden rounded-sm border border-white/15 bg-slate-950/60 p-5 shadow-xl backdrop-blur-md transition-colors duration-500 hover:border-indigo-300/40 sm:p-6 md:col-span-7 md:min-h-[320px] md:p-7"
     >
+      {/* top status rail, borrowed from the archive/desktop aesthetic */}
+      <div className="relative z-10 mb-5 flex flex-wrap items-center gap-x-4 gap-y-1 border-b border-white/10 pb-3 font-mono text-[9px] uppercase tracking-[0.18em] text-slate-400 md:text-[10px]">
+        <span className="flex items-center gap-1.5 text-indigo-300">
+          <span className="inline-block h-1.5 w-1.5 rounded-full bg-indigo-300" />
+          Portfolio 2026
+        </span>
+        <span className="hidden sm:inline">Hainan · CN</span>
+        <span className="hidden md:inline">CS 2025</span>
+        <span className="ml-auto text-slate-500">EN / DE</span>
+      </div>
       <div className="flex items-start justify-between relative z-10">
         <div className="flex items-center gap-4 md:gap-6 w-full">
-          <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-xl md:rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-500 p-1 shadow-lg flex-shrink-0 transition-transform duration-500 group-hover:rotate-3">
-            <img decoding="async" src={siteConfig.avatarUrl} alt={siteConfig.avatarAlt} className="w-full h-full rounded-lg md:rounded-xl object-cover bg-white" />
+          <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-sm border border-white/15 bg-slate-900/60 p-1 shadow-lg flex-shrink-0 transition-transform duration-500 group-hover:-translate-y-1">
+            <img decoding="async" src={siteConfig.avatarUrl} alt={siteConfig.avatarAlt} className="w-full h-full rounded-sm object-cover" />
           </div>
           <div className="flex-1 min-w-0">
-            {/* 🌟 Key fixes:
-                1. Added pb-1 (padding-bottom) to leave room for descenders
-                2. Added leading-snug so the line height is not too tight
-            */}
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-1 md:mb-2 pb-1 leading-snug tracking-wider transition-colors duration-700 truncate">
+            <h1 className="font-display text-3xl uppercase leading-[0.95] tracking-wide text-slate-50 transition-colors duration-700 sm:text-4xl md:text-[3.4rem]">
               {siteConfig.authorName}
             </h1>
-            <p className="mb-1 text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.16em] text-indigo-600 transition-colors duration-700 dark:text-indigo-400">
+            <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.2em] text-indigo-300 transition-colors duration-700">
               {siteConfig.handle} · CS 2025
             </p>
-            <p className="text-xs sm:text-sm md:text-base text-slate-700 dark:text-slate-300 font-medium leading-relaxed max-w-md transition-colors duration-700 line-clamp-2 md:line-clamp-none">
+            <p className="mt-3 text-xs font-medium leading-relaxed text-slate-300 transition-colors duration-700 sm:text-sm md:text-base max-w-md line-clamp-2 md:line-clamp-none">
               {siteConfig.bio}
             </p>
           </div>
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row items-center md:items-end justify-between mt-6 md:mt-8 gap-5 md:gap-6 relative z-10">
-        <div className="flex gap-2 sm:gap-6 w-full md:w-auto justify-between sm:justify-around md:justify-start px-2 sm:px-0">
-          <StatItem count={postCount} label="Posts" color="text-indigo-600 dark:text-indigo-400" />
-          <div className="w-px h-8 md:h-10 bg-slate-300/50 dark:bg-slate-700 hidden md:block"></div>
-          <StatItem count={momentCount} label="Moments" color="text-purple-600 dark:text-purple-400" />
-          <div className="w-px h-8 md:h-10 bg-slate-300/50 dark:bg-slate-700 hidden md:block"></div>
-          <StatItem count={photoCount} label="Photos" color="text-pink-600 dark:text-pink-400" />
+      <div className="mt-6 flex flex-col items-stretch justify-between gap-5 border-t border-white/10 pt-4 md:mt-8 md:flex-row md:items-end md:gap-6 relative z-10">
+        <div className="grid w-full grid-cols-3 divide-x divide-white/10 md:w-auto md:min-w-[260px]">
+          <StatItem count={postCount} label="Posts" color="text-indigo-300" />
+          <StatItem count={momentCount} label="Moments" color="text-purple-300" />
+          <StatItem count={photoCount} label="Photos" color="text-pink-300" />
         </div>
 
         <div className="flex gap-2 md:gap-3 flex-wrap justify-center md:justify-end w-full md:w-auto" onClick={(e) => e.stopPropagation()}>
@@ -65,9 +69,9 @@ export default function ProfileCard({ postCount, momentCount, photoCount }: { po
 
 function StatItem({ count, label, color }: { count: number, label: string, color: string }) {
   return (
-    <div className="text-center group/stat px-2">
-      <div className={`text-xl md:text-2xl font-black ${color} transition-transform group-hover/stat:scale-110`}>{count}</div>
-      <div className="text-[9px] md:text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mt-0.5">{label}</div>
+    <div className="px-3 text-center group/stat">
+      <div className={`font-display text-2xl md:text-3xl ${color} transition-transform group-hover/stat:scale-110`}>{count}</div>
+      <div className="mt-1 font-mono text-[9px] uppercase tracking-[0.16em] text-slate-400">{label}</div>
     </div>
   );
 }
@@ -96,7 +100,7 @@ function SocialBtn({ type, url, onClick }: { type: string, url?: string, onClick
       tabIndex={onClick ? 0 : undefined}
       aria-label={label}
       onKeyDown={onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(); } } : undefined}
-      className="w-9 h-9 md:w-10 md:h-10 rounded-xl bg-white/50 dark:bg-slate-700/50 flex items-center justify-center text-slate-700 dark:text-slate-300 hover:bg-indigo-500 hover:text-white dark:hover:bg-indigo-600 dark:hover:text-white transition-all duration-300 border border-white/40 dark:border-white/10 shadow-sm"
+      className="w-9 h-9 md:w-10 md:h-10 rounded-sm bg-white/[0.04] flex items-center justify-center text-slate-300 hover:bg-indigo-300/10 hover:text-indigo-200 transition-colors duration-300 border border-white/15 hover:border-indigo-300/50"
       title={type}
     >
       {getIcon()}

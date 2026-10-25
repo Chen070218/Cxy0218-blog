@@ -173,20 +173,20 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-white/20 bg-white/60 backdrop-blur-xl shadow-sm dark:border-white/5 dark:bg-slate-900/60">
+      <header className="fixed inset-x-0 top-0 z-50 border-b border-white/20 bg-white/80 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/70">
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-[80] focus:rounded-full focus:bg-indigo-600 focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-white"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-[80] focus:rounded-full focus:bg-indigo-300 focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-slate-950"
         >
           Skip to content
         </a>
 
         <div className="mx-auto flex h-16 w-[94%] max-w-6xl items-center justify-between gap-4">
           <Link href="/" className="group flex flex-col leading-none">
-            <span className="text-lg font-black tracking-tight text-slate-800 transition-colors duration-300 group-hover:text-indigo-600 sm:text-xl dark:text-white dark:group-hover:text-indigo-400">
+            <span className="font-display text-xl uppercase tracking-wide text-slate-800 transition-colors duration-300 group-hover:text-indigo-600 sm:text-2xl dark:text-white dark:group-hover:text-indigo-300">
               {siteConfig.authorName}
             </span>
-            <span className="mt-1 text-[9px] font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400 sm:text-[10px]">
+            <span className="mt-1 font-mono text-[9px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400 sm:text-[10px]">
               {siteConfig.handle} · CS 2025
             </span>
           </Link>
@@ -201,7 +201,7 @@ export default function Navbar() {
                       <Link
                         href={item.href as string}
                         aria-current={active ? "page" : undefined}
-                        className={`rounded-full px-3 py-2 text-sm font-bold transition-colors ${
+                        className={`px-3 py-2 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors md:text-[11px] ${
                           active
                             ? "text-indigo-600 dark:text-indigo-400"
                             : "text-slate-700 hover:text-indigo-600 dark:text-slate-200 dark:hover:text-indigo-400"
@@ -242,7 +242,7 @@ export default function Navbar() {
                       // A click opens the menu instead of toggling it: with hover already
                       // opening it, a toggle would slam it shut just as the user clicks.
                       onClick={() => openDropdown(item.label)}
-                      className={`flex items-center gap-1 rounded-full px-3 py-2 text-sm font-bold transition-colors ${
+                      className={`flex items-center gap-1 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors md:text-[11px] ${
                         active || expanded
                           ? "text-indigo-600 dark:text-indigo-400"
                           : "text-slate-700 hover:text-indigo-600 dark:text-slate-200 dark:hover:text-indigo-400"
@@ -268,7 +268,7 @@ export default function Navbar() {
                     <div
                       id={panelId}
                       hidden={!expanded}
-                      className="absolute left-0 top-full mt-2 w-64 rounded-2xl border border-white/60 bg-white/95 p-2 shadow-xl backdrop-blur-xl dark:border-white/10 dark:bg-slate-900/95"
+                      className="absolute left-0 top-full mt-2 w-64 rounded-sm border border-white/60 bg-white/95 p-2 shadow-xl backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/95"
                     >
                       <ul>
                         {(item.children ?? []).map((child) => {
@@ -306,7 +306,7 @@ export default function Navbar() {
             aria-expanded={mobileOpen}
             aria-controls="mobile-navigation"
             onClick={() => setMobileOpen(true)}
-            className="flex h-11 w-11 items-center justify-center rounded-full border border-white/50 bg-white/70 text-slate-800 shadow-md transition-colors hover:bg-white md:hidden dark:border-white/10 dark:bg-slate-800/80 dark:text-slate-100"
+            className="flex h-11 w-11 items-center justify-center rounded-sm border border-white/40 bg-white/70 text-slate-800 transition-colors hover:bg-white md:hidden dark:border-white/15 dark:bg-slate-900/80 dark:text-slate-100"
           >
             <span className="sr-only">Open navigation menu</span>
             <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5">

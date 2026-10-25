@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 // Self-hosted fonts (from the geist npm package), served locally instead of Google Fonts — no network needed at build time
 import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
+import '@fontsource/anton/400.css';
 import "./globals.css";
 import { ThemeProvider } from "../components/ThemeProvider";
 import { MotionConfig } from 'framer-motion';
 import EffectsGate from '../components/EffectsGate';
+import SiteFooter from '../components/SiteFooter';
 import DesktopOnly from '../components/DesktopOnly';
 import BackgroundEffects from "../components/BackgroundEffects";
 import { MusicProvider } from "../components/MusicProvider";
@@ -162,7 +164,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               <div className="fixed inset-0 z-[-1] pointer-events-none overflow-hidden">
                 <EffectsGate><SiteBackground /></EffectsGate>
                 {/* Full-screen backdrop-blur removed: it sat on top of the moving background, which re-blurred the whole screen every frame. Using a translucent veil plus the background image's own blur instead */}
-                <div className="absolute inset-0 z-[-9] bg-white/72 dark:bg-slate-950/58 transition-colors duration-1000"></div>
+                <div className="absolute inset-0 z-[-9] bg-white/80 dark:bg-slate-950/66 transition-colors duration-1000"></div>
 
                 <div
                   className="absolute -inset-[20%] z-[-8] opacity-60 dark:opacity-20 mix-blend-color transition-opacity duration-1000 will-change-transform"
@@ -190,6 +192,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 
               <div className="relative z-10 flex-1 flex flex-col">
                 {children}
+                <SiteFooter />
               </div>
 
               <div className="hidden md:block">

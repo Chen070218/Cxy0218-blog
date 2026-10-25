@@ -85,7 +85,7 @@ export default function AboutPage() {
             <div className="mt-4 flex flex-wrap gap-3 text-sm font-bold">
               <a
                 href={siteConfig.social.github}
-                className="rounded-full bg-indigo-600 px-4 py-2 text-white transition-colors hover:bg-indigo-500"
+                className="rounded-full bg-indigo-300 px-4 py-2 text-slate-950 transition-colors hover:bg-indigo-500"
               >
                 GitHub ↗
               </a>

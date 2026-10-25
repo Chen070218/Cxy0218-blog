@@ -81,7 +81,7 @@ export default function CalculatorTool() {
             key={btn}
             onClick={() => handleCalcClick(btn)}
             className={`h-10 rounded-xl text-sm font-bold flex items-center justify-center shadow-sm active:scale-95 transition-all
-              ${btn === '=' ? 'col-span-2 bg-indigo-500 text-white hover:bg-indigo-600' 
+              ${btn === '=' ? 'col-span-2 bg-indigo-300 text-slate-950 hover:bg-indigo-200' 
               : ['C', '(', ')', '/', '*', '-', '+'].includes(btn) ? 'bg-indigo-500/10 dark:bg-indigo-500/20 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-500/20'
               : 'bg-white/80 dark:bg-slate-700/80 text-slate-700 dark:text-slate-200 hover:bg-white dark:hover:bg-slate-600'}
             `}

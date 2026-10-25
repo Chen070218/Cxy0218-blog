@@ -67,8 +67,6 @@ export default function Home() {
         <PageTransition>
           {/* 🌟 Adjust the container padding for smaller phone screens */}
           <div className="w-full max-w-6xl mx-auto mt-24 sm:mt-28 px-4 sm:px-6 lg:px-10 relative z-10">
-            <SearchBar posts={allPosts} />
-
             <main id="main-content" className="flex flex-col gap-6 w-full mt-6">
 
               {/* Row one: profile + player */}
@@ -85,6 +83,8 @@ export default function Home() {
 
               {/* Lyric bar */}
               <div className="w-full mt-[-10px]"><LyricBar/></div>
+
+              <SearchBar posts={allPosts} />
 
               {/* Row two: latest posts carousel + photo wall + moments + theme toggle */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full">

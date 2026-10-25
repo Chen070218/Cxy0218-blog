@@ -122,7 +122,7 @@ export default function FriendsBoard() {
 
           <button
             onClick={handleCopy}
-            className="absolute top-2 right-2 md:top-3 md:right-3 p-1.5 md:p-2 rounded-lg bg-white/80 dark:bg-slate-800/80 hover:bg-indigo-500 hover:text-white dark:hover:bg-indigo-500 transition-all duration-300 shadow-sm backdrop-blur-sm"
+            className="absolute top-2 right-2 md:top-3 md:right-3 p-1.5 md:p-2 rounded-lg bg-white/80 dark:bg-slate-800/80 hover:bg-indigo-300 hover:text-slate-950 dark:hover:bg-indigo-500 transition-all duration-300 shadow-sm backdrop-blur-sm"
             title="Copy"
           >
             {isCopied ? (

@@ -45,36 +45,40 @@ export default function SplashScreen() {
       {show && (
         <motion.div
           key="splash-screen-container"
-          exit={{ opacity: 0, scale: 1.1, filter: "blur(20px)" }}
+          exit={{ opacity: 0, scale: 1.02, filter: "blur(12px)" }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
-          className="fixed inset-0 z-[100000] flex flex-col items-center justify-center bg-white dark:bg-slate-950"
+          className="fixed inset-0 z-[100000] flex flex-col items-center justify-center bg-slate-950 text-slate-100"
         >
-          <div className="relative z-10 flex flex-col items-center">
-            {/* Avatar halo */}
-            <div className="relative w-24 h-24 mb-8">
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                className="absolute -inset-1.5 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 opacity-60 blur-[3px]"
-              />
-              <div className="relative w-full h-full rounded-full p-1.5 bg-white dark:bg-slate-900 shadow-xl">
-                <img decoding="async" src={siteConfig.avatarUrl} alt={siteConfig.avatarAlt} className="w-full h-full rounded-full object-cover" />
-              </div>
+          {/* hairline frame, echoing the archive/desktop reference */}
+          <div aria-hidden="true" className="pointer-events-none absolute inset-4 border border-white/10 md:inset-8" />
+          <p aria-hidden="true" className="absolute left-6 top-6 font-mono text-[9px] uppercase tracking-[0.28em] text-slate-500 md:left-10 md:top-10">
+            CXY0218 / Archive
+          </p>
+          <p aria-hidden="true" className="absolute bottom-6 right-6 font-mono text-[9px] uppercase tracking-[0.28em] text-slate-500 md:bottom-10 md:right-10">
+            Est. 2025
+          </p>
+
+          <div className="relative z-10 flex flex-col items-center px-6">
+            <div className="relative mb-8 h-16 w-16 border border-white/15 p-1.5">
+              <img decoding="async" src={siteConfig.avatarUrl} alt={siteConfig.avatarAlt} className="h-full w-full object-cover" />
             </div>
 
-            <p className="text-2xl font-black text-slate-800 dark:text-white mb-2 tracking-[0.2em] uppercase">
+            <p className="font-display text-4xl uppercase tracking-wide text-slate-100 sm:text-6xl">
               {siteConfig.authorName}
             </p>
-            <p className="text-[10px] font-black text-slate-400 tracking-[0.5em] mb-12">INITIALIZING SYSTEM</p>
+            <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.42em] text-indigo-300">Opening the archive</p>
 
-            <div className="w-40 h-[1.5px] bg-slate-200 dark:bg-slate-800 relative">
+            <div className="mt-12 h-px w-56 bg-white/10 md:w-72">
               <motion.div
                 initial={{ width: "0%" }}
                 animate={{ width: "100%" }}
                 transition={{ duration: 1.8, ease: "easeInOut" }}
-                className="absolute top-0 left-0 h-full bg-indigo-500 shadow-[0_0_12px_rgba(99,102,241,0.8)]"
+                className="h-full bg-indigo-300"
               />
             </div>
+            <p className="mt-4 font-mono text-[9px] uppercase tracking-[0.3em] text-slate-500">
+              Loading · {siteConfig.handle}
+            </p>
           </div>
         </motion.div>
       )}

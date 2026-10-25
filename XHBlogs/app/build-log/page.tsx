@@ -32,9 +32,11 @@ const process = [
   { period: 'Oct 14 – Oct 18', commits: '51', work: 'The main build: pages and components, the desktop pet, check-in, accessibility fixes, performance work, Cloudflare Pages deployment and the local package for submission.' },
   { period: 'Oct 21', commits: 'this rewrite', work: 'Full English rewrite of the interface and articles, rebuilt navigation, and a final accessibility and responsiveness pass.' },
   { period: 'Oct 24', commits: 'polish pass', work: 'Type checking turned back on, reduced-motion support, sitemap/robots/RSS/manifest/Open Graph, phone asset loading cut by more than half, and dead components removed.' },
+  { period: 'Oct 25', commits: 'visual pass', work: 'Reference-inspired redesign: condensed display headings, a chartreuse accent on near-black surfaces, monospaced labels, squared panels, a status-rail hero card, a global footer, and an axe colour-contrast audit in both themes.' },
 ];
 
 const decisions = [
+  { title: 'A visual system borrowed from a portfolio I liked', body: 'I wanted the site to read like an archive/portfolio instead of a blog theme. The reference pairs near-black surfaces with a pale chartreuse accent, condensed display type and monospaced micro-labels inside a hairline grid. I mapped the existing Tailwind palette onto those tokens (slate to warm black, indigo to chartreuse, purple and pink to bronze and clay), used Anton only for first-level headings, hero text and numbers, squared the card corners, and kept the anime artwork as the site identity. Both themes are checked with axe for contrast, not just eyeballed.' },
   { title: 'Licensed 30-second previews, not a pirated stream', body: 'Mainstream streaming endpoints either need a paid account (NetEase now sends anonymous listeners to /404) or refuse datacenter IPs (Apple\'s API blocks Cloudflare). The playlist therefore has two halves: eight full-length free-licensed instrumentals from ccMixter, hosted with the site and credited on /music under their CC BY licences, which play offline on any device; and 30-second Apple previews of popular songs. Playback is legal and guaranteed instead of pretending a stream works.' },
   {
     title: 'Next.js App Router, exported as static files',
@@ -106,7 +108,7 @@ export default function BuildLogPage() {
           <div className="mt-6 flex flex-wrap gap-3 text-sm font-bold">
             <a
               href="https://cxy0218-blog.pages.dev/"
-              className="rounded-full bg-indigo-600 px-4 py-2 text-white transition-colors hover:bg-indigo-500"
+              className="rounded-full bg-indigo-300 px-4 py-2 text-slate-950 transition-colors hover:bg-indigo-500"
             >
               Live site ↗
             </a>

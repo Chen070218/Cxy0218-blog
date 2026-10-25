@@ -72,7 +72,7 @@ export default function ChatterBoard({ chatters }: { chatters: Chatter[] }) {
               onClick={() => setActiveTag(tag)}
               className={`px-3 py-1.5 md:px-5 md:py-2 rounded-lg md:rounded-xl text-[10px] md:text-xs font-black transition-all duration-500 border ${
                 activeTag === tag 
-                ? 'bg-indigo-500 text-white border-indigo-500 shadow-md md:shadow-lg md:shadow-indigo-500/30 scale-105' 
+                ? 'bg-indigo-300 text-slate-950 border-indigo-500 shadow-md md:shadow-lg md:shadow-indigo-500/30 scale-105' 
                 : 'bg-white/30 dark:bg-slate-800/30 text-slate-600 dark:text-slate-400 border-white/20 dark:border-white/5 hover:bg-white/60 dark:hover:bg-slate-700/60'
               }`}
             >
