@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useMemo, useState } from 'react';
+import { Fragment, useEffect, useRef, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Pause, SkipBack, SkipForward, Repeat, Shuffle, RefreshCcw, ListMusic, Mic2, Disc3, Volume2, VolumeX, Search, X, MessageSquare } from 'lucide-react';
 import Navbar from '../../components/Navbar';
@@ -263,10 +263,12 @@ export default function MusicClient() {
                     </div>
                     <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 flex flex-col gap-2 md:gap-2.5">
                       <AnimatePresence mode='popLayout'>
-                        {filteredPlaylist.map((song: any) => {
+                        {filteredPlaylist.map((song: any, index: number) => {
                           const originalIndex = playlist.findIndex((s: any) => s.id === song.id);
                           const isPlayingThis = (song.id === currentSong.id);
-                          return (
+                          const previous = index > 0 ? filteredPlaylist[index - 1] : null;
+                          const showGroup = !previous || previous.kind !== song.kind;
+                          const row = (
                             <motion.div layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95 }} key={song.id} onClick={() => handlePlaySong(originalIndex)} className={`group flex items-center justify-between p-3 md:p-4 rounded-xl md:rounded-2xl cursor-pointer transition-all border ${isPlayingThis ? 'bg-white/60 dark:bg-slate-700/80 shadow-md border-indigo-500/30' : 'border-transparent hover:bg-white/30 dark:hover:bg-slate-700/40'}`}>
                               <div className="flex items-center gap-3 md:gap-4 w-[85%]">
                                 <div className="relative w-10 h-10 md:w-12 md:h-12 shrink-0 rounded-lg md:rounded-xl overflow-hidden shadow-sm">
@@ -274,9 +276,21 @@ export default function MusicClient() {
                                   {isPlayingThis && isPlaying && <div className="absolute inset-0 bg-black/40 flex items-center justify-center backdrop-blur-[1px]"><div className="flex gap-[3px] items-end h-2 md:h-3"><span className="w-0.5 bg-white rounded-full animate-[bounce_1s_infinite_0ms]" /><span className="w-0.5 bg-white rounded-full animate-[bounce_1s_infinite_200ms]" /><span className="w-0.5 bg-white rounded-full animate-[bounce_1s_infinite_400ms]" /></div></div>}
                                 </div>
                                 <div className="flex flex-col truncate"><span className={`text-sm md:text-[15px] font-black truncate ${isPlayingThis ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-800 dark:text-slate-200'}`}>{song.title || song.name}</span><span className="text-[10px] md:text-[11px] font-medium text-slate-500 dark:text-slate-400 truncate mt-0.5">{song.artist || song.author}</span></div>
-                                <span className={`ml-auto shrink-0 rounded-full px-2 py-0.5 text-[9px] font-black uppercase tracking-wider ${song.kind === 'full' ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-300' : 'bg-slate-500/10 text-slate-500 dark:text-slate-400'}`}>{song.kind === 'full' ? 'Full' : '30s'}</span>
+                                <span className="ml-auto flex shrink-0 items-center gap-2">
+                                  <span className="text-[10px] font-bold tabular-nums text-slate-500 dark:text-slate-400">{formatTime(song.durationSec || 0)}</span>
+                                  <span className={`rounded-full px-2 py-0.5 text-[9px] font-black uppercase tracking-wider ${song.kind === 'full' ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-300' : 'bg-slate-500/10 text-slate-500 dark:text-slate-400'}`}>{song.kind === 'full' ? 'Full' : '30s'}</span>
+                                </span>
                               </div>
                             </motion.div>
+                          );
+                          if (!showGroup) return row;
+                          return (
+                            <Fragment key={song.id + '-group'}>
+                              <div className="px-2 pt-1 text-[10px] font-black uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">
+                                {song.kind === 'full' ? 'Full tracks' : 'Popular previews'}
+                              </div>
+                              {row}
+                            </Fragment>
                           );
                         })}
                       </AnimatePresence>

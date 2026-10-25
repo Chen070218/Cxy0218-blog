@@ -103,6 +103,7 @@ export function MusicProvider({ children }: { children: ReactNode }) {
           lrcUrl: null,
           lyrics: [],
           kind: track.kind,
+          durationSec: track.durationSec,
           preview: track.kind === 'preview',
           license: track.license,
           licenseUrl: track.licenseUrl,
@@ -257,6 +258,7 @@ export function MusicProvider({ children }: { children: ReactNode }) {
         <audio
           ref={audioRef}
           src={currentSong.src}
+          preload="metadata"
           onTimeUpdate={handleTimeUpdate}
           onEnded={handleEnded} // use our rewritten end handler
           onLoadedMetadata={handleTimeUpdate}

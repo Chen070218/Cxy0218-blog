@@ -19,6 +19,8 @@ import "katex/dist/katex.min.css";
 import Navbar from "../../../components/Navbar";
 import PageTransition from "../../../components/PageTransition";
 import SmartImage from "../../../components/SmartImage";
+import ReadingProgress from "../../../components/ReadingProgress";
+import CodeCopy from "../../../components/CodeCopy";
 import { siteConfig } from "../../../siteConfig";
 
 const chatterDir = () => path.join(process.cwd(), "chatters");
@@ -60,9 +62,25 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const item = await getChatter(slug);
   if (!item) return { title: `Musings | ${siteConfig.title}` };
+  const description = `${item.title} — a short note by ${siteConfig.authorName}.`;
   return {
     title: `${item.title} | ${siteConfig.title}`,
-    description: `${item.title} — a short note by ${siteConfig.authorName}.`,
+    description,
+    alternates: { canonical: `/chatter/${slug}/` },
+    openGraph: {
+      type: 'article',
+      title: item.title,
+      description,
+      url: `/chatter/${slug}/`,
+      images: [{ url: item.cover, width: 1200, height: 833, alt: item.title }],
+      authors: [siteConfig.authorName],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: item.title,
+      description,
+      images: [item.cover],
+    },
   };
 }
 
@@ -73,6 +91,7 @@ export default async function ChatterDetail({ params }: { params: Promise<{ slug
 
   return (
     <div className="min-h-screen relative pb-24">
+      <ReadingProgress targetId="chatter-content" />
       <Navbar />
       <PageTransition>
         <main id="main-content" className="w-[92%] md:w-[90%] max-w-3xl mx-auto mt-24 md:mt-28">
@@ -94,7 +113,8 @@ export default async function ChatterDetail({ params }: { params: Promise<{ slug
                   </span>
                 ))}
               </div>
-              <div className="prose prose-slate dark:prose-invert max-w-none mt-6" dangerouslySetInnerHTML={{ __html: prefixHtml(item.contentHtml) }} />
+              <div id="chatter-content" className="prose prose-slate dark:prose-invert max-w-none mt-6" dangerouslySetInnerHTML={{ __html: prefixHtml(item.contentHtml) }} />
+              <CodeCopy rootId="chatter-content" />
             </div>
           </article>
         </main>

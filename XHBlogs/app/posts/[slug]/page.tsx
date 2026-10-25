@@ -27,6 +27,8 @@ import ClientSocials from '../../../components/ClientSocials';
 import ClientTOC from '../../../components/ClientTOC';
 import BackButton from '../../../components/BackButton';
 import SidebarLyric from '../../../components/SidebarLyric';
+import CodeCopy from '../../../components/CodeCopy';
+import ReadingProgress from '../../../components/ReadingProgress';
 
 export async function generateStaticParams() {
   const postsDirectory = path.join(process.cwd(), 'posts');
@@ -119,9 +121,28 @@ async function getPostData(slug: string) {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const post = await getPostData(slug);
+  const description = post.description || `${post.title} — an article by ${siteConfig.authorName}.`;
+  const published = post.date ? new Date(String(post.date).replace(' ', 'T')) : undefined;
+  const iso = published && !Number.isNaN(published.getTime()) ? published.toISOString() : undefined;
   return {
     title: `${post.title} | ${siteConfig.title}`,
-    description: post.description || `${post.title} — an article by ${siteConfig.authorName}.`,
+    description,
+    alternates: { canonical: `/posts/${slug}/` },
+    openGraph: {
+      type: 'article',
+      title: post.title,
+      description,
+      url: `/posts/${slug}/`,
+      images: [{ url: post.cover, width: 1200, height: 833, alt: post.title }],
+      publishedTime: iso,
+      authors: [siteConfig.authorName],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description,
+      images: [post.cover],
+    },
   };
 }
 
@@ -145,9 +166,25 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
 
   return (
     <div className="min-h-screen relative pb-20">
+      <ReadingProgress />
       <Navbar />
       <PageTransition>
         <main id="main-content" className="w-[95%] md:w-[90%] max-w-6xl mx-auto mt-24 md:mt-28 flex flex-col lg:flex-row gap-6 md:gap-8 relative z-10">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'BlogPosting',
+              headline: postData.title,
+              description: postData.description,
+              datePublished: postData.date ? new Date(String(postData.date).replace(' ', 'T')).toISOString() : undefined,
+              author: { '@type': 'Person', name: siteConfig.authorName },
+              image: postData.cover,
+              mainEntityOfPage: { '@type': 'WebPage', '@id': (process.env.NEXT_PUBLIC_SITE_URL || 'https://cxy0218-blog.pages.dev').replace(/\/$/, '') + '/posts/' + postData.slug + '/' },
+            }),
+          }}
+        />
 
           <article className="flex-1 bg-white/60 dark:bg-slate-800/50 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/40 dark:border-white/10 overflow-hidden transition-colors duration-700">
             <div className="w-full aspect-video bg-slate-200 dark:bg-slate-700 relative group">
@@ -272,6 +309,7 @@ export default async function Post({ params }: { params: Promise<{ slug: string 
                   className="prose prose-slate dark:prose-invert prose-base md:prose-lg max-w-none text-slate-800 dark:text-slate-200 transition-colors duration-700 scroll-smooth"
                   dangerouslySetInnerHTML={{ __html: prefixHtml(postData.contentHtml) }}
                 />
+                <CodeCopy rootId="article-content" />
               </div>
 
               <div className="mt-12 md:mt-16">

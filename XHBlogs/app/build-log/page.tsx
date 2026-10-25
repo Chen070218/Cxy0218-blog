@@ -11,7 +11,7 @@ export const metadata = {
 const pages = [
   { route: '/', name: 'Home', purpose: 'Short introduction, latest writing, photo wall and dashboard.', interactive: 'Live clock, rotating carousel, music player, theme switch' },
   { route: '/posts', name: 'Posts', purpose: 'Longer write-ups about things I built or got stuck on.', interactive: 'Search and tag filtering' },
-  { route: '/posts/[slug]', name: 'Article', purpose: 'One article with table of contents and reading progress.', interactive: 'Scroll spy, copy-button on code blocks' },
+  { route: '/posts/[slug]', name: 'Article', purpose: 'One article with table of contents and reading progress.', interactive: 'Scroll spy, reading progress, copy buttons on code' },
   { route: '/chatter', name: 'Musings', purpose: 'Shorter, looser notes than the articles.', interactive: 'Filter by tag, mood badges' },
   { route: '/timeline', name: 'Timeline', purpose: 'Everything I have published, in one chronological view.', interactive: 'Expandable timeline nodes' },
   { route: '/local-posts', name: 'Local Drafts', purpose: 'Drafts written in the browser and stored only on this device.', interactive: 'Local save, open, delete' },
@@ -81,7 +81,8 @@ const checks = [
   'The HTML language is set to en, dates and numbers are formatted in English, and no Chinese text remains anywhere in the interface, articles or metadata.',
   'Reduced-motion mode removes every decorative animation (measured 113 animated elements down to 0) and skips the splash screen, while navigation and forms keep working.',
   'On a throttled 4G phone profile the home page went from 1.45 MB and 5.6 s LCP to 655 KB and 2.4 s; the pet no longer preloads its sprites on phones.',
-  'SEO files are generated at build time: sitemap.xml, robots.txt, rss.xml, manifest.webmanifest, Open Graph/Twitter cards and JSON-LD.',
+  'SEO files are generated at build time: sitemap.xml, robots.txt, rss.xml, manifest.webmanifest, Open Graph/Twitter cards and JSON-LD; every article has its own canonical URL and BlogPosting data.',
+  'Article code blocks have a Copy button and long articles show a reading-progress bar; the music playlist is grouped into full tracks and previews with durations.',
   'Full-length tracks play from the site\'s own audio files (checked offline in the local package and online), and every preview is labelled as a 30-second clip.',
 ];
 
