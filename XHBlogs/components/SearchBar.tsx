@@ -74,7 +74,7 @@ export default function SearchBar({ posts = [] }: { posts: Post[] }) {
         {/* Render the input first */}
         <input
           type="text"
-          className="w-full pl-14 pr-6 py-4 bg-white/60 dark:bg-slate-950/55 backdrop-blur-xl border border-white/40 dark:border-white/15 rounded-sm shadow-xl focus:outline-none focus:ring-2 focus:ring-indigo-400/50 text-slate-800 dark:text-slate-100 transition-all placeholder-slate-500 dark:placeholder-slate-400 font-mono text-sm md:text-base relative z-0"
+          className="w-full pl-14 pr-6 py-4 bg-white/90 dark:bg-slate-950/85 border border-white/40 dark:border-white/15 rounded-sm shadow-xl focus:outline-none focus:ring-2 focus:ring-indigo-400/50 text-slate-800 dark:text-slate-100 transition-all placeholder-slate-500 dark:placeholder-slate-400 font-mono text-sm md:text-base relative z-0"
           placeholder="Search titles, descriptions or tags…" aria-label="Search posts"
           value={searchQuery}
           onChange={(e) => {
@@ -112,7 +112,7 @@ export default function SearchBar({ posts = [] }: { posts: Post[] }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.98 }}
             transition={{ duration: 0.2 }}
-            className="absolute top-full left-0 right-0 mt-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-3xl border border-white/50 dark:border-slate-700/50 rounded-3xl shadow-2xl overflow-hidden max-h-[450px] overflow-y-auto z-20"
+            className="absolute top-full left-0 right-0 mt-4 bg-white/90 dark:bg-slate-900/903xl border border-white/50 dark:border-slate-700/50 rounded-3xl shadow-2xl overflow-hidden max-h-[450px] overflow-y-auto z-20"
           >
             {searchResults.length > 0 ? (
               <div className="flex flex-col py-3">

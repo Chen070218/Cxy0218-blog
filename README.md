@@ -164,6 +164,7 @@ double-click the launcher, no installation and no network needed for the site it
 - Palette: near-black surfaces (`slate` remapped) with a pale chartreuse accent (`indigo` remapped); purple/pink are mapped to bronze/clay so old utility classes stay coherent.
 - Type: Geist Sans for body copy, Geist Mono for labels, and the self-hosted **Anton** display face for `h1`, hero text and stat numbers.
 - Panels are squared, hairline-bordered and dark in both themes, after the archive/portfolio reference the site was aligned to. Every page ends in a shared footer.
+- Large panels use opaque fills instead of `backdrop-filter`: sixteen blurred layers plus a moving gradient made scrolling stutter. Only small, transient surfaces (menus, tooltips) blur.
 
 ## Content and data
 

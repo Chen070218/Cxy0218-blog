@@ -171,7 +171,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                   style={{
                     background: `linear-gradient(-45deg, ${siteConfig.themeColors.join(', ')})`,
                     backgroundSize: '100% 100%',
-                    animation: 'gradientMove 15s ease infinite' // 🌟 keep the gradient flowing at every breakpoint
                   }}
                 ></div>
 

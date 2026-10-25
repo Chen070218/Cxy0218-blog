@@ -31,7 +31,7 @@ export default function SiteDashboard() {
 
   return (
     // A long strip spanning all 12 columns
-    <div className="md:col-span-12 rounded-3xl bg-slate-950/75 backdrop-blur-md border border-white/15 shadow-xl overflow-hidden flex flex-col md:flex-row items-stretch transition-colors duration-700 h-auto md:h-20 group">
+    <div className="md:col-span-12 rounded-3xl bg-slate-950/90 border border-white/15 shadow-xl overflow-hidden flex flex-col md:flex-row items-stretch transition-colors duration-700 h-auto md:h-20 group">
 
       {/* Left: flip-clock effect (monospace font) */}
       <div className="bg-slate-900 dark:bg-black text-white px-8 py-4 md:py-0 flex items-center justify-center font-mono text-2xl md:text-3xl font-black tracking-widest shadow-inner relative overflow-hidden group-hover:text-indigo-400 transition-colors">

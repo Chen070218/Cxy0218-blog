@@ -173,7 +173,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-white/20 bg-white/80 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/70">
+      <header className="fixed inset-x-0 top-0 z-50 border-b border-white/20 bg-white/95 dark:border-white/10 dark:bg-slate-950/90">
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-[80] focus:rounded-full focus:bg-indigo-300 focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-slate-950"
@@ -268,7 +268,7 @@ export default function Navbar() {
                     <div
                       id={panelId}
                       hidden={!expanded}
-                      className="absolute left-0 top-full mt-2 w-64 rounded-sm border border-white/60 bg-white/95 p-2 shadow-xl backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/95"
+                      className="absolute left-0 top-full mt-2 w-64 rounded-sm border border-white/60 bg-white/95 p-2 shadow-xl dark:border-white/10 dark:bg-slate-950/95"
                     >
                       <ul>
                         {(item.children ?? []).map((child) => {
@@ -319,7 +319,7 @@ export default function Navbar() {
       {mobileOpen && (
         <div className="fixed inset-0 z-[70] md:hidden">
           <div
-            className="absolute inset-0 bg-slate-950/60 backdrop-blur-sm"
+            className="absolute inset-0 bg-slate-950/60"
             onClick={() => setMobileOpen(false)}
             aria-hidden="true"
           />

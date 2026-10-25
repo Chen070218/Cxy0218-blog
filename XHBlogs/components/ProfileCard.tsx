@@ -16,7 +16,7 @@ export default function ProfileCard({ postCount, momentCount, photoCount }: { po
   return (
     <div
       onClick={() => router.push('/about')}
-      className="group relative flex h-full min-h-[260px] cursor-pointer flex-col justify-between overflow-hidden rounded-sm border border-white/15 bg-slate-950/60 p-5 shadow-xl backdrop-blur-md transition-colors duration-500 hover:border-indigo-300/40 sm:p-6 md:col-span-7 md:min-h-[320px] md:p-7"
+      className="group relative flex h-full min-h-[260px] cursor-pointer flex-col justify-between overflow-hidden rounded-sm border border-white/15 bg-slate-950/90 p-5 shadow-xl transition-colors duration-500 hover:border-indigo-300/40 sm:p-6 md:col-span-7 md:min-h-[320px] md:p-7"
     >
       {/* top status rail, borrowed from the archive/desktop aesthetic */}
       <div className="relative z-10 mb-5 flex flex-wrap items-center gap-x-4 gap-y-1 border-b border-white/10 pb-3 font-mono text-[9px] uppercase tracking-[0.18em] text-slate-400 md:text-[10px]">

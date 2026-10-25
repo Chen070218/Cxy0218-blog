@@ -37,7 +37,7 @@ export default function CloudPlayer() {
 
   if (isLoading) {
     return (
-      <div className="h-full w-full rounded-3xl bg-slate-950/75 backdrop-blur-md border border-white/15 shadow-xl p-6 flex flex-col items-center justify-center transition-colors duration-700">
+      <div className="h-full w-full rounded-3xl bg-slate-950/90 border border-white/15 shadow-xl p-6 flex flex-col items-center justify-center transition-colors duration-700">
         <div className="w-10 h-10 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mb-4"></div>
         <span className="text-slate-800 dark:text-white font-bold tracking-widest animate-pulse text-sm">CONNECTING...</span>
       </div>
@@ -51,7 +51,7 @@ export default function CloudPlayer() {
 
   if (playlist.length === 0 || !currentSong) {
     return (
-      <div className="h-full w-full rounded-3xl bg-slate-950/75 backdrop-blur-md border border-white/15 shadow-xl p-6 flex flex-col items-center justify-center transition-all duration-700">
+      <div className="h-full w-full rounded-3xl bg-slate-950/90 border border-white/15 shadow-xl p-6 flex flex-col items-center justify-center transition-all duration-700">
         <div className="w-16 h-16 mb-4 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center shadow-inner opacity-50">
           <svg className="w-8 h-8 text-slate-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
         </div>
@@ -97,7 +97,7 @@ export default function CloudPlayer() {
       {/* 🌟 Ultimate logic: bind onClick on the outer Div to navigate */}
       <div
         onClick={() => router.push('/music')}
-        className="h-full w-full rounded-3xl bg-slate-950/75 backdrop-blur-md border border-white/15 shadow-xl p-6 flex flex-col justify-between transition-all duration-700 hover:border-indigo-300/40 relative group overflow-hidden cursor-pointer"
+        className="h-full w-full rounded-3xl bg-slate-950/90 border border-white/15 shadow-xl p-6 flex flex-col justify-between transition-all duration-700 hover:border-indigo-300/40 relative group overflow-hidden cursor-pointer"
       >
         <div className={`absolute -top-20 -right-20 w-48 h-48 bg-indigo-500/20 blur-[50px] rounded-full transition-opacity duration-1000 ${isPlaying ? 'opacity-100' : 'opacity-30'}`}></div>
 
@@ -111,7 +111,7 @@ export default function CloudPlayer() {
           >
             <img decoding="async" src={currentSong.cover?.replace("/600x600bb", "/300x300bb")} alt="Album cover" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
             <div className="absolute inset-0 bg-black/10"></div>
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 bg-white/80 backdrop-blur-sm rounded-full border border-gray-300 shadow-inner"></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 bg-white/80 rounded-full border border-gray-300 shadow-inner"></div>
           </div>
 
           <div className="flex-col overflow-hidden w-full">
