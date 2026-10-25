@@ -28,6 +28,7 @@ const FULL_TRACKS = [
     license: 'CC BY 3.0',
     licenseUrl: 'https://creativecommons.org/licenses/by/3.0/',
     sourceUrl: 'https://ccmixter.org/files/djlang59/37792',
+    durationSec: 315,
   },
   {
     id: 'full-improvisation-on-friday',
@@ -37,6 +38,7 @@ const FULL_TRACKS = [
     license: 'CC BY 3.0',
     licenseUrl: 'https://creativecommons.org/licenses/by/3.0/',
     sourceUrl: 'https://ccmixter.org/files/AlexBeroza/17253',
+    durationSec: 217,
   },
   {
     id: 'full-parametaphoriquement',
@@ -46,6 +48,7 @@ const FULL_TRACKS = [
     license: 'CC BY 3.0',
     licenseUrl: 'https://creativecommons.org/licenses/by/3.0/',
     sourceUrl: 'https://ccmixter.org/files/gmz/19367',
+    durationSec: 289,
   },
   {
     id: 'full-silence-await',
@@ -55,6 +58,7 @@ const FULL_TRACKS = [
     license: 'CC BY 3.0',
     licenseUrl: 'https://creativecommons.org/licenses/by/3.0/',
     sourceUrl: 'https://ccmixter.org/files/cdk/17432',
+    durationSec: 199,
   },
   {
     id: 'full-awel',
@@ -64,6 +68,7 @@ const FULL_TRACKS = [
     license: 'CC BY 2.5',
     licenseUrl: 'https://creativecommons.org/licenses/by/2.5/',
     sourceUrl: 'https://ccmixter.org/files/stefsax/7785',
+    durationSec: 185,
   },
   {
     id: 'full-urbana-metronica',
@@ -73,6 +78,7 @@ const FULL_TRACKS = [
     license: 'CC BY 3.0',
     licenseUrl: 'https://creativecommons.org/licenses/by/3.0/',
     sourceUrl: 'https://ccmixter.org/files/jlbrock44/33345',
+    durationSec: 207,
   },
   {
     id: 'full-long-goodbye',
@@ -82,6 +88,7 @@ const FULL_TRACKS = [
     license: 'CC BY 2.5',
     licenseUrl: 'https://creativecommons.org/licenses/by/2.5/',
     sourceUrl: 'https://ccmixter.org/files/flatwound/14476',
+    durationSec: 134,
   },
   {
     id: 'full-rkod-pulse',
@@ -91,6 +98,7 @@ const FULL_TRACKS = [
     license: 'CC BY 3.0',
     licenseUrl: 'https://creativecommons.org/licenses/by/3.0/',
     sourceUrl: 'https://ccmixter.org/files/George_Ellinas/14073',
+    durationSec: 198,
   },
 ];
 
@@ -139,6 +147,7 @@ async function resolvePreviews() {
       license: 'Preview',
       licenseUrl: 'https://www.apple.com/legal/internet-services/itunes/',
       sourceUrl: track.trackViewUrl || 'https://music.apple.com/',
+      durationSec: Math.round((track.trackTimeMillis || 0) / 1000),
     });
   }
   return tracks;
@@ -154,6 +163,7 @@ const full = FULL_TRACKS.map((track) => ({
   license: track.license,
   licenseUrl: track.licenseUrl,
   sourceUrl: track.sourceUrl,
+  durationSec: track.durationSec,
 }));
 
 const previews = await resolvePreviews();
@@ -175,6 +185,7 @@ const file = [
   '  license: string;',
   '  licenseUrl: string;',
   '  sourceUrl: string;',
+  '  durationSec: number;',
   '};',
   '',
   'export const musicTracks: MusicTrack[] = [',
