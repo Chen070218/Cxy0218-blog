@@ -14,16 +14,14 @@ const pages = [
   { route: '/posts/[slug]', name: 'Article', purpose: 'One article with table of contents and reading progress.', interactive: 'Scroll spy, reading progress, copy buttons on code' },
   { route: '/chatter', name: 'Musings', purpose: 'Shorter, looser notes than the articles.', interactive: 'Filter by tag, mood badges' },
   { route: '/timeline', name: 'Timeline', purpose: 'Everything I have published, in one chronological view.', interactive: 'Expandable timeline nodes' },
-  { route: '/local-posts', name: 'Local Drafts', purpose: 'Drafts written in the browser and stored only on this device.', interactive: 'Local save, open, delete' },
   { route: '/courses', name: 'Courses', purpose: 'My weekly timetable for this semester.', interactive: 'Editable lessons, week switch' },
   { route: '/resources', name: 'Resources', purpose: 'Study links I keep coming back to.', interactive: 'Category filters, add your own' },
+  { route: '/hobbies', name: 'Hobbies', purpose: 'What I do off the clock: games, soundtracks, screenshots and German.', interactive: 'Four honest hobbies, links into the site' },
   { route: '/photowall', name: 'Photo Wall', purpose: 'Albums of screenshots and photos, with captions.', interactive: 'Lightbox with keyboard navigation' },
   { route: '/moments', name: 'Moments', purpose: 'Short diary entries with a location and images.', interactive: 'Image lightbox, comments' },
   { route: '/music', name: 'Music', purpose: 'What I listen to while coding.', interactive: 'Full free-licensed tracks and popular previews' },
   { route: '/checkin', name: 'Check-in', purpose: 'Time-block tracking with a monthly log.', interactive: 'Timer, calendar heat-map, export/import' },
-  { route: '/tree', name: 'Creative Workshop', purpose: 'Small 3D and canvas experiments.', interactive: 'Interactive 3D scenes' },
   { route: '/about', name: 'About Me', purpose: 'Who I am and why the site exists.', interactive: 'Profile card, social links' },
-  { route: '/friends', name: 'Friends', purpose: 'Sites I read, and how to apply to be listed.', interactive: 'Friend-link cards' },
 ];
 
 const process = [
@@ -34,9 +32,11 @@ const process = [
   { period: 'Oct 24', commits: 'polish pass', work: 'Type checking turned back on, reduced-motion support, sitemap/robots/RSS/manifest/Open Graph, phone asset loading cut by more than half, and dead components removed.' },
   { period: 'Oct 25', commits: 'visual pass', work: 'Reference-inspired redesign: condensed display headings, a chartreuse accent on near-black surfaces, monospaced labels, squared panels, a status-rail hero card, a global footer, and an axe colour-contrast audit in both themes.' },
   { period: 'Oct 25', commits: 'perf fix', work: 'Removed backdrop-filter from the large panels and stopped the full-screen gradient loop: scroll frame time on the home page dropped from ~38 ms to ~5 ms in the same headless test, and the page transition itself is ~130 ms.' },
+  { period: 'Nov 7', commits: 'simplification', work: 'After feedback that the site tried to do too much, removed the project gallery, the 3D workshop and the friends page, stopped listing browser drafts, and added a hobbies page. Five sections instead of six; the remaining pages are the ones I actually use.' },
 ];
 
 const decisions = [
+  { title: 'Fewer features, explained honestly', body: 'The first version tried to have everything: a project gallery, a 3D workshop, a friends page and browser drafts. The feedback was that it was too much, and it was right: those pages were the least used and the hardest to explain. I removed them instead of polishing them, and added a small hobbies page with four things I actually do. A shorter site is easier to present and easier to defend, because every remaining page has a reason.' },
   { title: 'Three self-hosted variable fonts, no webfont request to Google', body: 'Body copy uses Manrope, display headings and numbers use Space Grotesk, and labels, timestamps and code use JetBrains Mono. All three come from fontsource packages, so the build needs no network and the runtime never calls a third-party font host. Only the Latin subset is downloaded (about 87 KB total), font-display is swap, and the measured layout shift on first load is 0.' },
   { title: 'A frame-rate guard instead of blaming a slow machine', body: 'After load, PerfGuard samples two seconds of frames. If the median frame is over 22 ms, or a quarter of frames are over 34 ms, it adds perf-lite to the document: the ambient canvas layers, particles and desktop pet are hidden for the rest of the session, while the site keeps the static background. It re-runs in a new session, so a fast machine is never degraded permanently. This is why the heavy effects stay as an enhancement rather than a requirement.' },
   { title: 'Glass is expensive, so it stays on small surfaces only', body: 'Every backdrop-filter element forces the browser to re-sample whatever is behind it. With sixteen blurred panels over a moving gradient the home page scrolled at roughly 26 fps in a headless test. Removing the blur from the large cards, making them opaque enough to keep the look, and freezing the background gradient brought the same scroll to ~200 fps. The transient menu and modal surfaces still use a little blur where it is cheap.' },
@@ -130,7 +130,7 @@ export default function BuildLogPage() {
             Against the brief
           </h2>
           <ul className="mt-4 space-y-3 text-slate-700 dark:text-slate-300">
-            <li><strong className="text-slate-900 dark:text-white">At least four pages with working navigation.</strong> Fifteen routes, grouped into six sections. Every link is checked by a script that walks the whole site.</li>
+            <li><strong className="text-slate-900 dark:text-white">At least four pages with working navigation.</strong> Thirteen pages, grouped into five sections. Every link is checked by a script that walks the whole site.</li>
             <li><strong className="text-slate-900 dark:text-white">Own content.</strong> Six long articles, three moments and one design note, all written from my own coursework and debugging sessions — sorting assignments, the Linux lab, the move between two computers, the performance investigation.</li>
             <li><strong className="text-slate-900 dark:text-white">Semantic, accessible markup.</strong> Landmarks, heading hierarchy, labeled controls, keyboard-operable menus, visible focus, reduced-motion support and AA contrast in both themes.</li>
             <li><strong className="text-slate-900 dark:text-white">Responsive layout.</strong> Tested at phone, tablet and desktop widths; the navigation, timetable, check-in calendar and photo wall all have dedicated small-screen layouts.</li>
@@ -146,7 +146,7 @@ export default function BuildLogPage() {
             What is on the site
           </h2>
           <p className="mt-2 text-slate-700 dark:text-slate-300">
-            Fifteen routes, each with a reason to exist and something to do on it.
+            Every remaining page, with a reason to exist and something to do on it.
           </p>
           <div className="mt-4 overflow-x-auto">
             <table className="w-full min-w-[36rem] border-collapse text-left text-sm">

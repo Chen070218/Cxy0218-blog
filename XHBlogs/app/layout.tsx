@@ -53,6 +53,7 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
+      { url: withBasePath('/favicon-32.png'), sizes: '32x32', type: 'image/png' },
       { url: siteConfig.faviconUrl, type: 'image/webp' },
       { url: withBasePath('/icons/icon-192.png'), sizes: '192x192', type: 'image/png' },
     ],

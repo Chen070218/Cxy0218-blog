@@ -45,9 +45,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/resources', priority: 0.6, changeFrequency: 'monthly' },
     { path: '/checkin', priority: 0.6, changeFrequency: 'monthly' },
     { path: '/music', priority: 0.6, changeFrequency: 'monthly' },
-    { path: '/tree', priority: 0.6, changeFrequency: 'monthly' },
-    { path: '/friends', priority: 0.5, changeFrequency: 'monthly' },
-    { path: '/local-posts', priority: 0.4, changeFrequency: 'monthly' },
+    { path: '/hobbies', priority: 0.7, changeFrequency: 'monthly' },
   ];
 
   const pages: MetadataRoute.Sitemap = routes.map((route) => ({

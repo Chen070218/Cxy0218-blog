@@ -10,7 +10,7 @@ export const siteConfig = {
   handle: "cxy0218",
   role: "Computer Science, 2025 intake",
   avatarAlt: "Portrait of Chen Xiangyang",
-  bio: "Computer Science, 2025 intake, Hainan Bielefeld University of Applied Sciences. I'm studying programming, algorithms and data structures, operating systems, plus German and English.",
+  bio: "Computer Science, 2025 intake, Hainan Bielefeld University of Applied Sciences. I'm studying programming, algorithms and data structures, operating systems, plus German and English. Outside code I play Wuthering Waves, listen to soundtracks and keep screenshots.",
 
   navTitle: "Chen Xiangyang",
 

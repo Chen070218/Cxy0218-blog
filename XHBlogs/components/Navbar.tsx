@@ -11,19 +11,11 @@ type NavItem = { label: string; href?: string; children?: NavChild[] };
 const NAV_ITEMS: NavItem[] = [
   { label: "Home", href: "/" },
   {
-    label: "Projects",
-    children: [
-      { label: "Projects", href: "/projects", hint: "Things I have built" },
-      { label: "Creative Workshop", href: "/tree", hint: "Small 3D experiments" },
-    ],
-  },
-  {
     label: "Writing",
     children: [
       { label: "Posts", href: "/posts", hint: "Longer write-ups" },
       { label: "Musings", href: "/chatter", hint: "Shorter, looser notes" },
       { label: "Timeline", href: "/timeline", hint: "Everything, by date" },
-      { label: "Local Drafts", href: "/local-posts", hint: "Saved in this browser" },
     ],
   },
   {
@@ -31,15 +23,16 @@ const NAV_ITEMS: NavItem[] = [
     children: [
       { label: "Courses", href: "/courses", hint: "This semester's timetable" },
       { label: "Resources", href: "/resources", hint: "Links I keep coming back to" },
+      { label: "Check-in", href: "/checkin", hint: "Where the hours went" },
     ],
   },
   {
     label: "Life",
     children: [
+      { label: "Hobbies", href: "/hobbies", hint: "What I do off the clock" },
       { label: "Photo Wall", href: "/photowall", hint: "Screenshots and photos" },
       { label: "Moments", href: "/moments", hint: "Short diary entries" },
       { label: "Music", href: "/music", hint: "What I listen to while coding" },
-      { label: "Check-in", href: "/checkin", hint: "Where the hours went" },
     ],
   },
   {
@@ -47,7 +40,6 @@ const NAV_ITEMS: NavItem[] = [
     children: [
       { label: "About Me", href: "/about", hint: "Who I am" },
       { label: "Build Log", href: "/build-log", hint: "How this site was made" },
-      { label: "Friends", href: "/friends", hint: "Sites I read" },
     ],
   },
 ];

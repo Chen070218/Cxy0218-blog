@@ -4,7 +4,7 @@ Five minutes, then questions. This is the plan and the answers I want to have re
 
 ## 1. What the site is (45 s)
 
-> "A personal site and study workspace: 15 pages, live at cxy0218-blog.pages.dev, built with
+> "A personal site and study workspace: 13 pages, live at cxy0218-blog.pages.dev, built with
 > Next.js and exported as static files. It has a blog, a photo wall, a weekly timetable, a study
 > library, a time-tracking board, a Pomodoro timer and a desktop pet. Everything is in English:
 > interface, articles, dates, metadata and screen-reader labels."
@@ -29,7 +29,7 @@ Five minutes, then questions. This is the plan and the answers I want to have re
   browser, so every one of those pages has export and import buttons, and the page says so.
 - **Rebuilt navigation for English.** Chinese labels are short; the English ones are not. Twelve
   top-level items no longer fit, and the old circular drag-to-rotate phone menu could not be used
-  with a keyboard. I grouped the pages into six sections with accessible dropdowns and replaced the
+  with a keyboard. I grouped the pages into five sections with accessible dropdowns and replaced the
   circle with a standard drawer: focus moves into it, Tab stays inside, Escape closes it, focus
   returns to the trigger.
 
