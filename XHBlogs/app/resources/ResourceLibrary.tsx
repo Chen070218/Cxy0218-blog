@@ -1,5 +1,6 @@
 "use client";
 
+import { makeId } from '../../components/makeId';
 import { useEffect, useRef, useState } from 'react';
 import ConfirmDelete from '../../components/ConfirmDelete';
 import LocalFiles, { addLocalFiles, removeLocalFiles } from '../../components/LocalFiles';
@@ -54,7 +55,7 @@ export default function ResourceLibrary({ projectMode = false, initialItems = []
     const data = new FormData(event.currentTarget);
     const value = (key: string) => String(data.get(key) || '').trim();
     if (!value('title') || (value('url') && !safeUrl(value('url')))) { setNotice('Enter a name; if you add a link, use a valid http / https address.'); return; }
-    const item = { id: editing?.id || crypto.randomUUID(), title: value('title'), url: value('url'), category: value('category') || 'Uncategorized', note: value('note') };
+    const item = { id: editing?.id || makeId(), title: value('title'), url: value('url'), category: value('category') || 'Uncategorized', note: value('note') };
     const selected = Array.from((event.currentTarget.elements.namedItem('materials') as HTMLInputElement).files || []);
     setBusy(true);
     try {

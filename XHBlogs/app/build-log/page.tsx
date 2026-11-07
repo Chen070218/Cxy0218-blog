@@ -131,7 +131,7 @@ export default function BuildLogPage() {
           </h2>
           <ul className="mt-4 space-y-3 text-slate-700 dark:text-slate-300">
             <li><strong className="text-slate-900 dark:text-white">At least four pages with working navigation.</strong> Thirteen pages, grouped into five sections. Every link is checked by a script that walks the whole site.</li>
-            <li><strong className="text-slate-900 dark:text-white">Own content.</strong> Six long articles, three moments and one design note, all written from my own coursework and debugging sessions — sorting assignments, the Linux lab, the move between two computers, the performance investigation.</li>
+            <li><strong className="text-slate-900 dark:text-white">Own content.</strong> Five course notes and five musings, all written from my own Web Technologies lessons — URLs and DNS, HTML semantics, the cascade and the box model, the DOM and events, Git and deployment — plus screens from the course itself.</li>
             <li><strong className="text-slate-900 dark:text-white">Semantic, accessible markup.</strong> Landmarks, heading hierarchy, labeled controls, keyboard-operable menus, visible focus, reduced-motion support and AA contrast in both themes.</li>
             <li><strong className="text-slate-900 dark:text-white">Responsive layout.</strong> Tested at phone, tablet and desktop widths; the navigation, timetable, check-in calendar and photo wall all have dedicated small-screen layouts.</li>
             <li><strong className="text-slate-900 dark:text-white">At least one interactive element.</strong> The site goes well past one: a live clock, a pomodoro timer, a check-in tracker with calendar heat-map, an editable timetable, search and filters, a photo lightbox and a desktop pet with a state machine.</li>
@@ -248,7 +248,7 @@ export default function BuildLogPage() {
             Writing the English version
           </h2>
           <p className="mt-2 leading-relaxed text-slate-700 dark:text-slate-300">
-            The course is taught in English, so the whole site now speaks English: the interface, the six articles, the moments,
+            The course is taught in English, so the whole site now speaks English: the interface, the five course notes, the musings,
             the project and album descriptions, the metadata, and the accessible names of icons. Translating was not a find-and-replace.
             English labels are longer than the Chinese ones, which broke the old twelve-item navigation on a laptop and made the
             circular mobile menu unusable, so the navigation was rebuilt as part of the rewrite.

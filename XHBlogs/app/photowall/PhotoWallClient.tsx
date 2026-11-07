@@ -61,7 +61,7 @@ export default function PhotoWallClient() {
               <div className="flex flex-col md:flex-row justify-between items-center mb-16 gap-6">
                 <div>
                   <h1 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-widest mb-2 transition-colors duration-700">Photo Wall</h1>
-                  <p className="text-slate-600 dark:text-slate-400 font-medium tracking-wider transition-colors duration-700">Pictures I saved on a whim, kept in albums; click one to enlarge it</p>
+                  <p className="text-slate-600 dark:text-slate-400 font-medium tracking-wider transition-colors duration-700">Screenshots from my own site, the course that taught me to build it, the first deploy, and the errors in between. Click an album to enlarge it.</p>
                 </div>
 
                 <div className="relative w-full md:w-80 group">

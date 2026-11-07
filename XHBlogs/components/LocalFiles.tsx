@@ -1,4 +1,5 @@
 "use client";
+import { makeId } from './makeId';
 import { useEffect, useState } from 'react';
 import ConfirmDelete from './ConfirmDelete';
 type StoredFile = { id: string; owner: string; name: string; size: number; blob: Blob };
@@ -16,7 +17,7 @@ export async function addLocalFiles(owner: string, files: File[]) {
   const db = await database();
   try { await new Promise<void>((resolve, reject) => {
     const tx = db.transaction('files', 'readwrite');
-    files.forEach(file => tx.objectStore('files').put({ id: crypto.randomUUID(), owner, name: file.name, size: file.size, blob: file }));
+    files.forEach(file => tx.objectStore('files').put({ id: makeId(), owner, name: file.name, size: file.size, blob: file }));
     tx.oncomplete = () => resolve();
     tx.onabort = () => reject(new Error('Could not save the file. Browser storage may be full.'));
   }); } finally { db.close(); }

@@ -1,5 +1,6 @@
 "use client";
 
+import { makeId } from '../../components/makeId';
 import { useEffect, useMemo, useRef, useState } from "react";
 import { formatDate } from "../../components/formatDate";
 import CalendarPanel from "./CalendarPanel";
@@ -81,7 +82,7 @@ export default function CheckinBoard() {
   function startCheckin() {
     if (running) return;
     const record: CheckinRecord = {
-      id: crypto.randomUUID(), categoryId: selectedCategory, start: new Date().toISOString(),
+      id: makeId(), categoryId: selectedCategory, start: new Date().toISOString(),
       end: null, content: "", rating: 5, blocked: false, nodes: [],
     };
     if (persist({ ...store, records: [record, ...store.records] })) {
@@ -111,7 +112,7 @@ export default function CheckinBoard() {
   function addNode(recordId: string) {
     const note = nodeNote.trim();
     if (!note) return;
-    const node: RecordNode = { id: crypto.randomUUID(), at: new Date().toISOString(), note };
+    const node: RecordNode = { id: makeId(), at: new Date().toISOString(), note };
     persist({ ...store, records: store.records.map((r) => (r.id === recordId ? { ...r, nodes: [...r.nodes, node] } : r)) });
     setNodeNote("");
     setNodeFor(null);
@@ -128,7 +129,7 @@ export default function CheckinBoard() {
   function addCategory() {
     const name = catName.trim();
     if (!name) { setNotice("Enter a category name first."); return; }
-    const category: Category = { id: crypto.randomUUID(), name, color: catColor, hidden: false };
+    const category: Category = { id: makeId(), name, color: catColor, hidden: false };
     if (persist({ ...store, categories: [...store.categories, category] })) {
       setSelectedCategory(category.id);
       setCatName(""); setCatColor(COLOR_PRESETS[0]); setShowAddCategory(false);

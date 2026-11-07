@@ -13,7 +13,7 @@ It is written in English throughout — interface, articles, metadata and access
 | Requirement | Where it is answered |
 | --- | --- |
 | At least four pages with working navigation | 15 routes, grouped into six sections; every internal link is checked by `scripts/audit-links.mjs` |
-| Own content | Six long articles, three moments and a design note, all written from my own coursework and debugging |
+| Own content | Five course notes and five musings, written from my own Web Technologies lessons (URLs/DNS, HTML, CSS, JavaScript, Git) |
 | Semantic, accessible markup | Landmarks, one `h1` per page, labelled controls, keyboard-operable menus, visible focus, reduced-motion support |
 | Responsive layout | Phone, tablet and desktop layouts; checked at 390 px and 1280 px with `scripts/audit-mobile.mjs` |
 | At least one interactive element | Clock, Pomodoro timer, check-in tracker, editable timetable, search and filters, photo lightbox, desktop pet |

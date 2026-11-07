@@ -1,4 +1,5 @@
 "use client";
+import { makeId } from './makeId';
 import { useRef, useState } from 'react';
 import type { Album } from '../data/albums';
 import '../app/courses/courses.css';
@@ -33,11 +34,11 @@ export default function ContentComposer({kind,albums=[],onSaved}:{kind:'photos'|
         const saved=await readContent<Album>('albums'); const existing=albums.find(a=>a.id===target);
         if(target!=='new'&&!existing)throw new Error('That album no longer exists. Pick another one.');
         if(!existing&&!get('title'))throw new Error('Enter an album name.');
-        const album:Album={id:existing?.id||crypto.randomUUID(),title:existing?.title||get('title'),description:existing?.description||get('description'),date:existing?.date||get('date'),cover:existing?.cover||urls[0],photos:[...(existing?.photos||[]),...urls.map((url,i)=>({url,caption:get('caption')||files[i].name}))]};
+        const album:Album={id:existing?.id||makeId(),title:existing?.title||get('title'),description:existing?.description||get('description'),date:existing?.date||get('date'),cover:existing?.cover||urls[0],photos:[...(existing?.photos||[]),...urls.map((url,i)=>({url,caption:get('caption')||files[i].name}))]};
         await writeContent('albums',[album,...saved.filter(a=>a.id!==album.id)]);
       }else{
         if(!get('title')||!get('content'))throw new Error('Enter a title and body text.');
-        const slug=crypto.randomUUID();const post:LocalPost={slug,title:get('title'),date:get('date'),description:get('description')||get('content').slice(0,100),tags:get('tags').split(/[,，]/).map(s=>s.trim()).filter(Boolean),cover:urls[0]||withBasePath('/covers/notes.webp'),content:get('content'),href:`/local-posts?id=${slug}`};
+        const slug=makeId();const post:LocalPost={slug,title:get('title'),date:get('date'),description:get('description')||get('content').slice(0,100),tags:get('tags').split(/[,，]/).map(s=>s.trim()).filter(Boolean),cover:urls[0]||withBasePath('/covers/notes.webp'),content:get('content'),href:`/local-posts?id=${slug}`};
         if(!post.tags.length)post.tags=['Uncategorized'];
         await writeContent('posts',[post,...await readContent<LocalPost>('posts')]);
       }

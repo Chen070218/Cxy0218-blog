@@ -1,7 +1,7 @@
-// Starter content for the study resources library (shipped with the repo, so it shows up on any device)
-//
-// These are the sites I collected for this semester's courses: programming / algorithms and data structures / Linux operating systems / German / English.
-// You can keep adding your own resources on the page; locally added items stay in the browser and never overwrite this list.
+// Study resources for Web Technologies (BiUH), grouped by what I use them for.
+// The course links are the pages I keep coming back to; the reference links are the
+// places I check when a lesson leaves a detail out. Locally added items stay in the
+// browser and never overwrite this list.
 
 export interface StudyResource {
   id: string;
@@ -12,18 +12,130 @@ export interface StudyResource {
 }
 
 export const studyResources: StudyResource[] = [
-  { id: 'mdn', title: 'MDN Web Docs (Chinese edition)', url: 'https://developer.mozilla.org/zh-CN/', category: 'Frontend', note: 'The authoritative reference for HTML / CSS / JavaScript; I check properties here first when building a page.' },
-  { id: 'python-tutorial', title: 'Python Tutorial (official, Chinese)', url: 'https://docs.python.org/zh-cn/3/tutorial/', category: 'Programming', note: 'The official tutorial from syntax to the standard library; works well read chapter by chapter.' },
-  { id: 'cppreference', title: 'cppreference (Chinese site)', url: 'https://zh.cppreference.com/', category: 'Programming', note: 'Quick reference for the C / C++ standard library, more accurate than a search engine.' },
-  { id: 'visualgo', title: 'VisuAlgo (Chinese edition)', url: 'https://visualgo.net/zh', category: 'Algorithms', note: 'Sorting, trees and graphs are easier to understand when you watch them move than when you memorize the code.' },
-  { id: 'leetcode', title: 'LeetCode (Chinese edition)', url: 'https://leetcode.cn/', category: 'Algorithms', note: 'Practice problems by tag; most of the Algorithms and Data Structures exercises line up with them.' },
-  { id: 'oi-wiki', title: 'OI Wiki', url: 'https://oi-wiki.org/', category: 'Algorithms', note: 'Topic notes on data structures and algorithms; the complexity analysis is explained systematically.' },
-  { id: 'missing-semester', title: 'The Missing Semester (MIT, Chinese)', url: 'https://missing-semester-cn.github.io/', category: 'Operating Systems', note: 'An intro to the command line, shell scripts and Git; I watch it alongside the Linux class.' },
-  { id: 'linux-man', title: 'Linux man pages', url: 'https://man7.org/linux/man-pages/', category: 'Operating Systems', note: 'The most accurate source for what a command flag actually means.' },
-  { id: 'git-book', title: 'Pro Git (Chinese edition)', url: 'https://git-scm.com/book/zh/v2', category: 'Tools', note: 'The branch and merge chapters are worth rereading; I used them for course projects too.' },
-  { id: 'dw-german', title: 'DW Learn German', url: 'https://learngerman.dw.com/zh/overview', category: 'German', note: 'Deutsche Welle free course (Chinese interface), starting at A1, with listening exercises.' },
-  { id: 'leo-dict', title: 'LEO German-English dictionary', url: 'https://dict.leo.org/german-english/', category: 'German', note: 'More detail on gender and fixed phrases than an ordinary dictionary.' },
-  { id: 'bbc-english', title: 'BBC Learning English', url: 'https://www.bbc.co.uk/learningenglish/', category: 'English', note: 'Short audio with text, good for listening practice in spare moments.' },
-  { id: 'cnmooc', title: 'China University MOOC', url: 'https://www.icourse163.org/', category: 'Courses', note: 'Intro computer science courses to catch up with class progress.' },
-  { id: 'khan-math', title: 'Khan Academy Math (Chinese edition)', url: 'https://zh.khanacademy.org/math', category: 'Mathematics', note: 'Where I go back to fill in the Mathematics I / II topics that trip me up.' },
+  {
+    id: 'webtech-course',
+    title: 'Web Technologies — course lessons',
+    url: 'https://webtech.landrock.io/course',
+    category: 'This course',
+    note: 'The full lesson path for the semester: fundamentals, HTML, CSS, JavaScript, project work, deployment, Vue and AI coding. I read the lesson before the class and again afterwards.',
+  },
+  {
+    id: 'webtech-sessions',
+    title: 'Web Technologies — sessions and slides',
+    url: 'https://webtech.landrock.io/sessions',
+    category: 'This course',
+    note: 'Every slide deck, in order. The slides are the spine; the full lessons under /course have the detail the slides skip.',
+  },
+  {
+    id: 'webtech-glossary',
+    title: 'Course glossary',
+    url: 'https://webtech.landrock.io/course/glossary',
+    category: 'This course',
+    note: 'The words I kept mixing up — repository, cascade, specificity, DOM, defer, CORS — defined in one place and linked back to the lesson.',
+  },
+  {
+    id: 'webtech-toolkit',
+    title: 'Course toolkit',
+    url: 'https://webtech.landrock.io/toolkit',
+    category: 'This course',
+    note: 'How the course expects the environment to be set up: editor, browser DevTools, Live Server, Git and hosting. This is where I check a setup question before asking.',
+  },
+  {
+    id: 'webtech-exam',
+    title: 'The written exam — what it asks',
+    url: 'https://webtech.landrock.io/exam/overview',
+    category: 'This course',
+    note: 'The four graded parts and what the written exam actually tests: reading code, telling HTML/CSS/JS apart, and finding errors — not writing code.',
+  },
+  {
+    id: 'webtech-practice',
+    title: 'Practice paper with answers',
+    url: 'https://webtech.landrock.io/exam/practice',
+    category: 'This course',
+    note: 'A full 90-minute practice paper. I work through it with a timer, then read the answers and mark the mistakes I did not see.',
+  },
+  {
+    id: 'webtech-box-model',
+    title: 'The box model, live',
+    url: 'https://webtech.landrock.io/demos/box-model.html',
+    category: 'CSS',
+    note: 'Drag the width, padding and border sliders and watch the computed size change. This is the demo that made content-box and border-box click for me.',
+  },
+  {
+    id: 'webtech-flexgrid',
+    title: 'Flexbox vs Grid, live',
+    url: 'https://webtech.landrock.io/demos/flex-vs-grid.html',
+    category: 'CSS',
+    note: 'The same items in both layout systems, side by side. I use flexbox for one-dimensional rows and grid when the layout is genuinely two-dimensional.',
+  },
+  {
+    id: 'mdn-html',
+    title: 'MDN — HTML reference',
+    url: 'https://developer.mozilla.org/en-US/docs/Web/HTML',
+    category: 'HTML',
+    note: 'The element reference I open when I am not sure whether an element is the right choice — and the page that taught me what alt text is for.',
+  },
+  {
+    id: 'html-validator',
+    title: 'W3C HTML validator',
+    url: 'https://validator.w3.org/',
+    category: 'HTML',
+    note: 'Paste a URL and it lists every markup error. It finds the unclosed tag I have been staring at for twenty minutes.',
+  },
+  {
+    id: 'mdn-css',
+    title: 'MDN — CSS reference',
+    url: 'https://developer.mozilla.org/en-US/docs/Web/CSS',
+    category: 'CSS',
+    note: 'The first place I check a property, especially for inherited-versus-not and for what a shorthand actually sets.',
+  },
+  {
+    id: 'mdn-specificity',
+    title: 'MDN — CSS specificity',
+    url: 'https://developer.mozilla.org/en-US/docs/Web/CSS/Specificity',
+    category: 'CSS',
+    note: 'The four-part score from the lesson, with more examples. When a rule loses, I work out the score here before changing the selector.',
+  },
+  {
+    id: 'caniuse',
+    title: 'Can I use',
+    url: 'https://caniuse.com/',
+    category: 'CSS',
+    note: 'Checks whether a CSS or JavaScript feature is safe to ship. Ten seconds instead of guessing whether a browser supports it.',
+  },
+  {
+    id: 'mdn-js',
+    title: 'MDN — JavaScript reference',
+    url: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript',
+    category: 'JavaScript',
+    note: 'Reference for the language and the DOM: querySelector, classList, addEventListener, localStorage and the error messages I keep meeting.',
+  },
+  {
+    id: 'javascript-info',
+    title: 'javascript.info',
+    url: 'https://javascript.info/',
+    category: 'JavaScript',
+    note: 'A slower, clearer explanation of functions, objects, events and the DOM than most tutorials. Good for reading after the lesson.',
+  },
+  {
+    id: 'webtech-git',
+    title: 'The Git & GitHub lesson',
+    url: 'https://webtech.landrock.io/slides/git-github.html',
+    category: 'Git & deploy',
+    note: 'The save-point explanation, the daily three commands, .gitignore, and the checklist for putting a site online. The page I reread before every deployment.',
+  },
+  {
+    id: 'github-pages',
+    title: 'GitHub Pages documentation',
+    url: 'https://docs.github.com/en/pages',
+    category: 'Git & deploy',
+    note: 'The official steps for publishing a repository at a real address, including the branch and folder settings.',
+  },
+  {
+    id: 'pro-git',
+    title: 'Pro Git (free book)',
+    url: 'https://git-scm.com/book/en/v2',
+    category: 'Git & deploy',
+    note: 'I have only read the first chapters so far, but they explain what a commit really contains better than any cheat sheet.',
+  },
 ];

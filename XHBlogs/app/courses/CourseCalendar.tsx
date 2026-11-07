@@ -1,4 +1,5 @@
 "use client";
+import { makeId } from '../../components/makeId';
 import { useEffect, useRef, useState } from 'react';
 import { CalendarPlus, ChevronLeft, ChevronRight, X } from 'lucide-react';
 import SectionCover from '../../components/SectionCover';
@@ -43,7 +44,7 @@ export default function CourseCalendar(){
  function persist(next:Course[]){try{localStorage.setItem('shore-courses-v1',JSON.stringify(next));setCourses(next);setNotice('Timetable saved in this browser.');return true;}catch{setNotice('Save failed: browser storage is full. Export a backup first.');return false;}}
  function openEditor(course:Course|null){setEditing(course);form.current?.reset();dialog.current?.showModal();}
  function save(e:React.FormEvent<HTMLFormElement>){e.preventDefault();const data=new FormData(e.currentTarget);const get=(k:string)=>String(data.get(k)||'').trim();const start=get('start'),end=get('end');if(end&&end<=start){setNotice('The end time must be later than the start time.');return;}if(!get('name')||!get('location')||!get('content')){setNotice('Fill in the name, room and content.');return;}
- const c:Course={id:editing?.id||crypto.randomUUID(),date:get('date'),start,end,name:get('name'),teacher:get('teacher'),location:get('location'),content:get('content'),done:data.get('done')==='on'};const next=editing?courses.map(x=>x.id===c.id?c:x):[...courses,c];if(persist(next)){setWeek(monday(new Date(c.date+'T12:00:00')));dialog.current?.close();}}
+ const c:Course={id:editing?.id||makeId(),date:get('date'),start,end,name:get('name'),teacher:get('teacher'),location:get('location'),content:get('content'),done:data.get('done')==='on'};const next=editing?courses.map(x=>x.id===c.id?c:x):[...courses,c];if(persist(next)){setWeek(monday(new Date(c.date+'T12:00:00')));dialog.current?.close();}}
  function exportCourses(){const data={format:'shore-blog-backup',version:1,data:{'shore-courses-v1':courses}};const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='courses-backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
  async function importCourses(file?:File){if(!file)return;try{if(file.size>5000000)throw new Error('Choose a backup under 5 MB.');const data=JSON.parse(await file.text());const list=Array.isArray(data)?data:data.data?.['shore-courses-v1'];if(!validCourses(list))throw new Error('The courses in this backup are not in the right format.');const map=new Map(courses.map(c=>[c.id,c]));list.forEach(c=>{if(!map.has(c.id))map.set(c.id,normalize(c));});if(persist([...map.values()])){setNotice(`Backup merged; courses with the same ID keep the current version. ${map.size} classes in total.`);if(list[0])setWeek(monday(new Date(list[0].date+'T12:00:00')));}}catch(e){setNotice(e instanceof Error?e.message:'Import failed.');}}
  return <main id="main-content" className="course-shell">
