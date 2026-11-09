@@ -51,3 +51,9 @@ jobs:
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          # The default is 10 minutes; a 40 MB portfolio with photos can spend
+          # longer than that in syncing_files on a busy Pages runner.
+          timeout: 1200000
+          error_count: 10
+          reporting_interval: 10000
