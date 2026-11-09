@@ -1,220 +1,192 @@
 "use client";
-import SmartImage from '../../components/SmartImage';
-import { withBasePath } from '../../sitePath';
-import { formatDate } from '../../components/formatDate';
 
-import { useState, useMemo } from 'react';
-import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
-import { MapPin, MessageSquare, Clock, Sparkles, Search, ArrowDownAZ, ArrowUpZA, ChevronLeft, ChevronRight, Ghost } from 'lucide-react';
+import { useEffect, useState } from "react";
+import { MapPin, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { withBasePath } from "../../sitePath";
+import { formatDate } from "../../components/formatDate";
 
-function timeAgo(dateStr: string) {
-  const date = new Date(dateStr);
-  const now = new Date();
-  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
-  if (diffInSeconds < 60) return 'just now';
-  if (diffInSeconds < 3600) {
-    const minutes = Math.floor(diffInSeconds / 60);
-    return `${minutes} minute${minutes === 1 ? '' : 's'} ago`;
-  }
-  if (diffInSeconds < 86400) {
-    const hours = Math.floor(diffInSeconds / 3600);
-    return `${hours} hour${hours === 1 ? '' : 's'} ago`;
-  }
-  return formatDate(dateStr);
+type Moment = {
+  id: string;
+  date: string;
+  location?: string;
+  images?: string[];
+  content: string;
+};
+
+function ImageGrid({ images, onOpen }: { images: string[]; onOpen: (index: number) => void }) {
+  if (!images.length) return null;
+  const count = images.length;
+  const columns = count === 1 ? 1 : count === 4 ? 2 : 3;
+
+  return (
+    <div
+      className="mt-3 grid gap-[3px] overflow-hidden rounded-[3px]"
+      style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
+    >
+      {images.slice(0, 9).map((src, index) => {
+        const last = index === 8 && count > 9;
+        return (
+          <button
+            key={src + index}
+            type="button"
+            onClick={() => onOpen(index)}
+            aria-label={`Open photo ${index + 1} of ${count}`}
+            className={`group relative overflow-hidden bg-black/5 ${count === 1 ? "aspect-[4/3] max-h-[380px]" : "aspect-square"}`}
+          >
+            <img
+              src={withBasePath(src)}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+            />
+            {last && (
+              <span className="absolute inset-0 flex items-center justify-center bg-black/55 text-xl font-bold text-white">
+                +{count - 9}
+              </span>
+            )}
+          </button>
+        );
+      })}
+    </div>
+  );
 }
 
 export default function MomentList({ moments, authorName, avatarUrl, avatarAlt }: any) {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
-  const [lightbox, setLightbox] = useState<{ images: string[], index: number } | null>(null);
-
-  const processedMoments = useMemo(() => {
-    let result = moments ? [...moments] : [];
-
-    if (searchQuery.trim()) {
-      const query = searchQuery.trim().toLowerCase();
-      result = result.filter(m =>
-        (m.content || '').toLowerCase().includes(query) ||
-        (m.location || '').toLowerCase().includes(query)
-      );
-    }
-
-    result.sort((a, b) => {
-      const timeA = new Date(a.date).getTime();
-      const timeB = new Date(b.date).getTime();
-      return sortOrder === 'desc' ? timeB - timeA : timeA - timeB;
-    });
-    return result;
-  }, [moments, searchQuery, sortOrder]);
-
-  const nextImg = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!lightbox) return;
-    setLightbox({ ...lightbox, index: (lightbox.index + 1) % lightbox.images.length });
-  };
-
-  const prevImg = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!lightbox) return;
-    setLightbox({ ...lightbox, index: (lightbox.index - 1 + lightbox.images.length) % lightbox.images.length });
-  };
-
-  const renderImages = (images: string[]) => {
-    if (!images || images.length === 0) return null;
-    const count = images.length;
-
-    if (count === 1) {
-      return (
-        <div className="mt-4 md:mt-8 flex justify-start sm:justify-center w-full">
-          <div onClick={() => setLightbox({ images, index: 0 })} className="max-w-[80%] sm:max-w-[280px] overflow-hidden rounded-xl md:rounded-2xl border border-slate-200/50 dark:border-white/10 shadow-lg md:shadow-xl cursor-zoom-in group">
-            <img loading="lazy" decoding="async" src={withBasePath(images[0])} alt="moment" className="w-full h-auto max-h-[300px] md:max-h-[400px] object-contain group-hover:scale-105 transition-transform duration-500" />
-          </div>
-        </div>
-      );
-    }
-
-    const columns = count === 4 ? 2 : 3;
-    const maxWidth = count === 4 ? '210px' : '320px';
-
-    return (
-      <div className="w-full flex justify-start sm:justify-center mt-4 md:mt-8">
-        <div className="grid gap-1.5 md:gap-2 sm:mx-auto" style={{ gridTemplateColumns: `repeat(${columns}, 1fr)`, width: '100%', maxWidth: maxWidth }}>
-          {images.slice(0, 9).map((src, idx) => {
-            const isLastVisible = idx === 8 && count > 9;
-            return (
-              <div key={idx} onClick={() => setLightbox({ images, index: idx })} className="group relative aspect-square overflow-hidden rounded-lg md:rounded-xl bg-slate-200/20 dark:bg-slate-700/20 border border-slate-200/50 dark:border-white/10 cursor-zoom-in">
-                <SmartImage fill sizes="(max-width: 768px) 33vw, 320px" src={src} alt="moment" className="object-cover group-hover:scale-110 transition-transform duration-500" />
-                {isLastVisible && (
-                  <div className="absolute inset-0 bg-black/60 flex items-center justify-center text-white backdrop-blur-[2px]">
-                    <span className="text-lg md:text-xl font-black">+{count - 9}</span>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
-  };
-
-  const renderMomentCard = (moment: any) => (
-    <motion.div
-      key={moment.id}
-      layout
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.9 }}
-      transition={{ duration: 0.4, type: 'spring', stiffness: 100 }}
-      className="flex flex-col bg-white/60 dark:bg-slate-800/50 backdrop-blur-xl rounded-3xl md:rounded-[40px] shadow-lg md:shadow-xl border border-white/40 dark:border-white/10 p-5 md:p-10 transition-shadow hover:shadow-2xl overflow-hidden relative group w-full"
-    >
-      <div className="flex items-center gap-3 md:gap-4 mb-4 md:mb-8 pb-4 md:pb-6 border-b border-slate-200/50 dark:border-slate-700/50 relative">
-        <div className="w-10 h-10 md:w-14 md:h-14 shrink-0 rounded-xl md:rounded-2xl overflow-hidden shadow-sm md:shadow-md border-2 border-white dark:border-slate-700">
-          <img loading="lazy" decoding="async" src={withBasePath(avatarUrl)} alt={avatarAlt} className="w-full h-full object-cover" />
-        </div>
-        <div className="flex flex-col">
-          <h2 className="text-base md:text-lg font-black text-[#576b95] dark:text-[#7f99cc] tracking-wide">{authorName}</h2>
-          <div className="flex items-center gap-1.5 md:gap-2 text-[10px] md:text-[11px] text-slate-400 font-bold mt-0.5 md:mt-1"><Clock size={10} className="md:w-3 md:h-3" /> {timeAgo(moment.date)}</div>
-        </div>
-      </div>
-
-      <p className="text-slate-800 dark:text-slate-200 text-[14px] md:text-[16px] leading-relaxed whitespace-pre-wrap font-medium break-words">{moment.content}</p>
-
-      {renderImages(moment.images)}
-
-      <div className="mt-5 md:mt-10 flex items-center justify-between">
-        <div className="min-w-0 flex-1 pr-2">
-          {moment.location && (
-            <span className="inline-flex items-center gap-1 md:gap-1.5 text-[9px] md:text-[11px] font-bold px-2 md:px-3 py-1 md:py-1.5 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 max-w-full truncate border border-indigo-500/10">
-              {/* 🌟 Right here! shrink-0 now sits properly inside className */}
-              <MapPin size={10} className="md:w-3 md:h-3 shrink-0" />
-              <span className="truncate">{moment.location}</span>
-            </span>
-          )}
-        </div>
-
-      </div>
-
-
-    </motion.div>
+  const [lightbox, setLightbox] = useState<{ images: string[]; index: number } | null>(null);
+  const sorted: Moment[] = [...(moments || [])].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   );
 
+  useEffect(() => {
+    if (!lightbox) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setLightbox(null);
+      if (event.key === "ArrowRight") {
+        setLightbox((current) =>
+          current ? { ...current, index: (current.index + 1) % current.images.length } : current,
+        );
+      }
+      if (event.key === "ArrowLeft") {
+        setLightbox((current) =>
+          current
+            ? { ...current, index: (current.index - 1 + current.images.length) % current.images.length }
+            : current,
+        );
+      }
+    };
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [lightbox]);
+
   return (
-    <div className="w-[95%] md:w-[90%] max-w-6xl mx-auto py-6 md:py-10 mt-24 md:mt-28 relative z-10 flex-1 flex flex-col min-h-[85vh]">
-
-      <div className="mb-8 md:mb-14 text-center relative">
-        <motion.h1 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-2 md:mb-4 tracking-tighter">Moments</motion.h1>
-        <p className="text-xs md:text-sm text-slate-500 dark:text-slate-400 font-medium italic opacity-80 flex items-center justify-center gap-1.5 md:gap-2">
-          <Sparkles size={12} className="md:w-3.5 md:h-3.5 text-indigo-500" /> “ Catching the warmth of moments outside of code ”
+    <div className="mx-auto mt-24 w-[92%] max-w-[680px] pb-20 md:mt-28 md:w-[90%]">
+      <header className="mb-6 text-center">
+        <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-indigo-600 dark:text-indigo-300">
+          朋友圈 · travel notes
         </p>
-      </div>
+        <h1 className="mt-2 text-3xl font-black tracking-tight text-slate-900 dark:text-white md:text-4xl">
+          Moments
+        </h1>
+        <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+          Trips, small days and the photos I did not want to lose.
+        </p>
+      </header>
 
-      <div className="mb-10 md:mb-16 flex flex-col items-center gap-5 md:gap-8">
-        <div className="relative w-full max-w-lg group px-2 md:px-0">
-          <Search className="w-5 h-5 md:w-6 md:h-6 absolute left-6 md:left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors z-20 pointer-events-none" />
-          <input type="text" placeholder="Search for forgotten memories..." aria-label="Search moments" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full bg-white/40 dark:bg-slate-800/40 backdrop-blur-xl border border-white/40 dark:border-white/5 rounded-xl md:rounded-2xl px-5 md:px-6 py-3 md:py-4 pl-12 md:pl-14 text-sm md:text-base text-slate-800 dark:text-white shadow-lg md:shadow-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all font-medium relative z-10" />
-        </div>
-
-        <div className="flex bg-white/50 dark:bg-slate-800/50 p-1 md:p-1.5 rounded-xl md:rounded-2xl border border-white/50 dark:border-white/10 shadow-sm relative z-10">
-          <button onClick={() => setSortOrder('desc')} className={`flex items-center gap-1.5 md:gap-2 px-4 md:px-6 py-1.5 md:py-2 rounded-lg md:rounded-xl text-[10px] md:text-xs font-black transition-all duration-300 ${sortOrder === 'desc' ? 'bg-indigo-300 text-slate-950 shadow-md md:shadow-lg scale-105' : 'text-slate-500 hover:text-indigo-500'}`}>
-            <ArrowDownAZ size={12} className="md:w-3.5 md:h-3.5"/> Latest
-          </button>
-          <button onClick={() => setSortOrder('asc')} className={`flex items-center gap-1.5 md:gap-2 px-4 md:px-6 py-1.5 md:py-2 rounded-lg md:rounded-xl text-[10px] md:text-xs font-black transition-all duration-300 ${sortOrder === 'asc' ? 'bg-indigo-300 text-slate-950 shadow-md md:shadow-lg scale-105' : 'text-slate-500 hover:text-indigo-500'}`}>
-            <ArrowUpZA size={12} className="md:w-3.5 md:h-3.5"/> Earliest
-          </button>
-        </div>
-      </div>
-
-      <LayoutGroup>
-        {processedMoments.length > 0 ? (
-          <div className="flex flex-col md:flex-row gap-5 md:gap-8 pb-32 w-full items-start">
-            <div className="flex-1 flex flex-col gap-5 md:gap-8 w-full min-w-0">
-              <AnimatePresence mode='popLayout'>
-                {processedMoments.filter((_, i) => i % 2 === 0).map(moment => renderMomentCard(moment))}
-              </AnimatePresence>
-            </div>
-            <div className="flex-1 flex flex-col gap-5 md:gap-8 w-full min-w-0">
-              <AnimatePresence mode='popLayout'>
-                {processedMoments.filter((_, i) => i % 2 === 1).map(moment => renderMomentCard(moment))}
-              </AnimatePresence>
-            </div>
-          </div>
-        ) : (
-          <div className="flex-1 flex flex-col items-center justify-center py-12 md:py-24 min-h-[300px] md:min-h-[450px]">
-            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="flex flex-col items-center text-center px-6 md:px-10 py-12 md:py-20 bg-white/40 dark:bg-slate-800/30 backdrop-blur-3xl rounded-[32px] md:rounded-[50px] border border-white/30 dark:border-white/10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.1)] max-w-lg w-full mx-auto">
-              <div className="w-16 h-16 md:w-24 md:h-24 bg-indigo-500/10 rounded-2xl md:rounded-3xl flex items-center justify-center mb-6 md:mb-8 relative">
-                <div className="absolute inset-0 bg-indigo-500/20 blur-2xl rounded-full animate-pulse"></div>
-                <Ghost size={32} className="md:w-12 md:h-12 text-indigo-500 relative z-10" strokeWidth={1.5} />
-              </div>
-              <h2 className="text-xl md:text-3xl font-black text-slate-900 dark:text-white mb-2 md:mb-4 tracking-tight">{searchQuery ? "No matching moments" : "The feed is empty"}</h2>
-              <p className="text-slate-500 dark:text-slate-400 font-medium text-sm md:text-lg leading-relaxed px-2 md:px-4">{searchQuery ? `Try a shorter search term, or come back in a different mood.` : `Not a single moment has been recorded yet.`}</p>
-            </motion.div>
-          </div>
-        )}
-      </LayoutGroup>
-
-      <AnimatePresence>
-        {lightbox && (
-          <motion.div
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[9999] bg-slate-950/98 backdrop-blur-xl flex items-center justify-center cursor-pointer overflow-hidden"
-            onClick={() => setLightbox(null)}
+      <div className="overflow-hidden rounded-[6px] bg-[#f7f7f7] text-[#1f1f1f] shadow-2xl">
+        {sorted.map((moment, index) => (
+          <article
+            key={moment.id}
+            className={`flex gap-3 px-4 py-5 md:gap-4 md:px-6 ${index > 0 ? "border-t border-black/[0.06]" : ""}`}
           >
-            {lightbox.images.length > 1 && (
-              <>
-                <button className="absolute left-4 md:left-12 w-10 h-10 md:w-14 md:h-14 flex items-center justify-center bg-white/10 hover:bg-white/20 rounded-full text-white transition-all z-50 border border-white/5 backdrop-blur-md" onClick={prevImg}><ChevronLeft size={24} className="md:w-9 md:h-9"/></button>
-                <button className="absolute right-4 md:right-12 w-10 h-10 md:w-14 md:h-14 flex items-center justify-center bg-white/10 hover:bg-white/20 rounded-full text-white transition-all z-50 border border-white/5 backdrop-blur-md" onClick={nextImg}><ChevronRight size={24} className="md:w-9 md:h-9"/></button>
-              </>
-            )}
-            <motion.div key={lightbox.index} initial={{ opacity: 0, scale: 0.9, x: 50 }} animate={{ opacity: 1, scale: 1, x: 0 }} exit={{ opacity: 0, scale: 0.9, x: -50 }} className="relative w-full h-full flex flex-col items-center justify-center p-4 md:p-12 pointer-events-none">
-              <img loading="lazy" decoding="async" src={withBasePath(lightbox.images[lightbox.index])} className="max-w-full max-h-[75vh] md:max-h-[85vh] object-contain rounded-2xl shadow-[0_0_80px_rgba(0,0,0,0.5)] border border-white/10 pointer-events-auto" alt="fullscreen" />
-              <div className="absolute bottom-8 md:bottom-10 px-4 md:px-5 py-1.5 md:py-2 rounded-full bg-white/10 backdrop-blur-md text-white/90 text-[10px] md:text-xs font-black tracking-widest border border-white/10">
-                {lightbox.index + 1} / {lightbox.images.length}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <img
+              src={withBasePath(avatarUrl)}
+              alt={avatarAlt}
+              className="h-10 w-10 shrink-0 rounded-[4px] object-cover md:h-11 md:w-11"
+            />
+            <div className="min-w-0 flex-1">
+              <h2 className="text-[15px] font-semibold text-[#576b95]">{authorName}</h2>
+              <p className="mt-1 whitespace-pre-wrap break-words text-[15px] leading-7 text-[#1f1f1f]">
+                {moment.content}
+              </p>
 
+              <ImageGrid
+                images={moment.images || []}
+                onOpen={(imageIndex) =>
+                  setLightbox({ images: (moment.images || []).map(withBasePath), index: imageIndex })
+                }
+              />
+
+              {moment.location && (
+                <p className="mt-2 flex items-center gap-1 text-xs text-[#576b95]">
+                  <MapPin size={12} />
+                  {moment.location}
+                </p>
+              )}
+
+              <div className="mt-3 flex items-center justify-between text-[11px] text-[#767676]">
+                <time dateTime={moment.date}>{formatDate(moment.date)}</time>
+                <span aria-hidden="true" className="text-[15px] leading-none text-[#767676]">♡</span>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      {lightbox && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Photo viewer"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4"
+          onClick={() => setLightbox(null)}
+        >
+          <button
+            type="button"
+            aria-label="Close photo viewer"
+            onClick={() => setLightbox(null)}
+            className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
+          >
+            <X size={22} />
+          </button>
+          {lightbox.images.length > 1 && (
+            <>
+              <button
+                type="button"
+                aria-label="Previous photo"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setLightbox({ ...lightbox, index: (lightbox.index - 1 + lightbox.images.length) % lightbox.images.length });
+                }}
+                className="absolute left-2 rounded-full bg-white/10 p-2 text-white hover:bg-white/20 md:left-6"
+              >
+                <ChevronLeft size={26} />
+              </button>
+              <button
+                type="button"
+                aria-label="Next photo"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setLightbox({ ...lightbox, index: (lightbox.index + 1) % lightbox.images.length });
+                }}
+                className="absolute right-2 rounded-full bg-white/10 p-2 text-white hover:bg-white/20 md:right-6"
+              >
+                <ChevronRight size={26} />
+              </button>
+            </>
+          )}
+          <img
+            src={lightbox.images[lightbox.index]}
+            alt=""
+            onClick={(event) => event.stopPropagation()}
+            className="max-h-[85vh] max-w-[92vw] object-contain"
+          />
+        </div>
+      )}
     </div>
   );
 }

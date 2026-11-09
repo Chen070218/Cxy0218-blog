@@ -22,7 +22,6 @@ const NAV_ITEMS: NavItem[] = [
     label: "Study",
     children: [
       { label: "Courses", href: "/courses", hint: "This semester's timetable" },
-      { label: "Resources", href: "/resources", hint: "Links I keep coming back to" },
       { label: "Check-in", href: "/checkin", hint: "Where the hours went" },
     ],
   },
@@ -30,6 +29,7 @@ const NAV_ITEMS: NavItem[] = [
     label: "Life",
     children: [
       { label: "Hobbies", href: "/hobbies", hint: "What I do off the clock" },
+      { label: "Badminton", href: "/badminton", hint: "The sport I keep coming back to" },
       { label: "Photo Wall", href: "/photowall", hint: "Screenshots and photos" },
       { label: "Moments", href: "/moments", hint: "Short diary entries" },
       { label: "Music", href: "/music", hint: "What I listen to while coding" },

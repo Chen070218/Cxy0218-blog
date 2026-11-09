@@ -73,9 +73,6 @@ export default function AboutPage() {
               screenshots I want to remember. Everything runs without a database: what I add stays in
               this browser, so moving devices means exporting and importing.
             </p>
-            <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-              The silver-white fox in the corner is Xinyuehu, the site's mascot and desktop pet.
-            </p>
           </section>
 
           <section aria-labelledby="hobbies" className="mt-6 rounded-3xl border border-white/40 bg-white/60 p-6 shadow-xl backdrop-blur-md sm:p-8 dark:border-white/10 dark:bg-slate-900/60">
@@ -83,9 +80,9 @@ export default function AboutPage() {
               Off the clock
             </h2>
             <p className="mt-3 text-base leading-relaxed text-slate-700 dark:text-slate-300">
-              I play Wuthering Waves, listen to game and anime soundtracks while coding, keep a
-              photo wall of small moments, and learn German alongside English. Four things, not a
-              long list — the <Link href="/hobbies" className="font-bold text-indigo-600 underline underline-offset-4 dark:text-indigo-300">hobbies page</Link> explains them.
+              I play badminton, play Wuthering Waves, listen to game and anime soundtracks while
+              coding, and keep a photo wall of small moments. Four things, not a long list — the
+              <Link href="/hobbies" className="font-bold text-indigo-600 underline underline-offset-4 dark:text-indigo-300">hobbies page</Link> explains them.
             </p>
           </section>
 

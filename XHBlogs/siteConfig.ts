@@ -5,12 +5,12 @@ import { withBasePath } from './sitePath';
 export const siteConfig = {
   // 1. Site title and author info
   title: "Chen Xiangyang",
-  faviconUrl: withBasePath("/characters/xinyuehu-square.webp"),
+  faviconUrl: withBasePath("/icons/cx-mark.webp"),
   authorName: "Chen Xiangyang",
   handle: "cxy0218",
   role: "Computer Science, 2025 intake",
   avatarAlt: "Portrait of Chen Xiangyang",
-  bio: "Computer Science, 2025 intake, Hainan Bielefeld University of Applied Sciences. I'm studying programming, algorithms and data structures, operating systems, plus German and English. Outside code I play Wuthering Waves, listen to soundtracks and keep screenshots.",
+  bio: "Computer Science, 2025 intake, Hainan Bielefeld University of Applied Sciences. I'm studying programming, algorithms and data structures, operating systems, plus German and English. Outside code I play badminton, listen to soundtracks and keep screenshots.",
 
   navTitle: "Chen Xiangyang",
 
@@ -29,12 +29,9 @@ export const siteConfig = {
   themeColors: ["#a18cd1", "#fbc2eb", "#a1c4fd", "#c2e9fb"], // breathing, flowing color palette
 // Edit here: switch it to an image array
   bgImages: [withBasePath("/bg/ambient-1.webp"), withBasePath("/bg/ambient-3.webp")],
-  // Sharp portrait on the right (hidden on small screens)
-  portraitImage: withBasePath("/bg/portrait.webp"),
-  portraitAlt: "Xinyuehu, the Moon Fox",
 
   // 4. Default post cover (shown when the Markdown has no cover)
-  defaultPostCover: withBasePath("/screenshots/01-home.webp"),
+  defaultPostCover: withBasePath("/photos/own/home.webp"),
 
   // 5. Photo wall preview on the home page
   photoWallImage: "/photos/329a8f2e4296.webp",
@@ -74,7 +71,7 @@ export const siteConfig = {
     maxOutputTokens: 150,
     temperature: 0.85,
   },
-  friendLinkApplyFormat: "Name: Chen Xiangyang (cxy0218)\nBio: Programming, German, and a desktop fox called Xinyuehu\nLink: https://cxy0218-blog.pages.dev/\nAvatar: /avatar/me.webp",
+  friendLinkApplyFormat: "Name: Chen Xiangyang (cxy0218)\nBio: Web Technologies, badminton and a travel diary\nLink: https://cxy0218-blog.pages.dev/\nAvatar: /avatar/me.webp",
   // AI backend for the Xinyuehu desktop pet: deepseek (default) or gemini
   chatProvider: "deepseek",
   deepseekConfig: {

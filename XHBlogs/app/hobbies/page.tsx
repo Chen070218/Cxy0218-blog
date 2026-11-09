@@ -6,37 +6,37 @@ import { siteConfig } from '../../siteConfig';
 export const metadata = {
   title: 'Hobbies | ' + siteConfig.title,
   description:
-    'What Chen Xiangyang does off the clock: an action RPG, game soundtracks, screenshots, and learning German.',
+    'What Chen Xiangyang does off the clock: badminton, Wuthering Waves, game soundtracks and screenshots.',
 };
 
 const hobbies = [
   {
     number: '01',
-    title: 'Wuthering Waves',
+    title: 'Badminton',
     body:
-      'An action RPG I play to switch off. I like the coastline around Jinzhou, the soundtrack, and the characters. Xinyuehu, the silver-white fox, ended up as the mascot in the corner of this site.',
-    link: { href: '/photowall', label: 'Screenshots on the photo wall' },
+      'The one sport I keep coming back to. I am not a coach and I do not play at a high level — I play with friends, lose more than I win, and still look forward to the next session. The badminton page has the rules I had to look up, the gear that matters, and a reading list from 中羽在线.',
+    link: { href: '/badminton', label: 'Rules, gear and notes' },
   },
   {
     number: '02',
+    title: 'Wuthering Waves',
+    body:
+      'An action RPG I play to switch off. I like the coastline around Jinzhou, the soundtrack, and the characters; the soundtrack is in my coding playlist too.',
+    link: { href: '/photowall', label: 'Screenshots on the photo wall' },
+  },
+  {
+    number: '03',
     title: 'Soundtracks while coding',
     body:
       'My study playlist is mostly game and anime soundtracks, with a few piano pieces. Lyrics distract me; a good instrumental does not. The music page has the actual list, including the free-licensed tracks I host with the site.',
     link: { href: '/music', label: 'Open the music page' },
   },
   {
-    number: '03',
+    number: '04',
     title: 'Keeping screenshots',
     body:
-      'I keep a photo wall of skies, campus corners and game scenery. I am not a photographer — I just like noticing the light and keeping the frame. Most of them are quiet, ordinary moments.',
+      'I keep a photo wall of skies, campus corners and the places I travelled to this year. I am not a photographer — I just like noticing the light and keeping the frame. Most of them are quiet, ordinary moments.',
     link: { href: '/photowall', label: 'See the album' },
-  },
-  {
-    number: '04',
-    title: 'Learning German',
-    body:
-      'I learn German next to English, and I like comparing how the two languages build a sentence. It is slow, but it is the subject closest to my degree, and it makes the German words on this site less mysterious.',
-    link: { href: '/about', label: 'More about me' },
   },
 ];
 

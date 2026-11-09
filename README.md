@@ -1,7 +1,7 @@
 # Chen Xiangyang (cxy0218) — Personal Site & Study Workspace
 
 My web-course final project and the site I actually use every day: a blog, a photo wall, a weekly
-timetable, a study-link library, a time-tracking board, a Pomodoro timer and a small desktop pet.
+timetable, a study-link library, a time-tracking board, a Pomodoro timer and a travel photo diary.
 It is written in English throughout — interface, articles, metadata and accessibility labels.
 
 - **Live site:** <https://cxy0218-blog.pages.dev/>
@@ -16,7 +16,7 @@ It is written in English throughout — interface, articles, metadata and access
 | Own content | Five course notes and five musings, written from my own Web Technologies lessons (URLs/DNS, HTML, CSS, JavaScript, Git) |
 | Semantic, accessible markup | Landmarks, one `h1` per page, labelled controls, keyboard-operable menus, visible focus, reduced-motion support |
 | Responsive layout | Phone, tablet and desktop layouts; checked at 390 px and 1280 px with `scripts/audit-mobile.mjs` |
-| At least one interactive element | Clock, Pomodoro timer, check-in tracker, editable timetable, search and filters, photo lightbox, desktop pet |
+| At least one interactive element | Clock, Pomodoro timer, check-in tracker, editable timetable, search and filters, photo lightbox |
 | Live at a real address | Cloudflare Pages, with a GitHub Pages mirror |
 | Git history | The development history is on `main`; see `/build-log` for the commit-by-commit story |
 | No server-side programming or database required | Static export; all user data stays in browser local storage |
@@ -24,10 +24,9 @@ It is written in English throughout — interface, articles, metadata and access
 ## Pages
 
 `/` home · `/posts` + `/posts/[slug]` articles · `/chatter` + `/chatter/[slug]` musings ·
-`/timeline` archive · `/local-posts` browser drafts · `/courses` timetable · `/resources` study
-links · `/photowall` photo albums · `/moments` short posts · `/music` player · `/checkin` time
-tracking · `/tree` creative workshop · `/about` about me · `/build-log` process page · `/friends`
-friend links.
+`/timeline` archive · `/courses` timetable · `/checkin` time tracking · `/photowall` photo
+albums · `/moments` short posts · `/music` player · `/hobbies` off the clock · `/badminton`
+rules, gear and notes · `/about` about me · `/build-log` process page.
 
 ## Features
 
@@ -38,12 +37,10 @@ friend links.
   roughly 100 KB each) by `scripts/localize-images.mjs`, so nothing depends on an external image host.
 - **Course planner** — a weekly timetable seeded from this semester; lessons can be edited in the
   browser.
-- **Study library** — curated links that ship with the repository, plus locally added entries and files.
+- **Badminton** — rules, beginner gear, practice notes, a glossary and a reading list from the Chinese forum 中羽在线.
 - **Time tracking** — categories, a start/stop timer, notes, ratings, a month heat-map, streaks and
   JSON export/import.
-- **Pomodoro timer** — 25/5 focus cycles in the toolbox; the desktop pet announces each phase change.
-- **Desktop pet** — a Q-version fox spirit (Xinyuehu) with nine states, a daily greeting, a
-  stand-up reminder and a chat bubble powered by DeepSeek through `/api/chat`.
+- **Pomodoro timer** — 25/5 focus cycles in the toolbox.
 - **Extras** — light/dark theme, music player, danmaku background, calculator, custom 404 page.
 - **SEO and discoverability** — sitemap, robots.txt, RSS feed, web manifest, Open Graph/Twitter cards and JSON-LD, all generated at build time.
 
@@ -83,7 +80,7 @@ npm start
 Environment variables (`XHBlogs/.env.local`, see `.env.local.example`):
 
 ```
-DEEPSEEK_API_KEY=sk-...     # powers the desktop pet chat; optional
+DEEPSEEK_API_KEY=sk-...     # optional: reserved for the old pet-chat function
 ```
 
 On Windows the helper scripts `start-site.cmd` (development), `start-site-production.cmd`
@@ -111,15 +108,14 @@ The site runs as a **fully static export** and is published in two places:
 | **Cloudflare Pages** (primary, full features) | `https://cxy0218-blog.pages.dev` | `scripts/deploy-cf.cmd` (static export + `wrangler pages deploy`) |
 | GitHub Pages (static mirror) | `https://chen070218.github.io/Cxy0218-blog/` | `.github/workflows/pages.yml` on every push to `main` |
 
-Cloudflare is the primary address because it can run the Pages Function below, so the pet chat
-works there. The music player hosts its full-length tracks as static files, so it works on every host
+Cloudflare is the primary address because it can run the Pages Function below. The music player hosts its full-length tracks as static files, so it works on every host
 including GitHub Pages and the offline package.
 
 A static export has no Node server, so the route handlers under `app/api` are moved aside during
 the build (`scripts/build-static.cmd` does this automatically and restores them afterwards) and
 re-implemented as **Cloudflare Pages Functions** in `XHBlogs/functions/api`:
 
-- `functions/api/chat.ts` — the desktop pet's DeepSeek chat, a plain JSON response; the key is read
+- `functions/api/chat.ts` — an optional DeepSeek chat endpoint left from the old pet feature; the key is read
   from the `DEEPSEEK_API_KEY` environment variable only.
 
 GitHub Pages (a project site) is served from a sub-path, so every hard-coded asset URL is prefixed
@@ -164,7 +160,7 @@ double-click the launcher, no installation and no network needed for the site it
 - Palette: near-black surfaces (`slate` remapped) with a pale chartreuse accent (`indigo` remapped); purple/pink are mapped to bronze/clay so old utility classes stay coherent.
 - Type: Manrope for body copy, JetBrains Mono for labels and code, and Space Grotesk for `h1`/`h2`, hero text and stat numbers. All three are self-hosted variable fonts; fallback metrics keep CLS at 0.
 - Panels are squared, hairline-bordered and dark in both themes, after the archive/portfolio reference the site was aligned to. Every page ends in a shared footer.
-- A tiny `PerfGuard` watches the first two seconds of frames; if the device is dropping frames it adds `perf-lite`, which hides the ambient canvas/pet layers for the rest of the session instead of making navigation feel heavy.
+- A tiny `PerfGuard` watches the first two seconds of frames; if the device is dropping frames it adds `perf-lite`, which hides the ambient canvas layers for the rest of the session instead of making navigation feel heavy.
 - Large panels use opaque fills instead of `backdrop-filter`: sixteen blurred layers plus a moving gradient made scrolling stutter. Only small, transient surfaces (menus, tooltips) blur.
 
 ## Content and data
@@ -175,7 +171,7 @@ double-click the launcher, no installation and no network needed for the site it
   instrumentals from ccMixter are committed under `XHBlogs/public/music` (96 kbps MP3, credited on
   /music under CC BY), so they play offline; thirteen popular songs are 30-second Apple iTunes
   previews. Regenerate with `node scripts/build-music-data.mjs`.
-- Anything added through the interface (course entries, study resources, photo albums, check-in
+- Anything added through the interface (course entries, photo albums, check-in
   records, visual settings) is stored in the browser's local storage. Use the export/import
   buttons on those pages to move data between devices.
 - The site was rewritten from Chinese to English in October 2026; the glossary used for that

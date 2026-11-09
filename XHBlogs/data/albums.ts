@@ -8,7 +8,7 @@ export const albums: Album[] = [
     id: 'pages-of-the-site',
     title: 'Pages of the site',
     description:
-      'Six screens from the site I built this year: the home page, the writing index, an article, the check-in heat-map, the study links and the short about page.',
+      'Six screens from the site I built this year: the home page, the writing index, an article, the check-in heat-map, the badminton page and the short about page.',
     cover: '/photos/own/home.webp',
     date: '2026.10',
     photos: [
@@ -16,7 +16,7 @@ export const albums: Album[] = [
       { url: '/photos/own/posts.webp', caption: 'The writing index' },
       { url: '/photos/own/article.webp', caption: 'An article, with its table of contents' },
       { url: '/photos/own/checkin.webp', caption: 'The check-in heat-map' },
-      { url: '/photos/own/resources.webp', caption: 'Study links, kept in one place' },
+      { url: '/photos/own/resources.webp', caption: 'The badminton page' },
       { url: '/photos/own/about.webp', caption: 'About, kept short' }
     ]
   },

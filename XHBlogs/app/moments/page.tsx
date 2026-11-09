@@ -8,7 +8,7 @@ import { siteConfig } from '../../siteConfig';
 
 export const metadata = {
   title: "Moments | " + siteConfig.title,
-  description: "Life updates and captured moments",
+  description: "A WeChat-style travel diary: six trips and the photos I kept",
 };
 
 export default function MomentsPage() {

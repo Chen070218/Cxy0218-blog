@@ -110,7 +110,7 @@ export default function TomatoClock() {
       </div>
 
       <p className="text-center text-[11px] text-slate-500 dark:text-slate-400">
-        25 minutes of focus, 5 minutes of break. The desktop pet will remind you when a phase ends.
+        25 minutes of focus, 5 minutes of break. The timer tells you when a phase ends.
       </p>
     </div>
   );
