@@ -31,7 +31,7 @@ export const siteConfig = {
   bgImages: [],
 
   // 4. Default post cover (shown when the Markdown has no cover)
-  defaultPostCover: withBasePath("/photos/own/home.webp?v=ledger"),
+  defaultPostCover: withBasePath("/photos/own/home-desk.webp"),
 
   // 5. Photo wall preview on the home page
   photoWallImage: "/photos/329a8f2e4296.webp",
