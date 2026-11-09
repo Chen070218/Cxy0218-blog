@@ -236,7 +236,7 @@ export default function CheckinBoard() {
               aria-pressed={selectedCategory === c.id}
               onClick={() => setSelectedCategory(c.id)}
               className={`${chip} ${selectedCategory === c.id ? "text-white shadow-md" : "text-slate-700 dark:text-slate-200 border-white/50 dark:border-white/10 bg-white/50 dark:bg-slate-700/40"}`}
-              style={selectedCategory === c.id ? { backgroundColor: c.color, borderColor: c.color, boxShadow: `0 6px 18px ${c.color}55` } : undefined}
+              style={selectedCategory === c.id ? { background: `linear-gradient(rgba(0,0,0,0.30), rgba(0,0,0,0.30)), ${c.color}`, borderColor: c.color, boxShadow: `0 6px 18px ${c.color}55` } : undefined}
             >
               {c.name}
             </button>

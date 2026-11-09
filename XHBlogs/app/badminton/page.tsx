@@ -183,7 +183,7 @@ export default function BadmintonPage() {
                 </li>
               ))}
             </ul>
-            <p className="mt-4 text-xs text-slate-500 dark:text-slate-500">
+            <p className="mt-4 text-xs text-slate-500 dark:text-slate-400">
               Some forum pages require a 中羽在线 account; the equipment index is public.
             </p>
           </section>

@@ -31,7 +31,7 @@ const NAV_ITEMS: NavItem[] = [
       { label: "Hobbies", href: "/hobbies", hint: "What I do off the clock" },
       { label: "Badminton", href: "/badminton", hint: "The sport I keep coming back to" },
       { label: "Photo Wall", href: "/photowall", hint: "Screenshots and photos" },
-      { label: "Moments", href: "/moments", hint: "Short diary entries" },
+      { label: "Moments", href: "/moments", hint: "Travel diary, WeChat style" },
       { label: "Music", href: "/music", hint: "What I listen to while coding" },
     ],
   },
@@ -165,7 +165,7 @@ export default function Navbar() {
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-white/20 bg-white/95 dark:border-white/10 dark:bg-slate-950/90">
+      <header className="fixed inset-x-0 top-0 z-50 bg-gradient-to-b from-white/95 via-white/80 to-transparent dark:from-[#0b0b10]/95 dark:via-[#0b0b10]/80 dark:to-transparent">
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-[80] focus:rounded-full focus:bg-indigo-300 focus:px-4 focus:py-2 focus:text-sm focus:font-bold focus:text-slate-950"
@@ -175,10 +175,10 @@ export default function Navbar() {
 
         <div className="mx-auto flex h-16 w-[94%] max-w-6xl items-center justify-between gap-4">
           <Link href="/" className="group flex flex-col leading-none">
-            <span className="font-display text-xl uppercase tracking-wide text-slate-800 transition-colors duration-300 group-hover:text-indigo-600 sm:text-2xl dark:text-white dark:group-hover:text-indigo-300">
-              {siteConfig.authorName}
+            <span className="text-[17px] font-bold tracking-tight text-slate-900 transition-colors duration-200 group-hover:text-indigo-600 dark:text-[#f4f4f7] dark:group-hover:text-indigo-300">
+              {siteConfig.authorName.split(' ')[0]}<span className="text-indigo-600 dark:text-indigo-400">.Desk</span>
             </span>
-            <span className="mt-1 font-mono text-[9px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400 sm:text-[10px]">
+            <span className="mt-0.5 font-mono text-[9px] uppercase tracking-[0.14em] text-slate-500 dark:text-white/40 sm:text-[10px]">
               {siteConfig.handle} · CS 2025
             </span>
           </Link>
@@ -193,10 +193,10 @@ export default function Navbar() {
                       <Link
                         href={item.href as string}
                         aria-current={active ? "page" : undefined}
-                        className={`px-3 py-2 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors md:text-[11px] ${
+                        className={`flex h-9 items-center rounded-full px-3.5 text-[13.5px] font-medium transition-all duration-200 ${
                           active
-                            ? "text-indigo-600 dark:text-indigo-400"
-                            : "text-slate-700 hover:text-indigo-600 dark:text-slate-200 dark:hover:text-indigo-400"
+                            ? "bg-[rgba(124,58,237,0.08)] text-slate-900 ring-1 ring-inset ring-black/[0.06] dark:bg-[rgba(167,139,250,0.16)] dark:text-[#f4f4f7] dark:ring-white/15"
+                            : "text-slate-600 hover:bg-slate-900/[0.04] hover:text-slate-900 dark:text-white/60 dark:hover:bg-white/[0.05] dark:hover:text-white"
                         }`}
                       >
                         {item.label}
@@ -234,10 +234,10 @@ export default function Navbar() {
                       // A click opens the menu instead of toggling it: with hover already
                       // opening it, a toggle would slam it shut just as the user clicks.
                       onClick={() => openDropdown(item.label)}
-                      className={`flex items-center gap-1 px-3 py-2 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors md:text-[11px] ${
+                      className={`flex h-9 items-center gap-1 rounded-full px-3.5 text-[13.5px] font-medium transition-all duration-200 ${
                         active || expanded
-                          ? "text-indigo-600 dark:text-indigo-400"
-                          : "text-slate-700 hover:text-indigo-600 dark:text-slate-200 dark:hover:text-indigo-400"
+                          ? "bg-[rgba(124,58,237,0.08)] text-slate-900 ring-1 ring-inset ring-black/[0.06] dark:bg-[rgba(167,139,250,0.16)] dark:text-[#f4f4f7] dark:ring-white/15"
+                          : "text-slate-600 hover:bg-slate-900/[0.04] hover:text-slate-900 dark:text-white/60 dark:hover:bg-white/[0.05] dark:hover:text-white"
                       }`}
                     >
                       {item.label}
@@ -260,7 +260,7 @@ export default function Navbar() {
                     <div
                       id={panelId}
                       hidden={!expanded}
-                      className="absolute left-0 top-full mt-2 w-64 rounded-sm border border-white/60 bg-white/95 p-2 shadow-xl dark:border-white/10 dark:bg-slate-950/95"
+                      className="absolute left-0 top-full mt-2 w-64 rounded-2xl border border-black/10 bg-white p-2 shadow-2xl dark:border-white/10 dark:bg-[#17171f]"
                     >
                       <ul>
                         {(item.children ?? []).map((child) => {
@@ -298,7 +298,7 @@ export default function Navbar() {
             aria-expanded={mobileOpen}
             aria-controls="mobile-navigation"
             onClick={() => setMobileOpen(true)}
-            className="flex h-11 w-11 items-center justify-center rounded-sm border border-white/40 bg-white/70 text-slate-800 transition-colors hover:bg-white md:hidden dark:border-white/15 dark:bg-slate-900/80 dark:text-slate-100"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-black/10 bg-white/70 text-slate-800 transition-colors hover:bg-white md:hidden dark:border-white/15 dark:bg-white/[0.06] dark:text-slate-100"
           >
             <span className="sr-only">Open navigation menu</span>
             <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5">
@@ -321,7 +321,7 @@ export default function Navbar() {
             role="dialog"
             aria-modal="true"
             aria-label="Site navigation"
-            className="absolute right-0 top-0 flex h-full w-[86%] max-w-sm flex-col overflow-y-auto bg-white p-6 shadow-2xl dark:bg-slate-900"
+            className="absolute right-0 top-0 flex h-full w-[86%] max-w-sm flex-col overflow-y-auto bg-[#f6f6fa] p-6 shadow-2xl dark:bg-[#0b0b10]"
           >
             <div className="flex items-center justify-between">
               <span className="flex flex-col leading-none">

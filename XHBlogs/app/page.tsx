@@ -12,6 +12,7 @@ import CloudPlayer from '../components/CloudPlayer';
 import ThemeToggleBlock from '../components/ThemeToggleBlock';
 import ProfileCard from '../components/ProfileCard';
 import SiteDashboard from '../components/SiteDashboard';
+import DeskHero from '../components/DeskHero';
 import { albums } from '../data/albums';
 import LyricBar from '../components/LyricBar';
 import { ToastProvider } from '../components/ToastProvider';
@@ -68,6 +69,9 @@ export default function Home() {
           {/* 🌟 Adjust the container padding for smaller phone screens */}
           <div className="w-full max-w-6xl mx-auto mt-24 sm:mt-28 px-4 sm:px-6 lg:px-10 relative z-10">
             <main id="main-content" className="flex flex-col gap-6 w-full mt-6">
+
+              <DeskHero />
+
 
               {/* Row one: profile + player */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full">

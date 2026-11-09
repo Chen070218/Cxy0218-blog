@@ -11,7 +11,7 @@ export default function NotFound() {
   return (
     <main id="main-content" className="w-[92%] md:w-[90%] max-w-3xl mx-auto mt-28 md:mt-36 pb-24">
       <div className="card-enter rounded-3xl bg-white/60 dark:bg-slate-800/50 backdrop-blur-xl border border-white/40 dark:border-white/10 shadow-2xl p-8 md:p-12 text-center">
-        <p className="text-6xl md:text-7xl font-black text-indigo-500">404</p>
+        <p className="text-6xl md:text-7xl font-black text-indigo-600 dark:text-indigo-300">404</p>
         <h1 className="mt-4 text-2xl md:text-3xl font-black text-slate-900 dark:text-white">This page is gone</h1>
         <p className="mt-3 text-sm md:text-base text-slate-700 dark:text-slate-300">
           Maybe the link is wrong, or the page has been moved. Here are a few places you can keep browsing.

@@ -245,7 +245,7 @@ export default function MusicClient() {
                               <div className="h-full flex items-center justify-center">
                                  <div className="flex flex-col items-center gap-3 md:gap-4">
                                     <Disc3 className="animate-spin text-indigo-500/40" size={32} />
-                                    <p className="text-base md:text-xl font-black text-indigo-500 animate-pulse">{currentLyric || "Catching the soul’s melody..."}</p>
+                                    <p className="text-base md:text-xl font-black text-indigo-600 dark:text-indigo-300 animate-pulse">{currentLyric || "Catching the soul’s melody..."}</p>
                                  </div>
                               </div>
                             )}

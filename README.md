@@ -49,7 +49,7 @@ rules, gear and notes · `/about` about me · `/build-log` process page.
 - Next.js 16.2.1 (App Router), React 19, Tailwind CSS 4, framer-motion, lucide-react
 - three.js / @react-three/fiber for the creative-workshop page, Tiptap for rich-text editing
 - Markdown pipeline: gray-matter, remark/rehype, KaTeX, highlight.js
-- Fonts are self-hosted variable fonts (Manrope for body, Space Grotesk for display, JetBrains Mono for labels), so no runtime dependency on Google Fonts
+- Fonts are self-hosted variable fonts (Inter for body and display, JetBrains Mono for labels), so no runtime dependency on Google Fonts
 
 ## Project layout
 
@@ -157,9 +157,9 @@ double-click the launcher, no installation and no network needed for the site it
 
 ## Design notes
 
-- Palette: near-black surfaces (`slate` remapped) with a pale chartreuse accent (`indigo` remapped); purple/pink are mapped to bronze/clay so old utility classes stay coherent.
-- Type: Manrope for body copy, JetBrains Mono for labels and code, and Space Grotesk for `h1`/`h2`, hero text and stat numbers. All three are self-hosted variable fonts; fallback metrics keep CLS at 0.
-- Panels are squared, hairline-bordered and dark in both themes, after the archive/portfolio reference the site was aligned to. Every page ends in a shared footer.
+- Palette: near-black desk surfaces (`#0b0b10`), panels at `#17171f`, hairline `white/12` borders, lavender accent (`#a78bfa`) and a cyan second glow. Light mode keeps the same panels with a paper background.
+- Type: Inter for body, headings and numbers, JetBrains Mono for labels and code. Both are self-hosted; the variable Inter file keeps CLS at 0.
+- Panels are 16px-rounded, hairline-bordered and dark in both themes, after the desk/ledger reference the site was aligned to. The home page opens with a live clock and an affirmation, then the profile and tools. Every page ends in a shared footer.
 - A tiny `PerfGuard` watches the first two seconds of frames; if the device is dropping frames it adds `perf-lite`, which hides the ambient canvas layers for the rest of the session instead of making navigation feel heavy.
 - Large panels use opaque fills instead of `backdrop-filter`: sixteen blurred layers plus a moving gradient made scrolling stutter. Only small, transient surfaces (menus, tooltips) blur.
 

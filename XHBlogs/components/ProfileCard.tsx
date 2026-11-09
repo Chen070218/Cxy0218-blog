@@ -16,7 +16,7 @@ export default function ProfileCard({ postCount, momentCount, photoCount }: { po
   return (
     <div
       onClick={() => router.push('/about')}
-      className="group relative flex h-full min-h-[260px] cursor-pointer flex-col justify-between overflow-hidden rounded-sm border border-white/15 bg-slate-950/90 p-5 shadow-xl transition-colors duration-500 hover:border-indigo-300/40 sm:p-6 md:col-span-7 md:min-h-[320px] md:p-7"
+      className="group relative flex h-full min-h-[260px] cursor-pointer flex-col justify-between overflow-hidden rounded-2xl border border-white/15 bg-slate-950/90 p-5 shadow-xl transition-colors duration-500 hover:border-indigo-300/40 sm:p-6 md:col-span-7 md:min-h-[320px] md:p-7"
     >
       {/* top status rail, borrowed from the archive/desktop aesthetic */}
       <div className="relative z-10 mb-5 flex flex-wrap items-center gap-x-4 gap-y-1 border-b border-white/10 pb-3 font-mono text-[9px] uppercase tracking-[0.18em] text-slate-400 md:text-[10px]">
@@ -26,7 +26,7 @@ export default function ProfileCard({ postCount, momentCount, photoCount }: { po
         </span>
         <span className="hidden sm:inline">Hainan · CN</span>
         <span className="hidden md:inline">CS 2025</span>
-        <span className="ml-auto text-slate-500">EN / DE</span>
+        <span className="ml-auto text-slate-500 dark:text-slate-400">EN / DE</span>
       </div>
       <div className="flex items-start justify-between relative z-10">
         <div className="flex items-center gap-4 md:gap-6 w-full">
@@ -34,7 +34,7 @@ export default function ProfileCard({ postCount, momentCount, photoCount }: { po
             <img decoding="async" src={siteConfig.avatarUrl} alt={siteConfig.avatarAlt} className="w-full h-full rounded-sm object-cover" />
           </div>
           <div className="flex-1 min-w-0">
-            <h1 className="font-display text-[2rem] uppercase leading-[0.95] tracking-tight text-slate-50 transition-colors duration-700 sm:text-[2.6rem] md:text-[2.95rem]">
+            <h1 className="font-display text-[2rem] leading-[1.05] tracking-tight text-slate-50 transition-colors duration-700 sm:text-[2.5rem] md:text-[2.8rem]">
               {siteConfig.authorName}
             </h1>
             <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.2em] text-indigo-300 transition-colors duration-700">

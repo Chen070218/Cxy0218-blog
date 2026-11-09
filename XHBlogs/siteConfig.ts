@@ -25,10 +25,10 @@ export const siteConfig = {
 
   // 3. Site background (pick one)
   // For a plain image background, write the paths in bgImages below and set useGradient to false
-  useGradient: false,
-  themeColors: ["#a18cd1", "#fbc2eb", "#a1c4fd", "#c2e9fb"], // breathing, flowing color palette
+  useGradient: true,
+  themeColors: ["#a78bfa", "#67e8f9", "#8b5cf6", "#0b0b10"], // breathing, flowing color palette
 // Edit here: switch it to an image array
-  bgImages: [withBasePath("/bg/ambient-1.webp"), withBasePath("/bg/ambient-3.webp")],
+  bgImages: [],
 
   // 4. Default post cover (shown when the Markdown has no cover)
   defaultPostCover: withBasePath("/photos/own/home.webp"),

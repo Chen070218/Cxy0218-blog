@@ -1,83 +1,28 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { siteConfig } from "../siteConfig";
-import { usePerfProfile } from "./usePerfProfile";
-
 /**
- * Site background: a theme background built from three stacked layers
+ * Site background: a quiet desk surface.
  *
- *  1) Ambience layer: a few theme images cross-fading, slightly softened and dimmed (bright enough to see the picture) — plus a light/dark wash so body text stays legible
- *  2) Portrait layer: one crisp portrait on the right, faded into the background with a mask; hidden on narrow screens so it does not cover the text
- *  3) Vignette layer: darkened edges, keeping the center focused and the text easier to read
- *
- * Performance: switching uses an opacity transition only (composited layer); the carousel pauses in a background tab; it does not rotate when the system asks for reduced motion.
+ * Dark: near-black with a lavender glow top-left and a cyan glow top-right.
+ * Light: paper white with the same two tints at low opacity.
+ * Static CSS only — no images, no canvas, no per-frame work.
  */
 export default function SiteBackground() {
-  const config = siteConfig as typeof siteConfig & { portraitImage?: string; portraitAlt?: string };
-  const images: string[] = config.bgImages || [];
-  const portrait = config.portraitImage;
-  const portraitAlt = config.portraitAlt || "Character portrait";
-
-  const { reducedMotion, visible } = usePerfProfile();
-  const [index, setIndex] = useState(0);
-  const [isDesktop, setIsDesktop] = useState(false);
-
-  // The portrait is hidden by CSS on phones, but a hidden lazy <img> is still fetched;
-  // don't render it at all below 768 px so a phone does not download ~180 KB it cannot see.
-  useEffect(() => {
-    const query = window.matchMedia('(min-width: 768px)');
-    const update = () => setIsDesktop(query.matches);
-    update();
-    query.addEventListener?.('change', update);
-    return () => query.removeEventListener?.('change', update);
-  }, []);
-
-  useEffect(() => {
-    if (images.length <= 1 || reducedMotion || !visible) return;
-    const timer = setInterval(() => setIndex((prev) => (prev + 1) % images.length), 12000);
-    return () => clearInterval(timer);
-  }, [images.length, reducedMotion, visible]);
-
-  const current = images[index] || images[0];
-
   return (
-    <div className="absolute inset-0 overflow-hidden bg-slate-950">
-      {/* 1) Ambience layer */}
-      {current && (
-        <div
-          key={current}
-          className="absolute inset-[-6%] bg-cover bg-center"
-          style={{
-            backgroundImage: `url(${current})`,
-            filter: "blur(4px) saturate(1.05) brightness(0.62)",
-            transform: "scale(1.02)",
-            animation: reducedMotion ? undefined : "site-bg-fade 1.8s ease-out both",
-          }}
-        />
-      )}
-
-      {/* 2) Portrait layer */}
-      {portrait && isDesktop && (
-        <div className="hidden md:block absolute right-[-1%] top-0 bottom-0 w-[44%] max-w-[680px]">
-          <img
-            src={portrait}
-            alt={portraitAlt}
-            loading="lazy"
-            decoding="async"
-            className="w-full h-full object-contain object-bottom opacity-80"
-            style={{
-              maskImage: "linear-gradient(to left, rgba(0,0,0,1) 42%, rgba(0,0,0,0) 98%)",
-              WebkitMaskImage: "linear-gradient(to left, rgba(0,0,0,1) 42%, rgba(0,0,0,0) 98%)",
-            }}
-          />
-        </div>
-      )}
-
-      {/* 3) Vignette layer */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(2,6,23,0.05)_30%,rgba(2,6,23,0.72)_100%)]" />
-
-      <style dangerouslySetInnerHTML={{ __html: `@keyframes site-bg-fade { from { opacity: 0; } to { opacity: 1; } }` }} />
+    <div className="absolute inset-0 overflow-hidden bg-[#f6f6fa] dark:bg-[#0b0b10]" aria-hidden="true">
+      <div
+        className="absolute inset-0 dark:hidden"
+        style={{
+          backgroundImage:
+            'radial-gradient(960px 480px at 15% -10%, rgba(167,139,250,0.14), rgba(0,0,0,0) 60%), radial-gradient(800px 416px at 90% 0%, rgba(103,232,249,0.10), rgba(0,0,0,0) 55%)',
+        }}
+      />
+      <div
+        className="absolute inset-0 hidden dark:block"
+        style={{
+          backgroundImage:
+            'radial-gradient(980px 520px at 14% -12%, rgba(167,139,250,0.30), rgba(0,0,0,0) 60%), radial-gradient(820px 440px at 90% -4%, rgba(103,232,249,0.16), rgba(0,0,0,0) 55%)',
+        }}
+      />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0)_38%,rgba(0,0,0,0.45)_100%)] opacity-30 dark:opacity-100" />
     </div>
   );
 }
