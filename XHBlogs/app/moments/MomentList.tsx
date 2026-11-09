@@ -128,7 +128,7 @@ export default function MomentList({ moments, authorName, avatarUrl, avatarAlt }
                 </p>
               )}
 
-              <div className="mt-3 flex items-center justify-between text-[11px] text-[#767676]">
+              <div className="mt-3 flex items-center justify-between text-[11px] text-[#595959]">
                 <time dateTime={moment.date}>{formatDate(moment.date)}</time>
                 <span aria-hidden="true" className="text-[15px] leading-none text-[#767676]">♡</span>
               </div>
