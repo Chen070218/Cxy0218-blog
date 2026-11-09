@@ -40,7 +40,7 @@ export default function ThemeToggleBlock() {
              {isDark ? 'Night mode' : 'Day mode'}
            </h3>
            <p className={`text-sm font-medium mt-1 transition-colors duration-500 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-             {isDark ? 'Deep space, fireflies dancing' : 'A morning of falling cherry petals'}
+             {isDark ? 'Deep space, soft lavender glow' : 'Paper white, quiet light'}
            </p>
        </div>
     </div>

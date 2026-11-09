@@ -90,7 +90,7 @@ export default function BadmintonPage() {
         <main id="main-content" className="mx-auto mt-24 w-[92%] max-w-4xl sm:mt-28 md:w-[90%]">
           <figure className="overflow-hidden rounded-3xl border border-white/15 shadow-2xl">
             <img
-              src="/covers/badminton.webp"
+              src="/covers/badminton-desk.webp"
               alt="A dark green badminton court diagram with a shuttlecock and the words Badminton, the sport I keep coming back to."
               width={1600}
               height={900}
