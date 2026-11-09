@@ -75,14 +75,12 @@ export default function AboutPage() {
             </p>
           </section>
 
-          <section aria-labelledby="hobbies" className="mt-6 rounded-3xl border border-white/40 bg-white/60 p-6 shadow-xl backdrop-blur-md sm:p-8 dark:border-white/10 dark:bg-slate-900/60">
-            <h2 id="hobbies" className="text-sm font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+          <section aria-labelledby="badminton" className="mt-6 rounded-3xl border border-white/40 bg-white/60 p-6 shadow-xl backdrop-blur-md sm:p-8 dark:border-white/10 dark:bg-slate-900/60">
+            <h2 id="badminton" className="text-sm font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
               Off the clock
             </h2>
             <p className="mt-3 text-base leading-relaxed text-slate-700 dark:text-slate-300">
-              I play badminton, play Wuthering Waves, listen to game and anime soundtracks while
-              coding, and keep a photo wall of small moments. Four things, not a long list — the
-              <Link href="/hobbies" className="font-bold text-indigo-600 underline underline-offset-4 dark:text-indigo-300">hobbies page</Link> explains them.
+              Badminton is the one hobby I keep coming back to. I play with friends, lose more than I win, and still look forward to the next session — the <Link href="/badminton" className="font-bold text-indigo-600 underline underline-offset-4 dark:text-indigo-300">badminton page</Link> has the rules, gear and notes.
             </p>
           </section>
 
@@ -115,12 +113,6 @@ export default function AboutPage() {
               >
                 Email
               </a>
-              <Link
-                href="/build-log"
-                className="rounded-full border border-slate-300 px-4 py-2 text-slate-700 transition-colors hover:border-indigo-400 hover:text-indigo-600 dark:border-slate-600 dark:text-slate-200"
-              >
-                How this site was built
-              </Link>
               <Link
                 href="/posts"
                 className="rounded-full border border-slate-300 px-4 py-2 text-slate-700 transition-colors hover:border-indigo-400 hover:text-indigo-600 dark:border-slate-600 dark:text-slate-200"

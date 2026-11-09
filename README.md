@@ -1,11 +1,10 @@
 # Chen Xiangyang (cxy0218) — Personal Site & Study Workspace
 
-My web-course final project and the site I actually use every day: a blog, a photo wall, a weekly
-timetable, a study-link library, a time-tracking board, a Pomodoro timer and a travel photo diary.
+My web-course final project and the site I actually use every day: a blog, a weekly
+timetable, a time-tracking board, a photo wall, a badminton page and a travel diary.
 It is written in English throughout — interface, articles, metadata and accessibility labels.
 
 - **Live site:** <https://cxy0218-blog.pages.dev/>
-- **How it was built, week by week:** the `/build-log` page (source: `XHBlogs/app/build-log/page.tsx`)
 - **Code:** <https://github.com/Chen070218/Cxy0218-blog>
 
 ## What the course brief asks for
@@ -18,15 +17,15 @@ It is written in English throughout — interface, articles, metadata and access
 | Responsive layout | Phone, tablet and desktop layouts; checked at 390 px and 1280 px with `scripts/audit-mobile.mjs` |
 | At least one interactive element | Clock, Pomodoro timer, check-in tracker, editable timetable, search and filters, photo lightbox |
 | Live at a real address | Cloudflare Pages, with a GitHub Pages mirror |
-| Git history | The development history is on `main`; see `/build-log` for the commit-by-commit story |
+| Git history | The development history is on `main` |
 | No server-side programming or database required | Static export; all user data stays in browser local storage |
 
 ## Pages
 
 `/` home · `/posts` + `/posts/[slug]` articles · `/chatter` + `/chatter/[slug]` musings ·
-`/timeline` archive · `/courses` timetable · `/checkin` time tracking · `/photowall` photo
-albums · `/moments` short posts · `/music` player · `/hobbies` off the clock · `/badminton`
-rules, gear and notes · `/about` about me · `/build-log` process page.
+`/courses` timetable · `/checkin` time tracking · `/photowall` photo albums ·
+`/moments` travel diary · `/music` player · `/badminton` rules, gear and notes ·
+`/about` about me.
 
 ## Features
 
@@ -175,8 +174,7 @@ double-click the launcher, no installation and no network needed for the site it
   records, visual settings) is stored in the browser's local storage. Use the export/import
   buttons on those pages to move data between devices.
 - The site was rewritten from Chinese to English in October 2026; the glossary used for that
-  rewrite is in `docs/TRANSLATION-GUIDE.md`, and the decisions behind the site are on the
-  `/build-log` page.
+  rewrite is in `docs/TRANSLATION-GUIDE.md`; the Git history records the decisions.
 
 ## License
 

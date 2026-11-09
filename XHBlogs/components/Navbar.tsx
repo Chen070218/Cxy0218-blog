@@ -15,7 +15,6 @@ const NAV_ITEMS: NavItem[] = [
     children: [
       { label: "Posts", href: "/posts", hint: "Longer write-ups" },
       { label: "Musings", href: "/chatter", hint: "Shorter, looser notes" },
-      { label: "Timeline", href: "/timeline", hint: "Everything, by date" },
     ],
   },
   {
@@ -28,20 +27,13 @@ const NAV_ITEMS: NavItem[] = [
   {
     label: "Life",
     children: [
-      { label: "Hobbies", href: "/hobbies", hint: "What I do off the clock" },
       { label: "Badminton", href: "/badminton", hint: "The sport I keep coming back to" },
       { label: "Photo Wall", href: "/photowall", hint: "Screenshots and photos" },
       { label: "Moments", href: "/moments", hint: "Travel diary, WeChat style" },
       { label: "Music", href: "/music", hint: "What I listen to while coding" },
     ],
   },
-  {
-    label: "About",
-    children: [
-      { label: "About Me", href: "/about", hint: "Who I am" },
-      { label: "Build Log", href: "/build-log", hint: "How this site was made" },
-    ],
-  },
+  { label: "About", href: "/about" },
 ];
 
 function normalize(path: string) {

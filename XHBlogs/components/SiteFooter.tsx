@@ -4,7 +4,7 @@ import { siteConfig } from "../siteConfig";
 const footerLinks = [
   { href: "/about/", label: "About" },
   { href: "/posts/", label: "Posts" },
-  { href: "/build-log/", label: "Build Log" },
+  { href: "/moments/", label: "Moments" },
   { href: "/rss.xml", label: "RSS", external: true },
   { href: "https://github.com/Chen070218", label: "GitHub", external: true },
 ];

@@ -33,7 +33,7 @@ export default function LocalPostPage() {
     <>
       <Navbar />
       <main id="main-content" className="course-shell">
-        <Link href="/timeline">← Back to Timeline</Link>
+        <Link href="/posts">← Back to Posts</Link>
 
         {post ? (
           <article className="course-panel" style={{ marginTop: 20 }}>

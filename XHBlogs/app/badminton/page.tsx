@@ -203,7 +203,7 @@ export default function BadmintonPage() {
           </section>
 
           <p className="mt-8 text-sm text-slate-500 dark:text-slate-400">
-            Back to <Link href="/hobbies" className="font-bold text-indigo-600 underline underline-offset-4 dark:text-indigo-300">the other hobbies</Link>.
+            Back to <Link href="/about" className="font-bold text-indigo-600 underline underline-offset-4 dark:text-indigo-300">about me</Link>.
           </p>
         </main>
       </PageTransition>
