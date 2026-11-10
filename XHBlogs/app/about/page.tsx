@@ -84,18 +84,6 @@ export default function AboutPage() {
             </p>
           </section>
 
-          <section aria-labelledby="smaller" className="mt-6 rounded-3xl border border-white/40 bg-white/60 p-6 shadow-xl backdrop-blur-md sm:p-8 dark:border-white/10 dark:bg-slate-900/60">
-            <h2 id="smaller" className="text-sm font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-              A smaller site, on purpose
-            </h2>
-            <p className="mt-3 text-base leading-relaxed text-slate-700 dark:text-slate-300">
-              The first version tried to have everything: a project gallery, a 3D workshop, a page
-              of friend links and browser drafts. After feedback that it was too much, I removed
-              those and kept five sections. Fewer features, but every page is one I can explain
-              and actually use.
-            </p>
-          </section>
-
           <section aria-labelledby="links" className="mt-6 rounded-3xl border border-white/40 bg-white/60 p-6 shadow-xl backdrop-blur-md sm:p-8 dark:border-white/10 dark:bg-slate-900/60">
             <h2 id="links" className="text-sm font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
               Find me

@@ -11,10 +11,8 @@ import { siteConfig } from '../siteConfig';
 import CloudPlayer from '../components/CloudPlayer';
 import ThemeToggleBlock from '../components/ThemeToggleBlock';
 import ProfileCard from '../components/ProfileCard';
-import SiteDashboard from '../components/SiteDashboard';
 import DeskHero from '../components/DeskHero';
 import { albums } from '../data/albums';
-import LyricBar from '../components/LyricBar';
 import { ToastProvider } from '../components/ToastProvider';
 
 import LatestPostsCarousel from '../components/LatestPostsCarousel';
@@ -85,9 +83,6 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Lyric bar */}
-              <div className="w-full mt-[-10px]"><LyricBar/></div>
-
               <SearchBar posts={allPosts} />
 
               {/* Row two: latest posts carousel + photo wall + moments + theme toggle */}
@@ -128,9 +123,6 @@ export default function Home() {
 
                 </div>
               </div>
-
-              {/* Bottom data panel */}
-              <div className="w-full mt-4"><SiteDashboard/></div>
             </main>
           </div>
         </PageTransition>

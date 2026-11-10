@@ -1,0 +1,13 @@
+{
+  "liveServer.settings.root": "/out",
+  "liveServer.settings.port": 5500,
+  "liveServer.settings.https": false,
+  "liveServer.settings.wait": 100,
+  "liveServer.settings.donotShowInfoMsg": true,
+  "liveServer.settings.ignoreFiles": [
+    ".vscode/**",
+    "**/*.scss",
+    "**/*.sass",
+    "**/*.ts"
+  ]
+}
