@@ -124,7 +124,7 @@ export function MusicProvider({ children }: { children: ReactNode }) {
       // Apple's 30-second clips have no synced lyrics; say so instead of showing an empty panel.
       if (isMounted) setCurrentLyric("30s preview · full track on streaming");
     } else if (currentSong.kind === 'full') {
-      if (isMounted) setCurrentLyric("Full track · free-licensed");
+      if (isMounted) setCurrentLyric("Pixabay · full track");
     } else if (currentSong.lyrics && currentSong.lyrics.length > 0) {
       if (isMounted) {
         setLyrics(currentSong.lyrics);

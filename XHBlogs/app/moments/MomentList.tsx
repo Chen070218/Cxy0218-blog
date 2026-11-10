@@ -13,6 +13,10 @@ type Moment = {
   content: string;
 };
 
+function thumb(src: string) {
+  return src.startsWith('/moments/') ? src.replace('/moments/', '/moments/thumbs/') : src;
+}
+
 function ImageGrid({ images, onOpen }: { images: string[]; onOpen: (index: number) => void }) {
   if (!images.length) return null;
   const count = images.length;
@@ -34,10 +38,13 @@ function ImageGrid({ images, onOpen }: { images: string[]; onOpen: (index: numbe
             className={`group relative overflow-hidden bg-black/5 ${count === 1 ? "aspect-[4/3] max-h-[380px]" : "aspect-square"}`}
           >
             <img
-              src={withBasePath(src)}
+              src={withBasePath(thumb(src))}
               alt=""
+              width={480}
+              height={480}
               loading="lazy"
               decoding="async"
+              fetchPriority={index < 3 ? "high" : "low"}
               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
             />
             {last && (
@@ -101,7 +108,7 @@ export default function MomentList({ moments, authorName, avatarUrl, avatarAlt }
         {sorted.map((moment, index) => (
           <article
             key={moment.id}
-            className={`flex gap-3 px-4 py-5 md:gap-4 md:px-6 ${index > 0 ? "border-t border-black/[0.06]" : ""}`}
+            className={`flex gap-3 px-4 py-5 md:gap-4 md:px-6 [content-visibility:auto] [contain-intrinsic-size:720px] ${index > 0 ? "border-t border-black/[0.06]" : ""}`}
           >
             <img
               src={withBasePath(avatarUrl)}

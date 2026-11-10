@@ -69,8 +69,8 @@ export default function AboutPage() {
             </h2>
             <p className="mt-3 text-base leading-relaxed text-slate-700 dark:text-slate-300">
               The posts are my study notes and debugging diaries. The check-in page tracks where my
-              hours go, the timetable holds this semester's classes, and the photo wall keeps the
-              screenshots I want to remember. Everything runs without a database: what I add stays in
+              hours go, the timetable holds this semester's classes, and Moments keeps the
+              travel photos I want to remember. Everything runs without a database: what I add stays in
               this browser, so moving devices means exporting and importing.
             </p>
           </section>

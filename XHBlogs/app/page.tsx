@@ -12,7 +12,6 @@ import CloudPlayer from '../components/CloudPlayer';
 import ThemeToggleBlock from '../components/ThemeToggleBlock';
 import ProfileCard from '../components/ProfileCard';
 import DeskHero from '../components/DeskHero';
-import { albums } from '../data/albums';
 import { ToastProvider } from '../components/ToastProvider';
 
 import LatestPostsCarousel from '../components/LatestPostsCarousel';
@@ -55,9 +54,17 @@ export default function Home() {
   const top5Posts = allPosts.length > 0 ? allPosts.slice(0, 5) : [{ slug: 'none', title: 'No posts yet', description: 'Go write the first one!', cover: siteConfig.defaultPostCover, date: '', formattedDate: '' }];
 
   const momentsDirectory = path.join(process.cwd(), 'moments');
-  const momentCount = fs.existsSync(momentsDirectory) ? fs.readdirSync(momentsDirectory).filter(f => f.endsWith('.md')).length : 0;
-  const realPhotoCount = albums.reduce((total, album) => total + album.photos.length, 0);
-  const latestAlbum = albums.length > 0 ? albums[0] : { id: '', title: 'Photo Wall', description: 'Browse the photo wall', cover: siteConfig.photoWallImage, date: '' };
+  const momentFiles = fs.existsSync(momentsDirectory)
+    ? fs.readdirSync(momentsDirectory).filter(f => f.endsWith('.md'))
+    : [];
+  const momentCount = momentFiles.length;
+  let momentPhotoCount = 0;
+  for (const file of momentFiles) {
+    try {
+      const { data } = matter(fs.readFileSync(path.join(momentsDirectory, file), 'utf8'));
+      if (Array.isArray(data.images)) momentPhotoCount += data.images.length;
+    } catch {}
+  }
 
   return (
     <ToastProvider>
@@ -75,7 +82,7 @@ export default function Home() {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full">
                 {/* One column on phones, seven columns on desktop */}
                 <div className="col-span-1 lg:col-span-7 flex flex-col">
-                    <ProfileCard postCount={allPosts.length} momentCount={momentCount} photoCount={realPhotoCount}/>
+                    <ProfileCard postCount={allPosts.length} momentCount={momentCount} photoCount={momentPhotoCount}/>
                 </div>
                 {/* One column on phones, five columns on desktop */}
                 <div className="col-span-1 lg:col-span-5 flex flex-col">
@@ -85,7 +92,7 @@ export default function Home() {
 
               <SearchBar posts={allPosts} />
 
-              {/* Row two: latest posts carousel + photo wall + moments + theme toggle */}
+              {/* Row two: latest posts carousel + music entry + badminton + theme toggle */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 w-full">
 
                 {/* Left: posts carousel (4 columns on desktop, first on phones) */}
@@ -96,13 +103,14 @@ export default function Home() {
                 {/* Right: combined panel (8 columns on desktop) */}
                 <div className="col-span-1 lg:col-span-8 flex flex-col gap-6">
 
-                  {/* Big photo wall poster */}
-                  <Link href="/photowall" className="w-full rounded-3xl bg-white/40 dark:bg-slate-800/50 border border-white/40 dark:border-white/10 shadow-xl overflow-hidden transition-all duration-700 hover:scale-[1.02] relative group min-h-[200px] sm:min-h-[220px] flex-shrink-0">
-                    <SmartImage fill sizes="(max-width: 768px) 100vw, 800px" src={latestAlbum.cover} alt={latestAlbum.title} className="object-cover transition-transform duration-700 group-hover:scale-105 opacity-90" />
-                    <div className="absolute inset-0 bg-black/30 dark:bg-black/50 group-hover:bg-black/10 transition-colors duration-500"></div>
-                    <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 right-6">
-                      <h3 className="text-2xl sm:text-3xl font-bold text-white mb-1 sm:mb-2 underline decoration-pink-400">{latestAlbum.title}</h3>
-                      <p className="text-white/90 text-sm sm:text-lg line-clamp-1">{latestAlbum.description}</p>
+                  {/* Music entry */}
+                  <Link href="/music" className="relative flex flex-col justify-end w-full rounded-3xl border border-white/40 dark:border-white/10 shadow-xl overflow-hidden transition-all duration-700 hover:scale-[1.02] group min-h-[200px] sm:min-h-[220px] flex-shrink-0">
+                    <SmartImage fill sizes="(max-width: 768px) 100vw, 800px" src="/music/covers/pixabay-ambient-dreams.webp" alt="" className="object-cover opacity-50 transition-transform duration-700 group-hover:scale-105 group-hover:opacity-65" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/45 to-slate-950/10" />
+                    <div className="relative p-6">
+                      <p className="text-xs tracking-widest mb-2 text-indigo-200">Music</p>
+                      <h3 className="text-2xl sm:text-3xl font-bold text-white mb-1 sm:mb-2">What I listen to while coding ↗</h3>
+                      <p className="text-white/85 text-sm sm:text-lg line-clamp-1">Full tracks, short previews and the player</p>
                     </div>
                   </Link>
 

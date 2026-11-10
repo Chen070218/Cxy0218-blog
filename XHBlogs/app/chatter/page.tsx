@@ -42,7 +42,7 @@ export default function ChatterPage() {
         <main id="main-content" className="w-[92%] md:w-[90%] max-w-6xl mx-auto mt-24 md:mt-28">
           <header className="mb-8 md:mb-10">
             <p className="text-xs font-black tracking-[0.3em] text-indigo-600 dark:text-indigo-300 uppercase">Chatter</p>
-            <h2 className="mt-2 text-3xl md:text-5xl font-black text-slate-900 dark:text-white">Musings</h2>
+            <h1 className="mt-2 text-3xl md:text-5xl font-black text-slate-900 dark:text-white">Musings</h1>
             <p className="mt-3 text-sm md:text-base text-slate-700 dark:text-slate-300">
               Informal posts and notes on whatever crosses my mind — {chatters.length} in total.
             </p>

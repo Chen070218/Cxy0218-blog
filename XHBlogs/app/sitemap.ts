@@ -30,7 +30,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: '/posts', priority: 0.9, changeFrequency: 'weekly' },
     { path: '/about', priority: 0.8, changeFrequency: 'monthly' },
     { path: '/chatter', priority: 0.7, changeFrequency: 'weekly' },
-    { path: '/photowall', priority: 0.7, changeFrequency: 'monthly' },
     { path: '/moments', priority: 0.7, changeFrequency: 'weekly' },
     { path: '/courses', priority: 0.6, changeFrequency: 'monthly' },
     { path: '/badminton', priority: 0.7, changeFrequency: 'monthly' },

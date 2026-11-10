@@ -3,7 +3,6 @@ import SmartImage from '../../components/SmartImage';
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { siteConfig } from '../../siteConfig';
 import { formatDate } from '../../components/formatDate';
 
 type Chatter = {
@@ -42,15 +41,18 @@ export default function ChatterBoard({ chatters }: { chatters: Chatter[] }) {
     // 🌟 Core change: tighten the container's left and right padding px-3 md:px-10
     <div className="w-full max-w-7xl mx-auto px-3 sm:px-10 py-6 md:py-10 pt-24 md:pt-28 relative z-10">
 
-      <div className="mb-8 md:mb-14 text-center">
-        {/* 🌟 Core change: responsive heading size */}
-        <h1 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-2 md:mb-4 tracking-tighter">
-          {siteConfig.chatterTitle || "Originium Research Notes"}
-        </h1>
-        <p className="text-xs md:text-base text-slate-500 dark:text-slate-400 font-medium italic opacity-80">
-          “ {siteConfig.chatterDescription || "Whatever comes to mind"} ”
-        </p>
-      </div>
+      <Link
+        href="/music"
+        className="group relative mb-8 md:mb-12 flex items-center gap-4 overflow-hidden rounded-2xl border border-white/40 bg-white/40 p-4 shadow-lg transition-all duration-500 hover:-translate-y-0.5 hover:border-indigo-400/50 hover:bg-white/60 dark:border-white/10 dark:bg-slate-800/40 dark:hover:bg-slate-800/60 md:p-6"
+      >
+        <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-indigo-500/15 text-2xl text-indigo-500 dark:text-indigo-300" aria-hidden="true">♪</span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-[10px] font-black uppercase tracking-[0.22em] text-indigo-600 dark:text-indigo-300">Music</span>
+          <span className="mt-1 block text-lg font-bold text-slate-900 dark:text-white md:text-xl">Open the music entry ↗</span>
+          <span className="mt-1 block text-xs text-slate-600 dark:text-slate-400 md:text-sm">Full-length free-licensed tracks, short previews and the player.</span>
+        </span>
+        <span className="hidden shrink-0 rounded-full border border-white/30 px-3 py-1.5 font-mono text-[10px] uppercase tracking-widest text-slate-500 group-hover:border-indigo-400/40 group-hover:text-indigo-500 dark:border-white/15 dark:text-white/50 dark:group-hover:text-indigo-300 sm:inline">Listen →</span>
+      </Link>
 
       <div className="mb-8 md:mb-12 flex flex-col items-center gap-5 md:gap-8">
         <div className="relative w-full max-w-lg group px-2 md:px-0">

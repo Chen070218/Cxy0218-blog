@@ -4,3 +4,6 @@
 /timeline/* / 301
 /build-log / 301
 /build-log/* / 301
+
+/photowall / 301
+/photowall/* / 301

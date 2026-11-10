@@ -4,7 +4,7 @@ import MusicClient from "./MusicClient";
 // 🌟 Server-rendered here, so metadata works properly
 export const metadata = {
   title: "Music | " + siteConfig.title,
-  description: "Full-length free-licensed tracks hosted with the site, plus 30-second previews of popular songs.",
+  description: "Royalty-free instrumentals from Pixabay Music, hosted with the site.",
 };
 
 export default function MusicPage() {

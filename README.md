@@ -1,7 +1,7 @@
 # Chen Xiangyang (cxy0218) — Personal Site & Study Workspace
 
 My web-course final project and the site I actually use every day: a blog, a weekly
-timetable, a time-tracking board, a photo wall, a badminton page and a travel diary.
+timetable, a time-tracking board, a badminton page and a travel diary.
 It is written in English throughout — interface, articles, metadata and accessibility labels.
 
 - **Live site:** <https://cxy0218-blog.pages.dev/>
@@ -23,9 +23,8 @@ It is written in English throughout — interface, articles, metadata and access
 ## Pages
 
 `/` home · `/posts` + `/posts/[slug]` articles · `/chatter` + `/chatter/[slug]` musings ·
-`/courses` timetable · `/checkin` time tracking · `/photowall` photo albums ·
-`/moments` travel diary · `/music` player · `/badminton` rules, gear and notes ·
-`/about` about me.
+`/courses` timetable · `/checkin` time tracking · `/moments` travel diary ·
+`/music` player · `/badminton` rules, gear and notes · `/about` about me.
 
 ## Features
 
@@ -166,10 +165,10 @@ double-click the launcher, no installation and no network needed for the site it
 
 - Articles, moments and musings are Markdown files inside `XHBlogs/posts`, `XHBlogs/moments` and
   `XHBlogs/chatters`.
-- The music playlist is static data in `XHBlogs/data/music.ts`. Eight full-length free-licensed
-  instrumentals from ccMixter are committed under `XHBlogs/public/music` (96 kbps MP3, credited on
-  /music under CC BY), so they play offline; thirteen popular songs are 30-second Apple iTunes
-  previews. Regenerate with `node scripts/build-music-data.mjs`.
+- The music playlist is static data in `XHBlogs/data/music.ts`. Six royalty-free
+  instrumentals from Pixabay Music are committed under `XHBlogs/public/music/pixabay`
+  (credited on /music under the Pixabay Content License), so they play offline.
+  Regenerate with `node scripts/build-music-data.mjs`.
 - Anything added through the interface (course entries, photo albums, check-in
   records, visual settings) is stored in the browser's local storage. Use the export/import
   buttons on those pages to move data between devices.

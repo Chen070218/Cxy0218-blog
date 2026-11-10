@@ -304,7 +304,7 @@ export default function MusicClient() {
           <section aria-labelledby="music-credits" className="mt-10 rounded-3xl border border-white/40 bg-white/60 p-5 backdrop-blur-xl md:p-6 dark:border-white/10 dark:bg-slate-800/50">
             <h2 id="music-credits" className="text-sm font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Music credits</h2>
             <p className="mt-2 text-xs text-slate-600 md:text-sm dark:text-slate-300">
-              The full tracks are free-licensed instrumentals from ccMixter, hosted with the site so they play offline on every device. The 30-second previews are official Apple iTunes clips.
+              All tracks are royalty-free instrumentals from Pixabay Music, hosted with the site so they play offline on every device. Source and licence are linked on each track.
             </p>
             <ul className="mt-3 space-y-1.5 text-xs text-slate-600 md:text-sm dark:text-slate-300">
               {musicTracks.filter((track) => track.kind === 'full').map((track) => (

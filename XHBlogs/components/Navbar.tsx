@@ -28,7 +28,6 @@ const NAV_ITEMS: NavItem[] = [
     label: "Life",
     children: [
       { label: "Badminton", href: "/badminton", hint: "The sport I keep coming back to" },
-      { label: "Photo Wall", href: "/photowall", hint: "Screenshots and photos" },
       { label: "Moments", href: "/moments", hint: "Travel diary, WeChat style" },
       { label: "Music", href: "/music", hint: "What I listen to while coding" },
     ],
