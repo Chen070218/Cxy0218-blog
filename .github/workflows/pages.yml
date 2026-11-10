@@ -47,13 +47,31 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.retry.outputs.page_url || steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
+        continue-on-error: true
         uses: actions/deploy-pages@v4
         with:
-          # The default is 10 minutes; a 40 MB portfolio with photos can spend
-          # longer than that in syncing_files on a busy Pages runner.
+          # Pages can sit in syncing_files; keep the first attempt bounded,
+          # then retry once with a longer window.
+          timeout: 600000
+          error_count: 10
+          reporting_interval: 10000
+
+      - name: Wait before retrying the Pages deployment
+        if: steps.deployment.outcome == 'failure'
+        run: sleep 15
+
+      - id: retry
+        if: steps.deployment.outcome == 'failure'
+        continue-on-error: true
+        uses: actions/deploy-pages@v4
+        with:
           timeout: 1200000
           error_count: 10
           reporting_interval: 10000
+
+      - name: Fail if both Pages deployment attempts failed
+        if: steps.deployment.outcome == 'failure' && steps.retry.outcome == 'failure'
+        run: exit 1
